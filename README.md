@@ -23,6 +23,5 @@ https://wiki.openstreetmap.org/wiki/ProxySimplePHP afin de réduire la charge su
 
 ## Autres ressources 
 	* Trie des tableaux: --> fork de sortable.js http://www.kryogenix.org/code/browser/sorttable/
-
 	* Les markers sont générés à partir d'un fork bourrin de Google-Maps-Markers by Concept211
-https://github.com/Concept211/Google-Maps-Markers disponible ici https://github.com/Arno153/Google-Maps-Markers
+	https://github.com/Concept211/Google-Maps-Markers disponible ici https://github.com/Arno153/Google-Maps-Markers
