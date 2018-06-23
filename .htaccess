@@ -1,0 +1,15 @@
+RewriteEngine On
+RewriteCond %{HTTP:HTTPS} !on
+RewriteRule (.*) https://%{SERVER_NAME}/$1 [QSA,L,R=301]
+
+RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ tiles.php?z=$1&x=$2&y=$3 [L]
+RewriteRule ^tiles/hot/([0-9]+)/([0-9]+)/([0-9]+).png$ tiles.php/?z=$1&x=$2&y=$3&r=hot [L]
+
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresDefault                        "access plus 1 month"
+  # CSS
+    ExpiresByType text/css                "access plus 1 year"
+  # JavaScript
+    ExpiresByType application/javascript  "access plus 1 year"
+</IfModule>
