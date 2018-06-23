@@ -3,11 +3,15 @@ Code source du site velib.philibert.info: analyse et interprétation des donnée
 
 
 ## Installation: 
-	--> creer la base de donnée MySQL à l'aide du script sql suivant: ./setup/CreateVelibToolDatabase.sql 
+	--> créer  la base de donnée MySQL à l'aide du script sql suivant: ./setup/CreateVelibToolDatabase.sql 
  	--> Renseigner le paramétrage Mysql dans ./inc/mysql.inc.php ($server, $user, $password, $db)
  	--> Remplacer "API-Key" par une clé d'api google map valide dans ./cron/stationLocationHasMoved.php
 	--> Remplacer l'identifiant google analystics ou supprimer le js des pages
- 	--> Adapter le .htaccess si le site n'est pas en https (NB: https requis pour la geolocalisation sur la carte)
+ 	--> Adapter le .htaccess si le site n'est pas en https (NB: https requis pour la géolocalisation  sur la carte)
+	--> les scripts du dossier cron sont prévu être appelés périodiquement 
+		- velibAPIParser.php : collecte des données depuis Velib-metropole
+		- stationLocationHasMoved.php: reverse geocoding: mise à jour des adresses des stations dont les coordonnées ont changé
+		- mysqlBackup.php: sauvegarde mysql
  	--> renommer le fichier no.maintenance en .maintenance active les bandeaux de maintenance
 
 ## Ressources Open street Map et Leaflet 
@@ -26,3 +30,4 @@ https://wiki.openstreetmap.org/wiki/ProxySimplePHP afin de réduire la charge su
 	* Trie des tableaux: --> fork de sortable.js http://www.kryogenix.org/code/browser/sorttable/
 	* Les markers sont générés à partir d'un fork bourrin de Google-Maps-Markers by Concept211
 	https://github.com/Concept211/Google-Maps-Markers disponible ici https://github.com/Arno153/Google-Maps-Markers
+	* graphiques réalisés avec plotly.js: https://plot.ly/javascript/
