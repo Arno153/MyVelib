@@ -35,7 +35,7 @@ if (mysqli_num_rows($result)>0)
 		echo "stationAdress: ".$row['stationAdress']."<br>";
 		
 		/// recupérer l'adresse --> google geocode API					
-		$wsUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$row['stationLat'].','.$row['stationLon'].'&key=AIzaSyBhVM63uEbuaccNCZ687XuAMVavQK4o-VQ';
+		$wsUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$row['stationLat'].','.$row['stationLon'].'&key=API-Key';
 		$googleGeocodeAPIRawData = file_get_contents($wsUrl);
 		$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
 
