@@ -182,8 +182,8 @@
 		});
 		
 		// set map area limits
-		var southWest = L.latLng(48.8, 2.19),
-		northEast = L.latLng( 48.93, 2.49),
+		var southWest = L.latLng(48.74, 2.14),
+		northEast = L.latLng( 48.98, 2.55),
 		mybounds = L.latLngBounds(southWest, northEast);		
 		mymap.setMaxBounds(mybounds);
 		mymap.options.minZoom = 11;
