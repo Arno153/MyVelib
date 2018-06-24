@@ -1,3 +1,8 @@
+body
+{
+	margin: 0px;
+}
+
 .bg-light {
     background-color: #f8f9fa !important;
 }
@@ -40,9 +45,14 @@
 	width: 22.5%;	
 }
 
+.left360{
+	min-height:360px;
+	width: 22.5%;	
+}
+
 .widget {
     float: left;
-	width: 98%;
+	width: 99%;
 	box-sizing: border-box;
     background-color: #f8f9fa !important;
 	padding: 0.1rem 1rem 1rem 1rem;
@@ -127,7 +137,7 @@
 	border: 2px solid #ccc !important;
 	border-radius: 16px;
 	float: left;
-	width: 98%;
+	width: 99%;
 	box-sizing: border-box;
 	background-color: #f8f9fa !important;
 }
@@ -214,7 +224,7 @@ tr:hover {background-color: #f5f5f5;}
 
 #mapid 
 { 
-height: 700px;
+height: calc(100vh - 150px);
 width: 100%; 
 }
 
@@ -384,7 +394,7 @@ width: 100%;
 
 @media (max-width: 450px) 
 {
-	.adapativeHide
+	.adapativeHide, .adapativeHide2
 	{
 		display: none;
 	}
@@ -398,18 +408,19 @@ width: 100%;
 	}
 		
 	.left200{
-		min-height:200px;
+		min-height: 130px;
 		width: 91%;	
+	}
+	
+	.left360{
+		min-height:360px;
+		width: 91%;		
 	}
 
 	.left-widget {
 		width: 91%;
 		margin: 0.5rem;
 		padding: 0.1rem 0.7rem 0.1rem 0.7rem;	
-	}
-
-	.left200{
-		min-height:100px;
 	}
 
 	table, th, td {
@@ -422,15 +433,26 @@ width: 100%;
 		padding-bottom: 35px;
 	}
 	
+	.widgetGraph2 {
+    height: 500px;
+	padding-bottom: 150px;
+	}	
+	
 	#mapid 
 	{ 
-		height: 600px;
+		height: calc(100vh - 100px);
 		width: 100%; 
 	}	
 }
 
 @media (min-width: 451px) and (max-width: 750px) 
 {
+	
+	.adapativeHide2
+	{
+		display: none;
+	}
+	
 	.nav-refresh {
 		float: left;
 	}	
@@ -440,18 +462,19 @@ width: 100%;
 	}
 		
 	.left200{
-		min-height:200px;
+		min-height:150px;
 		width: 91%;	
 	}
+	
+	.left360{
+		min-height:360px;
+		width: 91%;		
+	}	
 
 	.left-widget {
 		width: 91%;
 		margin: 0.5rem;
 		padding: 0.1rem 0.7rem 0.1rem 0.7rem;	
-	}
-
-	.left200{
-		min-height:100px;
 	}
 
 	table, th, td {
@@ -464,11 +487,14 @@ width: 100%;
 		padding-bottom: 35px;
 	}
 	
-	
+	.widgetGraph2 {
+    height: 475px;
+	padding-bottom: 85px;
+	}
 	
 	#mapid 
 	{ 
-		height: 600px;
+		height: calc(100vh - 100px);
 		width: 100%; 
 	}	
 }
@@ -476,6 +502,11 @@ width: 100%;
 
 @media (min-width: 751px) and (max-width: 1200px) 
 {
+	.adapativeHide2
+	{
+		display: none;
+	}
+	
 	.nav-link {
 		font-size: 1em;
 	}
@@ -485,7 +516,11 @@ width: 100%;
 	}
 
 	.left200{
-		min-height:150px;
+		min-height:265px;
+	}
+	
+	.left360{
+		min-height:360px;	
 	}
 	
 	.col2{
@@ -514,8 +549,10 @@ width: 100%;
 		min-height:270px;
 	}
 
-	.left200{
-		
+	.left200{		
+	}
+	
+	.left360{	
 	}
 
 	.widgetGraph

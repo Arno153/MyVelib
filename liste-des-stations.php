@@ -126,15 +126,15 @@
 							echo "Nb<br> Velib";
 							echo "</TH><TH>";
 							echo "Nb<br>VAE";
-							echo "</TH><TH>";
+							echo "</TH><TH class='adapativeHide2'>";
 							echo "Nb Velib <br>Overflow";
-							echo "</TH><TH>";
+							echo "</TH><TH class='adapativeHide2'> ";
 							echo "Nb VAE <br>Overflow";
 							echo "</TH><TH>";
 							echo "Dernier <br>mouvement";	
 							echo "</TH><TH>";					
 							echo "Dernier <br>retrait";							
-							echo "</TH><TH>";
+							echo "</TH><TH class='adapativeHide2'>";
 							echo "Durée depuis le <br>dernier mouvement";					
 							echo "</TH><TH>";
 							echo "Date <br>d'ajout";
@@ -226,16 +226,16 @@
 								echo $row["stationNbBike"];
 								echo "</TD><TD>";
 								echo $row["stationNbEBike"];
-								echo "</TD><TD>";
+								echo "</TD><TD class='adapativeHide2'>";
 
 								echo $row["stationNbBikeOverflow"];
-								echo "</TD><TD>";
+								echo "</TD><TD class='adapativeHide2'>";
 								echo $row["stationNbEBikeOverflow"];	
 								echo "</TD><TD>";
 								echo $row["stationLastChange"];	
 								echo "</TD><TD>";					
 								echo $row["stationLastExit"];							
-								echo "</TD><TD>";
+								echo "</TD><TD class='adapativeHide2'>";
 								echo $row["timediff"];
 								echo "</TD><TD>";					
 								echo $row["stationInsertedInDb"];
