@@ -90,7 +90,7 @@
 					stationSignaleHS,
 				   DATE_FORMAT(`stationSignaleHSDate`,'%d/%m/%Y') as stationSignaleHSDate                  ,
 				   DATE_FORMAT(`stationSignaleHSDate`,'%H:%i')    as stationSignaleHSHeure                 ,
-				   4 - stationSignaleHSCount              as nrRetraitDepuisSignalement						,
+				   10 - stationSignaleHSCount              as nrRetraitDepuisSignalement						,
 					`stationSignaledElectrified` as stationConnected, 
 					`stationSignaledElectrifiedDate` as stationConnectionDate,
 				   stationNbBike + stationNbEBike + stationNbBikeOverflow + stationNbEBikeOverflow  as station_nb_bike,
@@ -143,7 +143,7 @@
 					DATE_FORMAT(`stationSignaleHSDate`,'%d/%m/%Y') as stationSignaleHSDate                  ,
 					DATE_FORMAT(`stationSignaleHSDate`,'%H:%i')    as stationSignaleHSHeure                 ,	
 					(case when stationSignaleHS = 1
-						then 4 - stationSignaleHSCount
+						then 10 - stationSignaleHSCount
 						else 0
 					end) as nrRetraitDepuisSignalement,
 					`stationSignaledElectrified` as stationConnected, 

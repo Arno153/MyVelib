@@ -34,7 +34,7 @@ if(isset($stationCode))
 				SET 							
 					`stationSignaleHS` = 1, 
 					`stationSignaleHSDate`  = now(),
-					`stationSignaleHSCount` = 4
+					`stationSignaleHSCount` = 10
 				WHERE `stationCode`='$stationCode'";
 			}
 			elseif ($HSYesNo=="false")

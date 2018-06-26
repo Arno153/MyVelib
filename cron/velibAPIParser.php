@@ -144,6 +144,8 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 //si le md5 du flux courant n'est pas black-listé par le log on poursuit avec la maj des données
 // ---- nettoyage des données oscilatoire
 
+error_log( date("Y-m-d H:i:s")." - Collecte des données Velib");
+
 $VelibDataArray = json_decode($SomeVelibRawData, true);
 
 if($debugVelibRawData)
@@ -407,7 +409,40 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					
 					
 					if($stationNbEDock+$stationNbDock + $stationNbFreeDock + $stationNbFreeEDock+$stationNbBike+$stationNbEBike !=0)
-					{				
+					{	
+						// si la station est signalée HS, alors on recupère le max de  "delta(max-min) quotidien" de la station depuis le signalement
+						// 
+						
+						$resetStationHS = 0;
+						if($row["stationSignaleHS"]==1)
+						{
+							error_log( date("Y-m-d H:i:s")." - Changement dans la station ".$stationCode." signalée HS");
+							if ($resultHS = mysqli_query
+												(
+													$link, 
+													"
+														SELECT max(`stationVelibMaxVelib`-`stationVelibMinVelib`) as maxDelta
+														FROM `velib_station_min_velib`
+														where `stationCode` = '$stationCode' 
+															AND `stationStatDate` >= '$row[stationSignaleHSDate]'
+													"
+												)
+								) 
+								{
+									if (mysqli_num_rows($resultHS)>0)
+									{
+										//la station a un historique
+										$rowHS = mysqli_fetch_array($resultHS, MYSQLI_ASSOC);
+										if($rowHS["maxDelta"] > 3)
+										{
+											$resetStationHS = 1 ;
+											error_log("- et le deltaMaxMin est supérieur à 3(".$rowHS["maxDelta"].")");
+										}
+									}
+								}
+						}
+
+				
 						// mise à jour de la station				
 						$r = "UPDATE `velib_station` 
 						SET 
@@ -462,21 +497,51 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 							`stationSignaleHS` = 								
 								(
 								case 
-									when (('$row[nbFreeEDock]' < '$stationNbFreeEDock' or  '$row[nbFreeDock]' < '$stationNbFreeDock' or '$row[stationNbBikeOverflow]' > '$stationNbBikeOverflow' or '$row[stationNbEBikeOverflow]' > '$stationNbEBikeOverflow') and '$row[stationSignaleHSCount]'=1 ) 
-										then 0
-										else '$row[stationSignaleHS]'
+									when 
+									(
+										(
+											'$row[nbFreeEDock]' < '$stationNbFreeEDock' or '$row[nbFreeDock]' < '$stationNbFreeDock' or '$row[stationNbBikeOverflow]' > '$stationNbBikeOverflow' or '$row[stationNbEBikeOverflow]' > '$stationNbEBikeOverflow'
+										) 
+										and 
+										(
+											'$row[stationSignaleHSCount]'=1 
+											or
+											(
+											'$resetStationHS'=1
+											and 
+											'$row[stationSignaleHSCount]' < 6 
+											)
+										)
+									) 
+									then 0
+									else '$row[stationSignaleHS]'
 								end 
 								), 
 							`stationSignaleHSDate`  =
 								(
 								case 
-									when (('$row[nbFreeEDock]' < '$stationNbFreeEDock' or '$row[nbFreeDock]' < '$stationNbFreeDock' or '$row[stationNbBikeOverflow]' > '$stationNbBikeOverflow' or '$row[stationNbEBikeOverflow]' > '$stationNbEBikeOverflow') and '$row[stationSignaleHSCount]'=1 ) 
-										then NULL
-										else 
-											case when ( '$row[stationSignaleHSDate]' = '')
-												then NULL
-												else '$row[stationSignaleHSDate]'
-											end
+									when 
+									(
+										(
+											'$row[nbFreeEDock]' < '$stationNbFreeEDock' or '$row[nbFreeDock]' < '$stationNbFreeDock' or '$row[stationNbBikeOverflow]' > '$stationNbBikeOverflow' or '$row[stationNbEBikeOverflow]' > '$stationNbEBikeOverflow'
+										) 
+										and 
+										(
+											'$row[stationSignaleHSCount]'=1 
+											or
+											(
+											'$resetStationHS'=1
+											and 
+											'$row[stationSignaleHSCount]' < 6 
+											)
+										)
+									) 
+									then NULL
+									else 
+										case when ( '$row[stationSignaleHSDate]' = '')
+											then NULL
+											else '$row[stationSignaleHSDate]'
+										end
 								end 
 								),
 							`stationSignaleHSCount` =
@@ -497,9 +562,10 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 						}
 						
 						if(!mysqli_query($link, $r))
-							{
-								printf("Errormessage: %s\n", mysqli_error($link));
-							}
+						{
+							error_log( date("Y-m-d H:i:s")." - erreur lors de la mise à jour de la station ".$stationCode);
+							printf("Errormessage: %s\n", mysqli_error($link));
+						}
 					
 						// 2 : génération du log fichier
 						//$logstring = $logstring.date('H:i:s j/m/y').";".rtrim($r).";\r";
