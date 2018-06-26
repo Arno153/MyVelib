@@ -8,11 +8,11 @@ function InvalidCache()
 
 function isCacheValid($page)
 {
-	$debugCacheMgt = true;
+	$debugCacheMgt = false;
 	
 	if( filemtime(dirname(__FILE__).'/../cache/invalidCache.cache') <= filemtime(dirname(__FILE__).'/../cache/'.$page.'.cache')+60	)
 	{
-		//if($debugCacheMgt) error_log("Live Cache Mgt - Page: ".$page." is valid and will not be rebuilded");	
+		if($debugCacheMgt) error_log("Live Cache Mgt - Page: ".$page." is valid and will not be rebuilded");	
 		return True;
 	}
 	else
@@ -24,11 +24,11 @@ function isCacheValid($page)
 
 function isCacheValid1H($page)
 {
-	$debugCacheMgt = true;
+	$debugCacheMgt = false;
 	
 	if( time() <= filemtime(dirname(__FILE__).'/../cache/'.$page.'.cache')+3600	)
 	{
-		//if($debugCacheMgt) error_log("1H Cache Mgt - Page: ".$page." is valid and will not be rebuilded");
+		if($debugCacheMgt) error_log("1H Cache Mgt - Page: ".$page." is valid and will not be rebuilded");
 		return True;
 	}
 	else
