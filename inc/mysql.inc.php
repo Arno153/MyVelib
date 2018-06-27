@@ -1,9 +1,10 @@
 <?php
 
-	include "config.inc.php";
+	
 
 	function mysqlConnect()
-	{		 
+	{
+		include "config.inc.php";		
 		//DB connect
 		@$link = mysqli_connect($server, $user, $password, $db);
 		if (!$link) {
