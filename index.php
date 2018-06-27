@@ -107,7 +107,7 @@
 
 	<div class="left-widget left200">	
 		<h1 class="widget-title">Nombre de stations</h1>
-		<TABLE>
+		<TABLE class="table-compact">
 			<TR>
 			<TH>Fermées & En travaux</TH>
 			<TH>Actives</TH>
@@ -143,7 +143,7 @@
 		</TABLE>
 		<p class="notes">* status officiel</p>
 	</div>
-	<div class="left-widget left200">	
+	<div class="left-widget left200 col3">	
 	
 		<?php
 			if($cacheValide == true)
@@ -208,7 +208,7 @@
 		<p class="notes">* le nombre estimé de velib est obtenu en soustrayant le nombre min de velib enregitré par chaque station sur les 3 derniers jours</p>	
 	</div>
 	
-	<div class="left-widget left200 col2">
+	<div class="left-widget left360 col2">
 		<h1 class="widget-title">Stations par dernier mouvement</h1>
 		<TABLE class="table-compact">
 			<TR>
@@ -267,7 +267,7 @@
 		<p class="notes">*l'absence de mouvement ne présume pas du dysfonctionnement d'une station</p>
 	</div>
 	
-		<div class="left-widget left200 col2">
+		<div class="left-widget left360 col2">
 		<h1 class="widget-title">Stations par dernier retrait</h1>
 		<TABLE class="table-compact">
 			<TR>
@@ -916,7 +916,7 @@
 			<TR>
 			<TH>Code</TH>
 			<TH>Nom</TH>
-			<TH>Adresse</TH>
+			<TH class='adapativeHide'>Adresse</TH>
 			<TH class='thdate'>Date d'ajout</TH>
 			<TH class='thstatus'>Status</TH>			
 			<TH class='thdate'>Date d'activation</TH>				
@@ -937,7 +937,7 @@
 								echo "<TR>";
 								echo "<TD>".$row["stationCode"]."</TD>";	
 								echo "<TD><a href='carte-des-stations.php?lat=".$row["stationLat"]."&lon=".$row["stationLon"]."&zoom=17'>".$row["stationName"]."</a></TD>";											
-								echo "<TD>".$row["stationAdress"]."</TD>";	
+								echo "<TD class='adapativeHide'>".$row["stationAdress"]."</TD>";	
 								echo "<TD>".$row["stationInsertedInDb"]."</TD>";
 								if($row["stationState"]=="Operative")
 								{
