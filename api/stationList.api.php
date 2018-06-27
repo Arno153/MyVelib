@@ -1,24 +1,14 @@
 <?php
-
 	include "./../inc/cacheMgt.inc.php";
 	include "./../inc/mysql.inc.php";
 	
-	//DB connect
-	$link = mysqlConnect();
 	header('Content-type: application/json');
 	
-	if (!$link) {
-		echo "Error: Unable to connect to MySQL." . PHP_EOL;
-		echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
-		echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
-		exit;
-	}
-		
 	if(isset($_GET['v'])){
 		$version = $_GET['v'];
 		$version = strip_tags($version);
 		$version = stripslashes($version);		
-		$version = mysqli_real_escape_string($link, $version);
+		//$version = mysqli_real_escape_string($link, $version); //supprimer pour ne pas ouvrir une connexion sql lors de la rucp en cache
 		$version = trim($version);
 	}
 	else {
@@ -191,6 +181,17 @@
 		getPageFromCache("stationList.api.".$version.".json");
 	}
 	else
+	{
+		//DB connect
+		$link = mysqlConnect();
+		
+		if (!$link) {
+			echo "Error: Unable to connect to MySQL." . PHP_EOL;
+			echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
+			echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+			exit;
+		}
+		
 		if (isset($query))
 		{
 			//echo $query;
@@ -218,7 +219,7 @@
 			}
 		}
 		else echo "empty";
-	mysqlClose($link);
-
-	
+		
+		mysqlClose($link);
+	}	
 ?>

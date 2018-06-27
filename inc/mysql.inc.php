@@ -22,6 +22,7 @@
 		//DB connect
 		@$link = mysqli_connect($server, $user, $password, $db);
 		if (!$link) {
+			error_log(date("Y-m-d H:i:s")." - Unable to connect mysql :".mysqli_connect_errno());
 			header('HTTP/1.1 503 Service Temporarily Unavailable');
 			header('Status: 503 Service Temporarily Unavailable');
 			header('Retry-After: 10');//300 seconds
