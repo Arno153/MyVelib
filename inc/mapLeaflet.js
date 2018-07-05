@@ -113,6 +113,7 @@ function getStations(estimatedVelibNumber)
 				console.log("Réponse reçue: %s", this.responseText);
 				locations = JSON.parse(	this.responseText);
 				addMarkersToMap(estimatedVelibNumber);
+				ga('send', 'event', 'Appel AJAX', 'carte-des-stations.php');
 			} else {
 				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
 
