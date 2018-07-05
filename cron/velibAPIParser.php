@@ -417,29 +417,22 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 						if($row["stationSignaleHS"]==1)
 						{
 							error_log( date("Y-m-d H:i:s")." - Changement dans la station ".$stationCode." signalée HS");
-							if ($resultHS = mysqli_query
-												(
-													$link, 
-													"
-														SELECT max(`stationVelibMaxVelib`-`stationVelibMinVelib`) as maxDelta
-														FROM `velib_station_min_velib`
-														where `stationCode` = '$stationCode' 
-															AND `stationStatDate` >= '$row[stationSignaleHSDate]'
-													"
-												)
-								) 
+							$resultHSQ = "SELECT max(`stationVelibMaxVelib`-`stationVelibMinVelib`) as maxDelta FROM `velib_station_min_velib` where `stationCode` = '$stationCode' AND `stationStatDate` >= date('$row[stationSignaleHSDate]')";
+							//error_log( date("Y-m-d H:i:s").$resultHSQ);
+							
+							if ($resultHS = mysqli_query($link, $resultHSQ)	) 
+							{
+								if (mysqli_num_rows($resultHS)>0)
 								{
-									if (mysqli_num_rows($resultHS)>0)
+									//la station a un historique
+									$rowHS = mysqli_fetch_array($resultHS, MYSQLI_ASSOC);
+									if($rowHS["maxDelta"] > 3)
 									{
-										//la station a un historique
-										$rowHS = mysqli_fetch_array($resultHS, MYSQLI_ASSOC);
-										if($rowHS["maxDelta"] > 3)
-										{
-											$resetStationHS = 1 ;
-											error_log("- et le deltaMaxMin est supérieur à 3(".$rowHS["maxDelta"].")");
-										}
+										$resetStationHS = 1 ;
+										error_log("- et le deltaMaxMin est supérieur à 3(".$rowHS["maxDelta"].")");
 									}
 								}
+							}
 						}
 
 				
@@ -679,7 +672,11 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				/// recupérer l'adresse --> google geocode API
 					
 				$wsUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$stationLat.','.$stationLon.'&key=AIzaSyBhVM63uEbuaccNCZ687XuAMVavQK4o-VQ';
-				//echo $wsUrl."<br>";	
+				if($debugVerbose)
+				{
+					echo $wsUrl."<br>";	
+				}
+				
 				$googleGeocodeAPIRawData = file_get_contents($wsUrl);
 				$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
 
@@ -754,7 +751,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					now(), 
 					now(), 
 					'$stationKioskState', 
-					'$stationAdress',
+					left('$stationAdress',300),
 					case WHEN '$stationState' = 'Operative' then now() else null end,
 					now()
 					)";

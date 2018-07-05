@@ -80,7 +80,7 @@ if (mysqli_num_rows($result)>0)
 			"
 			UPDATE `velib_station` 
 				SET 
-					`stationAdress` = '$newStationAdress',
+					`stationAdress` = left('$newStationAdress',300),
 					`stationLocationHasChanged` = 0
 				where `id`='$row[id]';
 			";
