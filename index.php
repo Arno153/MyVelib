@@ -765,7 +765,7 @@
 					if($i%$nbcol==($nbcol-1))
 						echo ']';
 				}				
-				echo " }, type: 'scatter', name : 'Officiel,<br>En Overflow'},{";				
+				echo " }, type: 'scatter', visible: 'legendonly', name : 'Officiel,<br>En Overflow'},{";				
 				//serie 3
 				for($i=0;$i<$nb;$i++)
 				{
@@ -869,7 +869,60 @@
 					if($i%$nbcol==($nbcol-1))
 						echo ']';
 				}				
-				echo " }, type: 'scatter', name : 'Estimé,<br>en Overflow '}";					
+				echo " }, type: 'scatter', visible: 'legendonly', name : 'Estimé,<br>en Overflow '},{";				
+				
+				//serie 5
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+				
+					 ;
+					echo '"'.$tablo[$i]['avgEstimatedUnavailableVelib'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}
+				
+				echo ",
+						error_y: {
+						  type: 'data',
+						  symmetric: false,
+						  ";
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'array: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['maxEstimatedUnavailableVelib']-$tablo[$i]['avgEstimatedUnavailableVelib']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo '],';
+				}
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'arrayminus: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['avgEstimatedUnavailableVelib']-$tablo[$i]['minEstimatedUnavailableVelib']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " }, type: 'scatter', name : 'Estimé,<br>Indisponible '}"; 
 				
 				echo "];
 				var layout = 

@@ -1,7 +1,4 @@
 <?php
-
-	
-
 	function mysqlConnect()
 	{
 		include "config.inc.php";		
@@ -144,7 +141,10 @@
 		if ($result = mysqli_query($link, $query)) 
 			return $result;
 		else	
+		{
+			error_log(date("Y-m-d H:i:s")." - invalid request :".mysqli_error( $link ));
 			return False;			
+		}
 	}
 	
 	function getActivStationPercentage($link)
@@ -301,7 +301,10 @@
 				round(avg(`networkEstimatedNbBike`)) avgEstimatedVelib,    
 				min(`networkEstimatedNbBikeOverflow`) minEstimatedVelibOverflow,
 				max(`networkEstimatedNbBikeOverflow`) maxEstimatedVelibOverflow,
-				round(avg(`networkEstimatedNbBikeOverflow`)) avgEstimatedVelibOverflow    
+				round(avg(`networkEstimatedNbBikeOverflow`)) avgEstimatedVelibOverflow,
+				min(`networkNbBike` - `networkEstimatedNbBike`) minEstimatedUnavailableVelib,
+				max(`networkNbBike` - `networkEstimatedNbBike`) maxEstimatedUnavailableVelib,
+				round(avg(`networkNbBike`-`networkEstimatedNbBike`)) avgEstimatedUnavailableVelib				
 			FROM `velib_activ_station_stat` 
 			WHERE 
 				`date` > '2018-02-13'
