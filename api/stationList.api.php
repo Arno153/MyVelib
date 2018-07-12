@@ -172,6 +172,23 @@
 					  `nbFreeEDock` > 0 
 					and stationHidden = 0
 			";
+			case "heatmap" :
+			$query = "
+				SELECT 
+					vs.`stationCode`,
+					`stationStatDate`,
+					`stationVelibExit`,
+					`stationLat`,
+					`stationLon`
+				FROM 
+					`velib_station` vs, 
+					`velib_station_min_velib` vm
+				where 
+					vs.`stationCode` = vm.`stationCode`
+					and `stationHidden` = 0
+					and `stationStatDate` > DATE_ADD(NOW(), INTERVAL -1 DAY)
+				order by 1, 2 asc
+			";			
 			break;
 	}
 	

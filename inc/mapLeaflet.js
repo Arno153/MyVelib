@@ -113,7 +113,7 @@ function getStations(estimatedVelibNumber)
 				console.log("Réponse reçue: %s", this.responseText);
 				locations = JSON.parse(	this.responseText);
 				addMarkersToMap(estimatedVelibNumber);
-				ga('send', 'event', 'Appel AJAX', 'carte-des-stations.php');
+				
 			} else {
 				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
 
@@ -446,3 +446,74 @@ function addMarkersToMap(estimatedVelibNumber)
 		markers.push(marker);	
 	}
 }
+
+//js for mouvements heatmap
+function getHeatmapData()
+{
+   var xmlhttp;
+	// compatible with IE7+, Firefox, Chrome, Opera, Safari
+	xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			callback(xmlhttp.responseText);
+		}
+	}
+	
+	xmlhttp.onreadystatechange = function(event) {
+		// XMLHttpRequest.DONE === 4
+		if (this.readyState === XMLHttpRequest.DONE) {
+			if (this.status === 200) {
+				console.log("Réponse reçue: %s", this.responseText);
+				//var jsonDataArray = JSON.parse(	this.responseText);
+				buildHeatMapDataArray(JSON.parse(	this.responseText));
+				displayHeatMap(0);
+				
+			} else {
+				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
+
+			}
+		}
+	};
+	
+	url='./api/stationList.api.php?v=heatmap';
+	xmlhttp.open("POST", url, true);
+	xmlhttp.send();			
+}	
+
+function buildHeatMapDataArray(jsonDataArray)
+{
+	for(var i = 0; i< jsonDataArray.length;i++)
+	{
+		var stationCode = jsonDataArray[i]['stationCode'];
+		var stationLat = jsonDataArray[i]['stationLat'];
+		var stationLon = jsonDataArray[i]['stationLon'];
+		var dateMvt = [];
+		
+		do
+		{
+			dateMvt.push([jsonDataArray[i]['stationStatDate'],jsonDataArray[i]['stationVelibExit']]);
+			i++;
+		}
+		while (i< jsonDataArray.length && jsonDataArray[i]['stationCode'] == jsonDataArray[i-1]['stationCode']) 
+		
+		i=i-1;
+		locations.push([stationCode, stationLat, stationLon, dateMvt ]);	
+	}	
+}
+
+function displayHeatMap(j)
+{
+
+	var heatMapData = [];
+	for(var i = 0; i< locations.length;i++)
+	{
+		heatMapData.push([locations[i][1],locations[i][2],(locations[i][3])[j][1]]);
+	}	
+	
+heatMapData = heatMapData.map(function (p) { return [p[0], p[1]]; });
+
+var heat = L.heatLayer(heatMapData, {radius: 25}).addTo(mymap);
+
+
+}
+
