@@ -507,7 +507,10 @@ function displayHeatMap(j)
 	var heatMapData = [];
 	for(var i = 0; i< locations.length;i++)
 	{
+		if((locations[i][3])[j][1]>0)
+		{	
 		heatMapData.push([locations[i][1],locations[i][2],(locations[i][3])[j][1]]);
+		}
 	}	
 	
 heatMapData = heatMapData.map(function (p) { return [p[0], p[1]]; });

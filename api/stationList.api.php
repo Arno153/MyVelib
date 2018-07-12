@@ -186,7 +186,7 @@
 				where 
 					vs.`stationCode` = vm.`stationCode`
 					and `stationHidden` = 0
-					and `stationStatDate` > DATE_ADD(NOW(), INTERVAL -1 DAY)
+					and `stationStatDate` > DATE_ADD(NOW(), INTERVAL -2 DAY)
 				order by 1, 2 asc
 			";			
 			break;
