@@ -8,8 +8,8 @@
 include "./../inc/cacheMgt.inc.php";
 include "./../inc/mysql.inc.php";
 
-$debug = true;
-$debugVerbose = true;
+$debug = false;
+$debugVerbose = false;
 $debugVelibRawData= false;
 $velibExit = 0;
 
