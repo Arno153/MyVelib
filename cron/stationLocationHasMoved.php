@@ -75,7 +75,7 @@ if (mysqli_num_rows($result)>0)
 									
 									if(is_array($valueL3))
 									{
-										$newStationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['citycode']." ".$valueL3['city'];
+										$newStationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['postcode']." ".$valueL3['city'];
 										$newStationAdress = mysqli_real_escape_string($link, $newStationAdress); //ici on à l'adresse
 										$quitter = 1;
 										break;
@@ -124,6 +124,7 @@ if (mysqli_num_rows($result)>0)
 		{
 			echo "<br> something goes wrong with google geocode api";
 		}
+		sleep(1);
 	}
 }
 else
