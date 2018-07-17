@@ -34,8 +34,12 @@ if (mysqli_num_rows($result)>0)
 		echo "stationLon: ".$row['stationLon']."<br>";
 		echo "stationAdress: ".$row['stationAdress']."<br>";
 		
-		/// recupérer l'adresse --> google geocode API					
-		$wsUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$row['stationLat'].','.$row['stationLon'].'&key=API-Key';
+		/// recupérer l'adresse --> adresse.data.gouv.fr					
+		//remove// $wsUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$row['stationLat'].','.$row['stationLon'].'&key=API-Key';
+		
+		$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$row['stationLat'].'&lon='.$row['stationLon'];
+		//echo $wsUrl;
+		
 		$googleGeocodeAPIRawData = file_get_contents($wsUrl);
 		$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
 
@@ -44,30 +48,49 @@ if (mysqli_num_rows($result)>0)
 			echo "vardump</br>";
 			var_dump($googleGeocodeAPIDataArray);	
 		}
+		$quitter = 0;
 		
 		if(count($googleGeocodeAPIDataArray)!=3) //parce que lorsque le quota est atteint la reponse est un array(3)
 		{	
 			//echo "</br> --- --- ---dépiller le retour google  --- </br>";
 			foreach($googleGeocodeAPIDataArray as $keyL1 => $valueL1)
-			{			
-				foreach($valueL1 as $keyL2 => $valueL2){
-					if(is_array($valueL2))
+			{
+				//echo "<br>".$keyL1." => ".var_dump($valueL1);
+				if($keyL1 == 'features')
+				{
+					//echo "<br> inside features ";
+					foreach($valueL1 as $keyL2 => $valueL2)
 					{
-						foreach($valueL2 as $keyL3 => $valueL3){
-							if(!is_array($valueL3))
+						//echo "<br> => features :".$keyL2." => ".var_dump($valueL2);
+						if($keyL2 == '0')
+						{
+							//echo "<br> inside 0 ";
+							foreach($valueL2 as $keyL3 => $valueL3)
 							{
-								if($keyL3 == 'formatted_address')
+								//echo "<br> => features :".$keyL3." => ".var_dump($valueL3);
+								if($keyL3 == 'properties')
+								{			
+									//echo "<br> inside properties ";
+									//var_dump($valueL3);									
+									
+									if(is_array($valueL3))
 									{
-										$newStationAdress = mysqli_real_escape_string($link, $valueL3); //ici on à l'adresse
+										$newStationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['citycode']." ".$valueL3['city'];
+										$newStationAdress = mysqli_real_escape_string($link, $newStationAdress); //ici on à l'adresse
 										$quitter = 1;
 										break;
+										
 									}
+								}
+								if($quitter){
+									break;
+								}
 							}
 						}
 						if($quitter){
 							break;
-						}
-					}
+						}						
+					}	
 				}
 				if($quitter){
 					break;
