@@ -15,6 +15,23 @@
 		$version = "v1";
 	}
 	
+	if(isset($_GET['d'])){
+		$dureeEstimation = $_GET['d'];
+		$dureeEstimation = strip_tags($dureeEstimation);
+		$dureeEstimation = stripslashes($dureeEstimation);		
+		$dureeEstimation = trim($dureeEstimation);
+		if(!is_numeric($dureeEstimation))
+			$dureeEstimation = 3;
+		if($dureeEstimation ==0)
+			$dureeEstimation = 3;
+	}
+	else {
+		$dureeEstimation = 3;
+	}	
+	
+	
+	//error_log( date("Y-m-d H:i:s")." - v=".$version." d=".$dureeEstimation);
+	
 	switch($version)
 	{
 		case "v2" : 
@@ -159,7 +176,7 @@
 										 `velib_station_min_velib`
 								wHERE
 										 1
-										 and `stationStatDate` > DATE_ADD(NOW(), INTERVAL -3 DAY)
+										 and `stationStatDate` > DATE_ADD(NOW(), INTERVAL -'$dureeEstimation' DAY)
 								group by
 										 `stationCode`
 					   ) as min_Velib 
@@ -173,12 +190,30 @@
 					and stationHidden = 0
 			";
 			break;
+			case "heatmap" :
+			$query = "
+				SELECT 
+					vs.`stationCode`,
+					`stationStatDate`,
+					`stationVelibExit`,
+					`stationLat`,
+					`stationLon`
+				FROM 
+					`velib_station` vs, 
+					`velib_station_min_velib` vm
+				where 
+					vs.`stationCode` = vm.`stationCode`
+					and `stationHidden` = 0
+					and `stationStatDate` > DATE_ADD(NOW(), INTERVAL -1 DAY)
+				order by 1, 2 asc
+			";			
+			break;
 	}
 	
-	if(isCacheValid("stationList.api.".$version.".json"))
+	if(isCacheValid("stationList.api.".$version."-".$dureeEstimation.".json"))
 	{
 		//load from cach
-		getPageFromCache("stationList.api.".$version.".json");
+		getPageFromCache("stationList.api.".$version."-".$dureeEstimation.".json");
 	}
 	else
 	{
@@ -212,7 +247,7 @@
 					ob_start();
 					echo json_encode($resultArray, JSON_HEX_APOS);
 					$newPage = ob_get_contents();
-					updatePageInCache("stationList.api.".$version.".json", $newPage);
+					updatePageInCache("stationList.api.".$version."-".$dureeEstimation.".json", $newPage);
 					ob_end_clean(); 
 					echo $newPage;					
 				}

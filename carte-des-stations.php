@@ -113,9 +113,13 @@
 		
 		
 		var estimatedVelibNumber = 0;
-		if(getCookie("estimatedVelibNumber")==1)
+		if(getCookie("estimatedVelibNumber")==3)
 		{
-			estimatedVelibNumber = 1;
+			estimatedVelibNumber = 3;
+		}
+		else if(getCookie("estimatedVelibNumber")==2)
+		{
+			estimatedVelibNumber = 2;
 		}
 	
 		
@@ -220,7 +224,8 @@
 							title: 'switch',
 							content : 
 								//'<label class="switch switch-left-right"><input class="switch-input" type="checkbox" /><span class="switch-label" data-on="Estimé" data-off="Officiel"></span> <span class="switch-handle"></span></label>',
-								'<label class="switch switch-left-right"><input id="mySwitch" class="switch-input" type="checkbox" /><span class="switch-label" data-on="Estimé" data-off="Officiel"></span> <span class="switch-handle"></span></label>',
+								//'<label class="switch switch-left-right"><input id="mySwitch" class="switch-input" type="checkbox" /><span class="switch-label" data-on="Estimé" data-off="Officiel"></span> <span class="switch-handle"></span></label>',
+								'<div class="switch-field"><input type="radio" id="switch_3_left" name="switch_3" value="0" checked/><label for="switch_3_left">Officiel<br></label><input type="radio" id="switch_3_center" name="switch_3" value="3" /><label for="switch_3_center">Estimé<br>3J</label><input type="radio" id="switch_3_right" name="switch_3" value="2" /><label for="switch_3_right">Estimé<br>2J</label></div>',
 							style   :
 							{
 								padding: '0px',
@@ -229,37 +234,49 @@
 								{
 									click: function(data)
 									{
-										document.getElementById("mySwitch").onclick = function() {
-									
-											if(document.getElementById("mySwitch").checked)
+										document.getElementById("switch_3_center").onclick = function() {									
+											if(document.getElementById("switch_3_center").checked)
 											{											
-												//alert('OFFICIEL to ESTIME');
-												estimatedVelibNumber = 1;
-												refresh(1);												
-											}
-											else
-											{
-												//alert('ESTIME to OFFICIEL');
-												estimatedVelibNumber = 0;
-												refresh(0);													
-											}
-											
-											// on stoque le choix dans un cookies
-											var d = new Date();
-											d.setTime(d.getTime() + (30*24*60*60*1000));
-											var expires = "expires="+ d.toUTCString();
-											document.cookie = "estimatedVelibNumber" + "=" + estimatedVelibNumber + ";" + expires + ";path=/";
-											
-											
+												//alert('3J');
+												estimatedVelibNumber = 3;
+												refresh(3);												
+											}	
 										}
+										document.getElementById("switch_3_left").onclick = function() {									
+											if(document.getElementById("switch_3_left").checked)
+											{											
+												//alert('Officiel');
+												estimatedVelibNumber = 0;
+												refresh(0);												
+											}	
+										}	
+										document.getElementById("switch_3_right").onclick = function() {									
+											if(document.getElementById("switch_3_right").checked)
+											{											
+												//alert('2J');
+												estimatedVelibNumber = 2;
+												refresh(2);												
+											}	
+										}										
+										
+										
+										// on stoque le choix dans un cookies
+										var d = new Date();
+										d.setTime(d.getTime() + (30*24*60*60*1000));
+										var expires = "expires="+ d.toUTCString();
+										document.cookie = "estimatedVelibNumber" + "=" + estimatedVelibNumber + ";" + expires + ";path=/";
 									},
 								}
 						})
 						.addTo(mymap);
 						
-		if(estimatedVelibNumber == 1)
+		if(estimatedVelibNumber == 2)
 		{
-			document.getElementById("mySwitch").checked=true;
+			document.getElementById("switch_3_right").checked=true;
+		}
+		else if(estimatedVelibNumber == 3)
+		{
+			document.getElementById("switch_3_center").checked=true;
 		}
 		;						
 		
@@ -279,7 +296,7 @@
 					- <img src="./images/marker_u_green0.png" alt="inconnue" width="12"> Inconnue
 		
 		
-		<br>* Le mode "Estimé" essaye d'évaluer le nombre réel de velib disponnible dans une stations en soustrayant aux données officielles le nombre min de velib enregitré par la station sur  les 3 derniers jours
+		<br>* Le mode "Estimé" essaye d'évaluer le nombre réel de velib disponnible dans une stations en soustrayant aux données officielles le nombre min de velib enregitré par la station sur les 2 ou 3 derniers jours
 		<br>* L'absence de mouvement ne présume pas du dysfonctionnement d'une station, l'inverse est également vrai... 
 		<b>Tous les symboles de la V-BOX <a href="http://blog.velib-metropole.fr/wp-content/uploads/2018/02/PICTOS_LISTE_VELIB-.pdf" target="_blank">chez velib metropole</a> </b>
 		<br>* <b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.

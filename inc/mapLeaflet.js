@@ -113,7 +113,7 @@ function getStations(estimatedVelibNumber)
 				console.log("Réponse reçue: %s", this.responseText);
 				locations = JSON.parse(	this.responseText);
 				addMarkersToMap(estimatedVelibNumber);
-				ga('send', 'event', 'Appel AJAX', 'carte-des-stations.php');
+				
 			} else {
 				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
 
@@ -121,7 +121,7 @@ function getStations(estimatedVelibNumber)
 		}
 	};
 	
-	url='./api/stationList.api.php?v=web';
+	url='./api/stationList.api.php?v=web&d='+estimatedVelibNumber;
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send();			
 }	
@@ -378,8 +378,13 @@ function addMarkersToMap(estimatedVelibNumber)
 		
 		if(parseInt(locations[i]['stationMinVelibNDay'])+parseInt(locations[i]['stationVelibMinVelibOverflow']) > 0 )
 		{
+			if(estimatedVelibNumber == 0)
+				estimatedVelibNumberDisplayedIW= 3;
+			else	
+				estimatedVelibNumberDisplayedIW = estimatedVelibNumber;
+			
 			infoWindowContent = infoWindowContent +
-			'<br> Sur les 3 derniers jours il n\'y a jamais eu moins de ' + locations[i]['stationMinVelibNDay'] + ' velib (et '+locations[i]['stationVelibMinVelibOverflow']+' en park+)' ; 
+			'<br> Sur les '+estimatedVelibNumberDisplayedIW+' derniers jours il n\'y a jamais eu moins de ' + locations[i]['stationMinVelibNDay'] + ' velib (et '+locations[i]['stationVelibMinVelibOverflow']+' en park+)' ; 
 			
 			if( (parseInt(locations[i]['stationMinVelibNDay'])+parseInt(locations[i]['stationVelibMinVelibOverflow'])) == locations[i]['tot_station_nb_bike'] )
 			{			
@@ -446,3 +451,5 @@ function addMarkersToMap(estimatedVelibNumber)
 		markers.push(marker);	
 	}
 }
+
+
