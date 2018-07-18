@@ -519,7 +519,7 @@ function displayHeatMap(j)
 //heatMapData = heatMapData.map(function (p) { return [p[0], p[1]]; });
 
 
-var heat = L.heatLayer(heatMapData, {radius: 100, max: maxValue, minOpacity:0.2 }).addTo(mymap);
+var heat = L.heatLayer(heatMapData, {radius: 40, max: maxValue, minOpacity:0.25 }).addTo(mymap);
 
 
 }
