@@ -575,6 +575,11 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 							$logstring = $logstring.$row["stationOperativeDate"].";";	
 						}
 						$logstring = $logstring."\n";
+						$stationVelibExit = max(0, $row['stationNbEBike'] - $stationNbEBike) + 
+								max(0, $row['stationNbBike'] - $stationNbBike) + 
+								max(0, $row['stationNbBikeOverflow'] - $stationNbBikeOverflow) + 
+								max(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);
+						
 						
 						// Alimentation statistiques mvt de la station
 						$r = 
@@ -587,7 +592,8 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 									`stationVelibMinVelib`, 
 									`stationVelibMaxVelib`, 
 									`stationVelibMinVelibOverflow`, 
-									`stationVelibMaxVelibOverflow`, 									
+									`stationVelibMaxVelibOverflow`, 
+									`stationVelibExit`,
 									`updateDate`
 								) 
 							VALUES 
@@ -597,7 +603,8 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 									'$stationNbBike' + '$stationNbBikeOverflow' +'$stationNbEBike' + '$stationNbEBikeOverflow' ,
 									'$stationNbBike' + '$stationNbBikeOverflow' +'$stationNbEBike' + '$stationNbEBikeOverflow' ,
 									'$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ,
-									'$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ,									
+									'$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ,	
+									'$stationVelibExit',
 									now()
 								) 
 							ON DUPLICATE KEY UPDATE 
@@ -606,7 +613,8 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 								stationVelibMinVelib = LEAST(stationVelibMinVelib, '$stationNbBike' + '$stationNbBikeOverflow' +'$stationNbEBike' + '$stationNbEBikeOverflow' ),
 								stationVelibMaxVelib = greatest(stationVelibMaxVelib, '$stationNbBike' + '$stationNbBikeOverflow' +'$stationNbEBike' + '$stationNbEBikeOverflow' ),
 								stationVelibMinVelibOverflow = LEAST(stationVelibMinVelibOverflow, '$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ),
-								stationVelibMaxVelibOverflow = greatest(stationVelibMaxVelibOverflow, '$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ),								
+								stationVelibMaxVelibOverflow = greatest(stationVelibMaxVelibOverflow, '$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ),	
+								stationVelibExit = stationVelibExit + '$stationVelibExit',								
 								updateDate = now()
 						";
 						if($debugVerbose)
