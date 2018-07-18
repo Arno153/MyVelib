@@ -429,7 +429,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 									if($rowHS["maxDelta"] > 3)
 									{
 										$resetStationHS = 1 ;
-										error_log("- et le deltaMaxMin est supérieur à 3(".$rowHS["maxDelta"].")");
+										error_log("- et le deltaMaxMin est supérieur à 3(".$rowHS["maxDelta"].") --> suppr de l'indicateur HS");
 									}
 								}
 							}
@@ -669,13 +669,9 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				echo " - Lon : ".$stationLon;
 				
 				
-				/// recupérer l'adresse --> google geocode API
-					
-				$wsUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$stationLat.','.$stationLon.'&key=AIzaSyBhVM63uEbuaccNCZ687XuAMVavQK4o-VQ';
-				if($debugVerbose)
-				{
-					echo $wsUrl."<br>";	
-				}
+				/// recupérer l'adresse --> adresse.data.gouv.fr					
+				$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$row['stationLat'].'&lon='.$row['stationLon'].'&type=housenumber';
+				if($debugVerbose) echo $wsUrl;
 				
 				$googleGeocodeAPIRawData = file_get_contents($wsUrl);
 				$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
@@ -685,34 +681,56 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					echo "vardump</br>";
 					var_dump($googleGeocodeAPIDataArray);	
 				}
+				$quitter = 0;
 			
-				//echo "</br> --- --- ---dépiller le retour google  --- </br>";
+	
+				if($debugVerbose) echo "</br> --- --- ---dépiller le retour ws  --- </br>";
 				foreach($googleGeocodeAPIDataArray as $keyL1 => $valueL1)
-				{			
-					foreach($valueL1 as $keyL2 => $valueL2){
-						if(is_array($valueL2))
+				{
+					if($keyL1 == 'features')
+					{
+						if($debugVerbose) echo "<br> inside features ";
+						foreach($valueL1 as $keyL2 => $valueL2)
 						{
-							foreach($valueL2 as $keyL3 => $valueL3){
-								if(!is_array($valueL3))
+							if($keyL2 == '0')
+							{
+								if($debugVerbose) echo "<br> inside 0 ";
+								foreach($valueL2 as $keyL3 => $valueL3)
 								{
-									if($keyL3 == 'formatted_address')
+									if($keyL3 == 'properties')
+									{			
+										if($debugVerbose) echo "<br> inside properties ";
+										if($debugVerbose) var_dump($valueL3);									
+										
+										if(is_array($valueL3))
 										{
-											$stationAdress = mysqli_real_escape_string($link, $valueL3); //ici on à l'adresse
-											echo " - ".$stationAdress."<br>" ;	
+											if( isset($valueL3['housenumber']) && isset($valueL3['street']) && isset($valueL3['postcode']) && isset($valueL3['city']))
+												$stationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['postcode']." ".$valueL3['city'];
+											else
+												$stationAdress = $valueL3['label'];
+											
+											$stationAdress = mysqli_real_escape_string($link, $stationAdress); //ici on à l'adresse
 											$quitter = 1;
 											break;
+											
 										}
+									}
+									if($quitter){
+										break;
+									}
 								}
 							}
 							if($quitter){
 								break;
-							}
-						}
+							}						
+						}	
 					}
 					if($quitter){
 						break;
 					}				
-				}	
+				}
+			
+					echo "Station Adress: ".$stationAdress."<br>";	
 				
 				$r = "
 				INSERT 

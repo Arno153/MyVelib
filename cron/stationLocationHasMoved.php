@@ -27,7 +27,7 @@ if (mysqli_num_rows($result)>0)
 	while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
 	{
 		echo "<br>----------------<br>";
-		//var_dump($row);
+		if($debugVerbose) var_dump($row);
 		echo "stationCode: ".$row['stationCode']."<br>";
 		echo "stationName: ".$row['stationName']."<br>";
 		echo "stationLat: ".$row['stationLat']."<br>";
@@ -35,10 +35,8 @@ if (mysqli_num_rows($result)>0)
 		echo "stationAdress: ".$row['stationAdress']."<br>";
 		
 		/// recupérer l'adresse --> adresse.data.gouv.fr					
-		//remove// $wsUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$row['stationLat'].','.$row['stationLon'].'&key=API-Key';
-		
-		$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$row['stationLat'].'&lon='.$row['stationLon'];
-		//echo $wsUrl;
+		$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$row['stationLat'].'&lon='.$row['stationLon'].'&type=housenumber';
+		if($debugVerbose) echo $wsUrl;
 		
 		$googleGeocodeAPIRawData = file_get_contents($wsUrl);
 		$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
@@ -52,30 +50,31 @@ if (mysqli_num_rows($result)>0)
 		
 		if(count($googleGeocodeAPIDataArray)!=3) //parce que lorsque le quota est atteint la reponse est un array(3)
 		{	
-			//echo "</br> --- --- ---dépiller le retour google  --- </br>";
+			if($debugVerbose) echo "</br> --- --- ---dépiller le retour ws  --- </br>";
 			foreach($googleGeocodeAPIDataArray as $keyL1 => $valueL1)
 			{
-				//echo "<br>".$keyL1." => ".var_dump($valueL1);
 				if($keyL1 == 'features')
 				{
-					//echo "<br> inside features ";
+					if($debugVerbose) echo "<br> inside features ";
 					foreach($valueL1 as $keyL2 => $valueL2)
 					{
-						//echo "<br> => features :".$keyL2." => ".var_dump($valueL2);
 						if($keyL2 == '0')
 						{
-							//echo "<br> inside 0 ";
+							if($debugVerbose) echo "<br> inside 0 ";
 							foreach($valueL2 as $keyL3 => $valueL3)
 							{
-								//echo "<br> => features :".$keyL3." => ".var_dump($valueL3);
 								if($keyL3 == 'properties')
 								{			
-									//echo "<br> inside properties ";
-									//var_dump($valueL3);									
+									if($debugVerbose) echo "<br> inside properties ";
+									if($debugVerbose) var_dump($valueL3);									
 									
 									if(is_array($valueL3))
 									{
-										$newStationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['postcode']." ".$valueL3['city'];
+										if( isset($valueL3['housenumber']) && isset($valueL3['street']) && isset($valueL3['postcode']) && isset($valueL3['city']))
+											$newStationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['postcode']." ".$valueL3['city'];
+										else
+											$newStationAdress = $valueL3['label'];
+										
 										$newStationAdress = mysqli_real_escape_string($link, $newStationAdress); //ici on à l'adresse
 										$quitter = 1;
 										break;
