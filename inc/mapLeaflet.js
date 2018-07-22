@@ -516,20 +516,103 @@ function displayHeatMap(j)
 	var heatMapData = [];
 	var maxValue = 0;
 	for(var i = 0; i< locations.length;i++)
+	{	
+		if((locations[i][3])[j][1]>maxValue)
+			maxValue = (locations[i][3])[j][1];	
+	}
+	
+	
+	for(var i = 0; i< locations.length;i++)
 	{
 		if((locations[i][3])[j][1]>0)
 		{	
-		if((locations[i][3])[j][1]>maxValue)
-			maxValue = (locations[i][3])[j][1];	
-		heatMapData.push([locations[i][1],locations[i][2],(locations[i][3])[j][1]]);
+			heatMapData.push([locations[i][1],locations[i][2],((locations[i][3])[j][1])/maxValue]);
 		}
 	}	
 	
 //heatMapData = heatMapData.map(function (p) { return [p[0], p[1]]; });
+var heat = L.heatLayer(heatMapData, {radius: 30, maxZoom: 10, minOpacity:0.05 }).addTo(mymap);
+}
+
+//js for mouvements map 2
+function getMvtMapData()
+{
+   var xmlhttp;
+	// compatible with IE7+, Firefox, Chrome, Opera, Safari
+	xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			callback(xmlhttp.responseText);
+		}
+	}
+	
+	xmlhttp.onreadystatechange = function(event) {
+		// XMLHttpRequest.DONE === 4
+		if (this.readyState === XMLHttpRequest.DONE) {
+			if (this.status === 200) {
+				console.log("Réponse reçue: %s", this.responseText);
+				locations = JSON.parse(	this.responseText);
+				displayMvtMap();
+				
+			} else {
+				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
+
+			}
+		}
+	};
+	
+	url='./api/stationList.api.php?v=heatmap';
+	xmlhttp.open("POST", url, true);
+	xmlhttp.send();			
+}	
 
 
-var heat = L.heatLayer(heatMapData, {radius: 40, max: maxValue, minOpacity:0.25 }).addTo(mymap);
-
+function displayMvtMap()
+{
+	for (i = 0; i < locations.length; i++) 
+	{ 
+		
+		// détermination de la valeur du marker 
+		nbBikeMarker = (parseInt(locations[i]['stationVelibExit'])).toString();
+		if(nbBikeMarker>100)
+			nbBikeMarker = 100;
+		
+		
+		if( nbBikeMarker == 0)
+		{
+			iconurl = './images/marker_'+'grey'+nbBikeMarker+'.png';			
+		} 			
+		else if( nbBikeMarker < 10)
+		{
+			iconurl = './images/marker_'+'green'+nbBikeMarker+'.png';
+		} 
+		else if( nbBikeMarker < 25)
+		{
+			iconurl = './images/marker_'+'yellow'+nbBikeMarker+'.png';	
+		}
+		else if( nbBikeMarker < 50)
+		{
+			iconurl = './images/marker_'+'orange'+nbBikeMarker+'.png';				
+		}
+		else if( nbBikeMarker < 75)
+		{
+			iconurl = './images/marker_'+'red'+nbBikeMarker+'.png';				
+		}			
+		else
+		{
+			iconurl = './images/marker_'+'purple'+nbBikeMarker+'.png';	
+		}		
+			
+		marker = L.marker([locations[i]['stationLat'], locations[i]['stationLon']], 
+		{
+			icon: L.icon({
+					iconUrl: iconurl,
+					iconAnchor: [11, 40],
+					popupAnchor:  [0, -41]
+				})
+		}).addTo(mymap);		
+		markers.push(marker);	
+	}
 
 }
 
