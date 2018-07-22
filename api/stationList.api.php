@@ -192,19 +192,23 @@
 			break;
 			case "heatmap" :
 			$query = "
-				SELECT 
-					vs.`stationCode`,
-					`stationStatDate`,
-					`stationVelibExit`,
-					`stationLat`,
-					`stationLon`
-				FROM 
-					`velib_station` vs, 
-					`velib_station_min_velib` vm
-				where 
-					vs.`stationCode` = vm.`stationCode`
-					and `stationHidden` = 0
-					and `stationStatDate` > DATE_ADD(NOW(), INTERVAL -1 DAY)
+				SELECT
+				  vs.`stationCode`,
+				  `stationStatDate`,
+				  (case when `stationVelibExit` is not null then `stationVelibExit` else 0 end ) as stationVelibExit ,
+				  `stationLat`,
+				  `stationLon`
+				FROM
+				  `velib_station` vs 
+				  left join 
+				  (
+					  select * 
+					  from `velib_station_min_velib`  
+					  where `stationStatDate` > DATE_ADD(NOW(), INTERVAL -1 DAY) 
+				   ) vm
+					on vs.`stationCode` = vm.`stationCode` 
+				WHERE  
+				  `stationHidden` = 0  
 				order by 1, 2 asc
 			";			
 			break;
@@ -218,6 +222,7 @@
 	else
 	{
 		//DB connect
+
 		$link = mysqlConnect();
 		
 		if (!$link) {
@@ -229,6 +234,7 @@
 		
 		if (isset($query))
 		{
+
 			//echo $query;
 			if ($result = mysqli_query($link, $query)) 
 			{
@@ -252,6 +258,11 @@
 					echo $newPage;					
 				}
 			}
+			else
+			{
+				//echo mysqli_error( $link );				
+			}
+		
 		}
 		else echo "empty";
 		
