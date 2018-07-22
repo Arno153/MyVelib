@@ -122,10 +122,10 @@
 	<div class="disclaimer">
 		* Stations Velib par nombre de mouvements enregistrés : 
 		Aucun: <img src="./images/marker_grey0.png" alt="Gris" width="12">, 
-		1 < <img src="./images/marker_green5.png" alt="Vert" width="12">
-		10 < <img src="./images/marker_yellow15.png" alt="Jaune" width="12">
-		25 < <img src="./images/marker_orange40.png" alt="Orange" width="12">
-		50 < <img src="./images/marker_red60.png" alt="Rouge" width="12">
+		1 < <img src="./images/marker_yellow5.png" alt="Jaune" width="12"> <
+		10 < <img src="./images/marker_orange20.png" alt="Orange" width="12"> <
+		25 < <img src="./images/marker_green50.png" alt="Vert" width="12"> <
+		50 < <img src="./images/marker_red60.png" alt="Rouge" width="12"> <
 		75 < <img src="./images/marker_purple80.png" alt="Violet" width="12">
 		<br><b>Les valeurs > à 100 sont affichées comme 100</b>
 		<br>
