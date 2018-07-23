@@ -11,13 +11,13 @@
 	  gtag('config', 'UA-113973828-2');
 	</script>
 
-	<title>Velib Paris - Carte officieuse des stations et velib disponibles</title>
+	<title>Velib Paris - Carte officieuse - Nombre de mouvement par station</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="description" content="Carte officieuse des stations du nouveau velib 2018: stations qui fonctionnent ou peut être pas, nombre de velos et VAE disponibles..." />
 	<meta name="keywords" content="velib, velib 2018, velib2018, velib 2, cartes, geolocalisation, gps, autour de moi, station, vélo, paris, fonctionnent, disponibles, HS, en panne" />
 	<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 	<meta name="robots" content="index, follow">
-	<link rel="canonical" href="https://velib.philibert.info/carte-des-stations.php" />
+	<link rel="canonical" href="https://velib.philibert.info/carte-des-mouvements.php" />
 	
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -52,10 +52,6 @@
 	<script src="./inc/Leaflet.Control.Custom.js"></script>
 	<!-- custom controle -- END -->
 	
-	<!-- heatmap -->
-	<script src="./inc/leaflet-heat.js"></script>
-	<!-- heatmap -- END -->
-	
   </head>
   <body>
 	<?php	
@@ -85,7 +81,6 @@
 		var locations = [];
 		var marker, i, iconurl;
 		var markers = [];
-		var HS;			
 
 		var zoomp = 13;
 		var latp = 48.86;
@@ -119,13 +114,24 @@
 
 		
 		//load stations to the map
-		getHeatmapData();
+		getMvtMapData();
 				
 		
     </script>
 	
 	<div class="disclaimer">
-		<b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
+		* Stations Velib par nombre de mouvements enregistrés : 
+		Aucun: <img src="./images/marker_grey0.png" alt="Gris" width="12">, 
+		1 < <img src="./images/marker_yellow5.png" alt="Jaune" width="12"> <
+		10 < <img src="./images/marker_orange20.png" alt="Orange" width="12"> <
+		25 < <img src="./images/marker_green50.png" alt="Vert" width="12"> <
+		50 < <img src="./images/marker_red60.png" alt="Rouge" width="12"> <
+		75 < <img src="./images/marker_purple80.png" alt="Violet" width="12">
+		<br>Stations non opérationnelles selon Velib<img src="./images/marker_greenx10.png" alt="Croix" width="12"> 
+		<br><b>Les valeurs > à 300 sont affichées comme 300</b>
+		<br>
+		<br><b> Donnée de la journée en cours quelque soit l'heure à laquelle vous consultez cette page!!!</b>
+		<br><b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
 		<br>Contact: <a href="https://twitter.com/arno152153"><img border="0" alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" width="15px" height="15px"></a>
 	</div>	
 	
