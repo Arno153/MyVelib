@@ -569,38 +569,44 @@ function getMvtMapData()
 
 function displayMvtMap()
 {
+	var HS;
+	
 	for (i = 0; i < locations.length; i++) 
 	{ 
 		
 		// détermination de la valeur du marker 
 		nbBikeMarker = (parseInt(locations[i]['stationVelibExit'])).toString();
-		if(nbBikeMarker>100)
-			nbBikeMarker = 100;
+		if(nbBikeMarker>300)
+			nbBikeMarker = 300;
 		
+		if(locations[i]['stationState'] =='Operative')
+			HS = "";
+		else
+			HS = "x"
 		
 		if( nbBikeMarker == 0)
 		{
-			iconurl = './images/marker_'+'grey'+nbBikeMarker+'.png';			
+			iconurl = './images/marker_'+'grey'+HS+nbBikeMarker+'.png';			
 		} 			
 		else if( nbBikeMarker < 10)
 		{
-			iconurl = './images/marker_'+'yellow'+nbBikeMarker+'.png';
+			iconurl = './images/marker_'+'yellow'+HS+nbBikeMarker+'.png';
 		} 
 		else if( nbBikeMarker < 25)
 		{
-			iconurl = './images/marker_'+'orange'+nbBikeMarker+'.png';	
+			iconurl = './images/marker_'+'orange'+HS+nbBikeMarker+'.png';	
 		}
 		else if( nbBikeMarker < 50)
 		{
-			iconurl = './images/marker_'+'green'+nbBikeMarker+'.png';				
+			iconurl = './images/marker_'+'green'+HS+nbBikeMarker+'.png';				
 		}
 		else if( nbBikeMarker < 75)
 		{
-			iconurl = './images/marker_'+'red'+nbBikeMarker+'.png';				
+			iconurl = './images/marker_'+'red'+HS+nbBikeMarker+'.png';				
 		}			
 		else
 		{
-			iconurl = './images/marker_'+'purple'+nbBikeMarker+'.png';	
+			iconurl = './images/marker_'+'purple'+HS+nbBikeMarker+'.png';	
 		}		
 			
 		marker = L.marker([locations[i]['stationLat'], locations[i]['stationLon']], 

@@ -197,7 +197,8 @@
 				  `stationStatDate`,
 				  (case when `stationVelibExit` is not null then `stationVelibExit` else 0 end ) as stationVelibExit ,
 				  `stationLat`,
-				  `stationLon`
+				  `stationLon`,
+				  `stationState`
 				FROM
 				  `velib_station` vs 
 				  left join 
@@ -217,6 +218,7 @@
 	if(isCacheValid("stationList.api.".$version."-".$dureeEstimation.".json"))
 	{
 		//load from cach
+		//echo "load from cache";
 		getPageFromCache("stationList.api.".$version."-".$dureeEstimation.".json");
 	}
 	else
