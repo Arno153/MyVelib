@@ -205,7 +205,7 @@
 				  (
 					  select * 
 					  from `velib_station_min_velib`  
-					  where `stationStatDate` > DATE_ADD(NOW(), INTERVAL -1 DAY) 
+					  where `stationStatDate` between DATE_ADD(NOW(), INTERVAL -'$dureeEstimation'-1 DAY) and DATE_ADD(NOW(), INTERVAL -'$dureeEstimation' DAY)
 				   ) vm
 					on vs.`stationCode` = vm.`stationCode` 
 				WHERE  

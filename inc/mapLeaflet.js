@@ -534,8 +534,8 @@ function displayHeatMap(j)
 var heat = L.heatLayer(heatMapData, {radius: 30, maxZoom: 10, minOpacity:0.05 }).addTo(mymap);
 }
 
-//js for mouvements map 2
-function getMvtMapData()
+//js for mouvements map  
+function getMvtMapData(mvtJmN)
 {
    var xmlhttp;
 	// compatible with IE7+, Firefox, Chrome, Opera, Safari
@@ -561,7 +561,7 @@ function getMvtMapData()
 		}
 	};
 	
-	url='./api/stationList.api.php?v=heatmap';
+	url='./api/stationList.api.php?v=heatmap&d='+mvtJmN;
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send();			
 }	
@@ -570,6 +570,7 @@ function getMvtMapData()
 function displayMvtMap()
 {
 	var HS;
+	removeMarkersToMap();
 	
 	for (i = 0; i < locations.length; i++) 
 	{ 

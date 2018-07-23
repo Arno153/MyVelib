@@ -49,7 +49,10 @@
 	<!-- full screen END-->
 	
 	<!-- custom controle -- refresh and toggle button -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">	
 	<script src="./inc/Leaflet.Control.Custom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
 	<!-- custom controle -- END -->
 	
   </head>
@@ -85,6 +88,8 @@
 		var zoomp = 13;
 		var latp = 48.86;
 		var lonp = 2.34;
+		
+		var mvtDate = 0;
 
 		
 		// initiate leaflet map
@@ -95,6 +100,28 @@
 		})
 		// add zoomControl
 		L.control.zoom({ position: 'topright' }).addTo(mymap);
+		
+		// create a cutom control to refresh data (display only in fullscreen mode)		
+		var cc = L.control.custom({
+							position: 'topleft',
+							title: 'Rafraichir',
+							content : '<a class="leaflet-bar-part leaflet-bar-part-single" id="ReloadData">'+
+									  '    <i class="fa fa-refresh"></i> '+
+									  '</a>',
+							classes : 'leaflet-control-locate leaflet-bar leaflet-control',
+							style   :
+							{
+								padding: '0px',
+							},
+							events:
+								{
+									click: function(data)
+									{
+										getMvtMapData(mvtDate);									
+									},
+								}
+						})
+						.addTo(mymap);
 		
 		// add full screen control
 		mymap.addControl(new L.Control.Fullscreen());
@@ -114,10 +141,40 @@
 
 		
 		//load stations to the map
-		getMvtMapData();
+		getMvtMapData(mvtDate);
+
+
+		// slider management
+		var cc2 = L.control.custom({
+							position: 'bottomleft',
+							title: 'switch',
+							content : 
+								'<div class="value">J</div><input type="range" min="0" max="10" step="1" value="0">',
+							style   :
+							{
+								padding: '0px',
+							}
+						})
+						.addTo(mymap);		
 				
+		var elem = document.querySelector('input[type="range"]');
+
+		var rangeValue = function(){
+		  var newValue = elem.value;
+		  mvtDate = newValue;
+		  getMvtMapData(mvtDate);
+		  if(elem.value==0)
+			  newValue = "J";
+		  else newValue = "J-"+newValue;
+		  var target = document.querySelector('.value');
+		  target.innerHTML = newValue;
+		}
+
+		elem.addEventListener("input", rangeValue);
+		
 		
     </script>
+	
 	
 	<div class="disclaimer">
 		* Stations Velib par nombre de mouvements enregistrés : 
