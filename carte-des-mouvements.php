@@ -159,7 +159,7 @@
 				
 		var elem = document.querySelector('input[type="range"]');
 
-		var rangeValue = function(){
+		var rangeValue = debounce(function(){
 		  var newValue = elem.value;
 		  mvtDate = newValue;
 		  getMvtMapData(mvtDate);
@@ -170,11 +170,9 @@
 		  else newValue = "J-"+newValue;
 		  var target = document.querySelector('.value');
 		  target.innerHTML = newValue;
-		}
+		},300);
 
-		elem.addEventListener("input", rangeValue);
-		
-		
+		elem.addEventListener("input", rangeValue);		
     </script>
 	
 	
