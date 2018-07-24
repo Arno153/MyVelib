@@ -21,12 +21,10 @@
 		$dureeEstimation = stripslashes($dureeEstimation);		
 		$dureeEstimation = trim($dureeEstimation);
 		if(!is_numeric($dureeEstimation))
-			$dureeEstimation = 3;
-		if($dureeEstimation ==0)
-			$dureeEstimation = 3;
+			$dureeEstimation = 0;
 	}
 	else {
-		$dureeEstimation = 3;
+		$dureeEstimation = 0;
 	}	
 	
 	
@@ -127,6 +125,7 @@
 			";
 			break;
 		case "web" :
+			if($dureeEstimation ==0) $dureeEstimation = 3;
 			$query = "
 				SELECT 
 					concat(`stationName`, '-', `velib_station`.`stationCode`) as station,					

@@ -149,7 +149,7 @@
 							position: 'bottomleft',
 							title: 'switch',
 							content : 
-								'<div class="value">J</div><input type="range" min="0" max="10" step="1" value="0">',
+								'<div class="value">Aujourd\'hui</div><input type="range" min="0" max="10" step="1" value="0">',
 							style   :
 							{
 								padding: '0px',
@@ -164,7 +164,9 @@
 		  mvtDate = newValue;
 		  getMvtMapData(mvtDate);
 		  if(elem.value==0)
-			  newValue = "J";
+			  newValue = "Aujourd'hui";
+		  else if(elem.value==1)
+			  newValue = "Hier";
 		  else newValue = "J-"+newValue;
 		  var target = document.querySelector('.value');
 		  target.innerHTML = newValue;
