@@ -154,6 +154,13 @@ if($debugVelibRawData)
 	var_dump($VelibDataArray);
 }
 
+if(!is_array($VelibDataArray))
+{
+	echo "<br> Retour inattendu de l'api Velib";
+	error_log( date("Y-m-d H:i:s")." - Retour inattendu de l'api Velib");
+	exit;
+}
+
 // update log
 // 0 : 
 $logstring = "";
