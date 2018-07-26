@@ -1138,10 +1138,63 @@ if(!mysqli_query($link, $r))
 	//echo $r;
 }
 
-
 echo "</br>data updated";
-//mysqli_close($link);
+
+// mise en cache des données pour l'api dans la session sql du parser pour reduire le nbr de connexions sql
+include "./../inc/sqlQuery.inc.php";
+$query = getapiQuery_web(3);	
+if ($result = mysqli_query($link, $query)) 
+{
+	if (mysqli_num_rows($result)>0)
+	{
+		$n = 1;
+		$size = mysqli_num_rows($result);
+		$resultArray;
+
+		while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
+		{
+			$resultArray[]=$row;
+			$n = $n+1;			
+		}	
+
+		ob_start();
+		echo json_encode($resultArray, JSON_HEX_APOS);
+		$newPage = ob_get_contents();
+		updatePageInCache("stationList.api."."web"."-"."3".".json", $newPage);
+		ob_end_clean();
+		
+		error_log( date("Y-m-d H:i:s")." - données d'api mise en cache par le parser - v="."web"." d=3");
+	}
+}
+
+$query = getapiQuery_web(2);	
+if ($result = mysqli_query($link, $query)) 
+{
+	if (mysqli_num_rows($result)>0)
+	{
+		$n = 1;
+		$size = mysqli_num_rows($result);
+		$resultArray;
+
+		while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
+		{
+			$resultArray[]=$row;
+			$n = $n+1;			
+		}	
+
+		ob_start();
+		echo json_encode($resultArray, JSON_HEX_APOS);
+		$newPage = ob_get_contents();
+		updatePageInCache("stationList.api."."web"."-"."2".".json", $newPage);
+		ob_end_clean();
+		
+		error_log( date("Y-m-d H:i:s")." - données d'api mise en cache par le parser - v="."web"." d=2");
+	}
+}
+
+
 mysqlClose($link);
+InvalidCache();
 
 // 3 : opérations sur le fichier...
 if(fputs($openLogFile, $logstring)===FALSE)
@@ -1150,7 +1203,7 @@ echo("write log error");
 // 4 : quand on a fini de l'utiliser, on ferme le fichier
 fclose($openLogFile);
 
-InvalidCache();
+
 ?>
 
 </body>
