@@ -167,8 +167,8 @@
 							while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
 								{
 									echo "<TR>";	
-									echo "<TD>".($row["velibs"]-$row["velibs_overflow"])." ( + Park+: ".$row["velibs_overflow"].")<br> ( Max: ".$row["velibs_max"].")</TD>";	
-									echo "<TD>".($row["VAE"]-$row["VAE_overflow"])." ( + Park+: ".$row["VAE_overflow"].")<br> ( Max: ".$row["VAE_Max"].")</TD>"; 
+									echo "<TD>".($row["velibs"]-$row["velibs_overflow"])." ( + Park+: ".$row["velibs_overflow"].")<br> ( Max: ".$row["velibs_max"].")<br> (Max depuis 01/07: ".$row["velibs_max_072018"].")</TD>";	
+									echo "<TD>".($row["VAE"]-$row["VAE_overflow"])." ( + Park+: ".$row["VAE_overflow"].")<br> ( Max: ".$row["VAE_Max"].")<br> (Max depuis 01/07: ".$row["VAE_Max_072018"].")</TD>"; 
 									echo "</TR>";	
 								}				
 						}

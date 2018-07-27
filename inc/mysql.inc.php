@@ -233,8 +233,10 @@
 		"select 
 			(SELECT current_value FROM `velib_network` WHERE `network_key` = 'velib_nbr') velibs,
 			(SELECT max_value FROM `velib_network` WHERE `network_key` = 'velib_nbr') velibs_max,
+			(SELECT max_value FROM `velib_network` WHERE `network_key` = 'velib_nbr2') velibs_max_072018,
 			(SELECT current_value FROM `velib_network` WHERE `network_key` = 'evelib_nbr') VAE,
 			(SELECT max_value FROM `velib_network` WHERE `network_key` = 'evelib_nbr') VAE_Max,
+			(SELECT max_value FROM `velib_network` WHERE `network_key` = 'evelib_nbr2') VAE_Max_072018,
 			(SELECT current_value FROM `velib_network` WHERE `network_key` = 'velib_nbr_overflow') velibs_overflow,
 			(SELECT current_value FROM `velib_network` WHERE `network_key` = 'evelib_nbr_overflow') VAE_overflow			
 		from `velib_network`

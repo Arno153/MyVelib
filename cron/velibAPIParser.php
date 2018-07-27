@@ -1108,6 +1108,19 @@ if(!mysqli_query($link, $r))
 	//echo $r;
 }
 
+// maj nbr velib en stations depuis le 01/07
+$r = 
+"UPDATE `velib_network` 
+SET 
+	`Current_Value` = (select sum(stationNbBike)+sum(stationNbBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ), 
+	`Max_Value` = GREATEST(Max_Value,(select sum(stationNbBike)+sum(stationNbBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ) ) 
+WHERE `network_key` = 'velib_nbr2' ";
+if(!mysqli_query($link, $r))
+{
+	printf("Errormessage: %s\n", mysqli_error($link));
+	//echo $r;
+}
+
 // maj nbr velib VAE en stations
 $r = 
 "UPDATE `velib_network` 
@@ -1115,6 +1128,19 @@ SET
 	`Current_Value` = (select sum(stationNbEBike)+sum(stationNbEBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ), 
 	`Max_Value` = GREATEST(Max_Value,(select sum(stationNbEBike)+sum(stationNbEBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ) ) 
 WHERE `network_key` = 'evelib_nbr' ";
+if(!mysqli_query($link, $r))
+{
+	printf("Errormessage: %s\n", mysqli_error($link));
+	//echo $r;
+}
+
+// maj nbr velib VAE en stations depuis le 01/07
+$r = 
+"UPDATE `velib_network` 
+SET 
+	`Current_Value` = (select sum(stationNbEBike)+sum(stationNbEBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ), 
+	`Max_Value` = GREATEST(Max_Value,(select sum(stationNbEBike)+sum(stationNbEBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ) ) 
+WHERE `network_key` = 'evelib_nbr2' ";
 if(!mysqli_query($link, $r))
 {
 	printf("Errormessage: %s\n", mysqli_error($link));
