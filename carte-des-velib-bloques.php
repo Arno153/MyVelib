@@ -11,7 +11,7 @@
 	  gtag('config', 'UA-113973828-2');
 	</script>
 
-	<title>Velib Paris - Carte officieuse des stations et velib disponibles</title>
+	<title>Velib Paris - Carte officieuse des stations et velib bloqués</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="description" content="Carte officieuse des stations du nouveau velib 2018: stations qui fonctionnent ou peut être pas, nombre de velos et VAE disponibles..." />
 	<meta name="keywords" content="velib, velib 2018, velib2018, velib 2, cartes, geolocalisation, gps, autour de moi, station, vélo, paris, fonctionnent, disponibles, HS, en panne" />
