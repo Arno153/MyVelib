@@ -1196,7 +1196,7 @@ if ($result = mysqli_query($link, $query))
 		updatePageInCache("stationList.api."."web"."-"."3".".json", $newPage);
 		ob_end_clean();
 		
-		error_log( date("Y-m-d H:i:s")." - données d'api mise en cache par le parser - v="."web"." d=3");
+		//error_log( date("Y-m-d H:i:s")." - données d'api mise en cache par le parser - v="."web"." d=3");
 	}
 }
 
@@ -1221,7 +1221,7 @@ if ($result = mysqli_query($link, $query))
 		updatePageInCache("stationList.api."."web"."-"."2".".json", $newPage);
 		ob_end_clean();
 		
-		error_log( date("Y-m-d H:i:s")." - données d'api mise en cache par le parser - v="."web"." d=2");
+		//error_log( date("Y-m-d H:i:s")." - données d'api mise en cache par le parser - v="."web"." d=2");
 	}
 }
 

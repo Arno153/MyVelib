@@ -140,8 +140,8 @@
 		//echo "load from cache";
 		getPageFromCache("stationList.api.".$version."-".$dureeEstimation.".json");
 		
-		if($version=="web")
-			error_log( date("Y-m-d H:i:s")." - données d'api obtenue depuis le cache - v=".$version." d=".$dureeEstimation);
+		//if($version=="web")
+			//error_log( date("Y-m-d H:i:s")." - données d'api obtenue depuis le cache - v=".$version." d=".$dureeEstimation);
 	}
 	else
 	{
@@ -181,8 +181,8 @@
 					ob_end_clean(); 
 					echo $newPage;	
 
-					if($version=="web")
-						error_log( date("Y-m-d H:i:s")." - données d'api obtenue depuis la base - v=".$version." d=".$dureeEstimation);
+					//if($version=="web")
+						//error_log( date("Y-m-d H:i:s")." - données d'api obtenue depuis la base - v=".$version." d=".$dureeEstimation);
 				}
 			}
 			else
