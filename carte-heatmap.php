@@ -81,7 +81,9 @@
 		var locations = [];
 		var marker, i, iconurl;
 		var markers = [];
-		var HS;			
+		var HS;		
+
+		var mvtDate = 0;		
 
 		var zoomp = 13;
 		var latp = 48.86;
@@ -115,12 +117,43 @@
 
 		
 		//load stations to the map
-		getHeatmapData();
-				
+		getHeatmapData(mvtDate);
 		
+		// slider management
+		var cc2 = L.control.custom({
+							position: 'bottomleft',
+							title: 'switch',
+							content : 
+								'<div class="value">Aujourd\'hui</div><input type="range" min="0" max="10" step="1" value="0">',
+							style   :
+							{
+								padding: '0px',
+							}
+						})
+						.addTo(mymap);		
+				
+		var elem = document.querySelector('input[type="range"]');
+
+		var rangeValue = debounce(function(){
+		  var newValue = elem.value;
+		  mvtDate = newValue;
+		  getHeatmapData(mvtDate);
+		  if(elem.value==0)
+			  newValue = "Aujourd'hui";
+		  else if(elem.value==1)
+			  newValue = "Hier";
+		  else newValue = "J-"+newValue;
+		  var target = document.querySelector('.value');
+		  target.innerHTML = newValue;
+		},300);
+				
+		elem.addEventListener("input", rangeValue);	
     </script>
 	
 	<div class="disclaimer">
+		Estimation de la densité de mouvement des velibs basée sur le nombre de retraits identifiés pour chaque station. 
+		<br><b> Donnée de la journée en cours quelque soit l'heure à laquelle vous consultez cette page!!!</b>
+	
 		<b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
 		<br>Contact: <a href="https://twitter.com/arno152153"><img border="0" alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" width="15px" height="15px"></a>
 	</div>	

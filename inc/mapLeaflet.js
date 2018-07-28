@@ -485,7 +485,7 @@ function addMarkersToMap(estimatedVelibNumber, bloqueTF)
 
 
 //js for mouvements heatmap
-function getHeatmapData()
+function getHeatmapData(mvtJmN)
 {
    var xmlhttp;
 	// compatible with IE7+, Firefox, Chrome, Opera, Safari
@@ -502,8 +502,8 @@ function getHeatmapData()
 			if (this.status === 200) {
 				console.log("Réponse reçue: %s", this.responseText);
 				//var jsonDataArray = JSON.parse(	this.responseText);
-				buildHeatMapDataArray(JSON.parse(	this.responseText));
-				displayHeatMap(0);
+				locations = JSON.parse(	this.responseText);;
+				displayHeatMap();
 				
 			} else {
 				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
@@ -512,49 +512,28 @@ function getHeatmapData()
 		}
 	};
 	
-	url='./api/stationList.api.php?v=heatmap';
+	url='./api/stationList.api.php?v=heatmap&d='+mvtJmN;
 	xmlhttp.open("POST", url, true);
 	xmlhttp.send();			
 }	
 
-function buildHeatMapDataArray(jsonDataArray)
-{
-	for(var i = 0; i< jsonDataArray.length;i++)
-	{
-		var stationCode = jsonDataArray[i]['stationCode'];
-		var stationLat = jsonDataArray[i]['stationLat'];
-		var stationLon = jsonDataArray[i]['stationLon'];
-		var dateMvt = [];
-		
-		do
-		{
-			dateMvt.push([jsonDataArray[i]['stationStatDate'],parseInt(jsonDataArray[i]['stationVelibExit'])]);
-			i++;
-		}
-		while (i< jsonDataArray.length && jsonDataArray[i]['stationCode'] == jsonDataArray[i-1]['stationCode']) 
-		
-		i=i-1;
-		locations.push([stationCode, stationLat, stationLon, dateMvt ]);	
-	}	
-}
 
-function displayHeatMap(j)
+function displayHeatMap()
 {
-
 	var heatMapData = [];
 	var maxValue = 0;
 	for(var i = 0; i< locations.length;i++)
 	{	
-		if((locations[i][3])[j][1]>maxValue)
-			maxValue = (locations[i][3])[j][1];	
+		if(parseInt(locations[i]['stationVelibExit'])>maxValue)
+			maxValue = parseInt(locations[i]['stationVelibExit']);	
 	}
 	
 	
 	for(var i = 0; i< locations.length;i++)
 	{
-		if((locations[i][3])[j][1]>0)
+		if(parseInt(locations[i]['stationVelibExit'])>0)
 		{	
-			heatMapData.push([locations[i][1],locations[i][2],((locations[i][3])[j][1])/maxValue]);
+			heatMapData.push([locations[i]['stationLat'], locations[i]['stationLon'],(locations[i]['stationVelibExit'])/maxValue]);
 		}
 	}	
 	
