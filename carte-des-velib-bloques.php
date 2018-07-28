@@ -270,7 +270,7 @@
     </script>
 	
 	<div class="disclaimer">
-		* Stations Velib suivant le nombre de velib bloqués <img src="./images/marker_green0.png" alt="Vert" width="12"><1
+		* Stations Velib suivant le nombre de velib posiblement bloqués <img src="./images/marker_green0.png" alt="Vert" width="12"><1
 		<<img src="./images/marker_yellow0.png" alt="Jaune" width="12"><4
 		<<img src="./images/marker_orange0.png" alt="Orange" width="12"><8
 		<<img src="./images/marker_red0.png" alt="Rouge" width="12">
@@ -282,7 +282,7 @@
 					- <img src="./images/marker_u_green0.png" alt="inconnue" width="12"> Inconnue
 		
 		
-		<br>* Le mode "Estimé" essaye d'évaluer le nombre réel de velib disponnible dans une stations en soustrayant aux données officielles le nombre min de velib enregitré par la station sur les 2 ou 3 derniers jours
+		<br>* Cette carte essaye d'évaluer le nombre de velib bloqués dans une stations en se basant sur nombre min de velib enregitré par la station sur les 2 ou 3 derniers jours
 		<br>* L'absence de mouvement ne présume pas du dysfonctionnement d'une station, l'inverse est également vrai... 
 		<b>Tous les symboles de la V-BOX <a href="http://blog.velib-metropole.fr/wp-content/uploads/2018/02/PICTOS_LISTE_VELIB-.pdf" target="_blank">chez velib metropole</a> </b>
 		<br>* <b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
