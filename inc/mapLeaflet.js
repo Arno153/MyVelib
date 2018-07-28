@@ -1,10 +1,11 @@
-function refresh(estimatedVelibNumber)
+function refresh(estimatedVelibNumber, bloqueTF)
 {
+	bloqueTF = typeof bloqueTF !== 'undefined' ?  bloqueTF : 0;
 	//var varUrl = 'carte-des-stations.php?lat='+map.getCenter().lat()+'&lon='+map.getCenter().lng()+'&zoom='+map.getZoom();		
 	//window.location.href=varUrl;
 	removeMarkersToMap();
 	//addMarkersToMap();
-	getStations(estimatedVelibNumber);
+	getStations(estimatedVelibNumber, bloqueTF );
 	document.getElementById('gads').contentDocument.location.reload(true);
 }
 
@@ -95,8 +96,10 @@ function handleLocationError(browserHasGeolocation, infoWindow2, pos) {
 	infoWindow2.open(map);
   }
 
-function getStations(estimatedVelibNumber)
+function getStations(estimatedVelibNumber,bloqueTF)
 {
+   bloqueTF = typeof bloqueTF !== 'undefined' ?  bloqueTF : 0;
+   
    var xmlhttp;
 	// compatible with IE7+, Firefox, Chrome, Opera, Safari
 	xmlhttp = new XMLHttpRequest();
@@ -112,7 +115,7 @@ function getStations(estimatedVelibNumber)
 			if (this.status === 200) {
 				console.log("Réponse reçue: %s", this.responseText);
 				locations = JSON.parse(	this.responseText);
-				addMarkersToMap(estimatedVelibNumber);
+				addMarkersToMap(estimatedVelibNumber, bloqueTF);
 				
 			} else {
 				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
@@ -267,7 +270,7 @@ function removeMarkersToMap()
 
 }
 
-function addMarkersToMap(estimatedVelibNumber)
+function addMarkersToMap(estimatedVelibNumber, bloqueTF)
 {
 	for (i = 0; i < locations.length; i++) 
 	{ 
@@ -300,32 +303,57 @@ function addMarkersToMap(estimatedVelibNumber)
 		}
 		else
 		{
-			nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinVelibNDay'])).toString();
+			if(bloqueTF ==1)
+				nbBikeMarker = Math.max(0,parseInt(locations[i]['stationMinVelibNDay'])).toString();
+			else
+				nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinVelibNDay'])).toString();
 		}
 		
-		if( locations[i]['stationState']!='Operative')
+		if(bloqueTF ==1)
 		{
-			iconurl = './images/marker_'+pow+'grey'+nbBikeMarker+'.png'				
-		} 			
-		else if(locations[i]['hourLastExistDiff']<1)
-		{
-			iconurl = './images/marker_'+pow+'green'+HS+nbBikeMarker+'.png'				
-		} 
-		else if(locations[i]['hourLastExistDiff']<3||(locations[i]['hourLastExistDiff']<4&&locations[i]['hourdiff']<2))
-		{
-			iconurl = './images/marker_'+pow+'yellow'+HS+nbBikeMarker+'.png'			
-		}
-		else if(locations[i]['hourLastExistDiff']<12||(locations[i]['hourLastExistDiff']<16&&locations[i]['hourdiff']<8))
-		{
-			iconurl = './images/marker_'+pow+'orange'+HS+nbBikeMarker+'.png'
-		}
-		else if(locations[i]['hourLastExistDiff']<24||(locations[i]['hourLastExistDiff']<32&&locations[i]['hourdiff']<16))
-		{
-			iconurl = './images/marker_'+pow+'red'+HS+nbBikeMarker+'.png'
-		}			
+			if(nbBikeMarker<1)
+			{
+				iconurl = './images/marker_'+pow+'green'+HS+nbBikeMarker+'.png'				
+			} 
+			else if(nbBikeMarker < 4)
+			{
+				iconurl = './images/marker_'+pow+'yellow'+HS+nbBikeMarker+'.png'			
+			}
+			else if(nbBikeMarker < 8)
+			{
+				iconurl = './images/marker_'+pow+'orange'+HS+nbBikeMarker+'.png'
+			}
+			else
+			{
+				iconurl = './images/marker_'+pow+'red'+HS+nbBikeMarker+'.png'
+			}			
+		}		
 		else
 		{
-			iconurl = './images/marker_'+pow+'purple'+HS+nbBikeMarker+'.png'
+			if( locations[i]['stationState']!='Operative')
+			{
+				iconurl = './images/marker_'+pow+'grey'+nbBikeMarker+'.png'				
+			} 			
+			else if(locations[i]['hourLastExistDiff']<1)
+			{
+				iconurl = './images/marker_'+pow+'green'+HS+nbBikeMarker+'.png'				
+			} 
+			else if(locations[i]['hourLastExistDiff']<3||(locations[i]['hourLastExistDiff']<4&&locations[i]['hourdiff']<2))
+			{
+				iconurl = './images/marker_'+pow+'yellow'+HS+nbBikeMarker+'.png'			
+			}
+			else if(locations[i]['hourLastExistDiff']<12||(locations[i]['hourLastExistDiff']<16&&locations[i]['hourdiff']<8))
+			{
+				iconurl = './images/marker_'+pow+'orange'+HS+nbBikeMarker+'.png'
+			}
+			else if(locations[i]['hourLastExistDiff']<24||(locations[i]['hourLastExistDiff']<32&&locations[i]['hourdiff']<16))
+			{
+				iconurl = './images/marker_'+pow+'red'+HS+nbBikeMarker+'.png'
+			}			
+			else
+			{
+				iconurl = './images/marker_'+pow+'purple'+HS+nbBikeMarker+'.png'
+			}	
 		}		
 		
 

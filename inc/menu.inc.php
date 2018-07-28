@@ -8,8 +8,9 @@
      <li class="has-sub"><span class="submenu-button"></span><a href="#">Plus</a>
         <ul>
            <li><a href="https://velib.philibert.info/liste-des-stations.php"><i class="fa fa-fw fa-bars"></i> Liste des stations</a></li>
-           <li><a href="https://velib.philibert.info/carte-des-mouvements.php"><i class="fa fa-fw fa-map"></i> Carte des mouvements</a></li>
+           <li><a href="https://velib.philibert.info/carte-des-mouvements.php"><i class="fa fa-fw fa-map-o"></i> Carte des mouvements</a></li>
            <li><a href="https://velib.philibert.info/carte-heatmap.php"><i class="fa fa-fw fa-map-o"></i> Heat Map</a></li>
+		   <li><a href="https://velib.philibert.info/carte-des-velib-bloques.php"><i class="fa fa-fw fa-map-o"></i> Carte des velib bloqués</a></li>
         </ul>
      </li>
   </ul>
