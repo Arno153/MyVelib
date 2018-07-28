@@ -6,28 +6,16 @@ body
 .bg-light {
     background-color: #f8f9fa !important;
 }
-.navbar {
-    position: relative;
-    align-items: center;
-    padding: 0.5rem 1rem;
-}
 
-.nav-link {
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-	text-transform: uppercase;
-	font-size: 1.075em;
-	font-family:"Open Sans", verdana, arial, sans-serif !important;	
-}
-
-.nav-link, .nav-link.active {
-    color: rgba(0,0,0,0.9);
-}
 
 .nav-refresh {
     float: right;
     padding-right: 0.5rem;
     padding-left: 0.5rem;
+	margin-top: -30px;
+	color: #dddddd;
+	position: relative;
+	z-index: 50000;
 }
 
 .left-widget {
@@ -505,6 +493,15 @@ input[type="range"]::-webkit-slider-thumb {
 	{
 		padding-bottom: 35px
 	}
+}
+
+@media (max-width: 750px)
+{
+.nav-refresh {
+	margin-top: 0px !important;
+	color: #545454 !important;
+}
+	
 }
 
 .wvButton

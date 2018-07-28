@@ -74,36 +74,29 @@
 			</div>	
 			";
 	}
-		
-	?>
-	<nav class="navbar bg-light">
-		<b>
-		  <a class="nav-link" href="./">Accueil</a>
-		  <a class="nav-link" href="./carte-des-stations.php">Carte</a>
-		  <a class="nav-link" href="./liste-des-stations.php">Liste des stations</a>
-		</b>  
-		
-		<?php	
-			echo "<div class='nav-refresh'>(Dernière collecte: ";
-			if($cacheValide == true)
-				getPageFromCache('lastUpdateText');
-			else
-			{
-				ob_start();
-				echo getLastUpdate($link);
-				$newPage = ob_get_contents();
-				updatePageInCache('lastUpdateText', $newPage);
-				ob_end_clean(); 
-				echo $newPage;			
-			}
-			echo ")";			
-		?>	
+	
+	include "./inc/menu.inc.php";
+	
+	echo "<div class='nav-refresh'>(Dernière collecte: ";
+	if($cacheValide == true)
+		getPageFromCache('lastUpdateText');
+	else
+	{
+		ob_start();
+		echo getLastUpdate($link);
+		$newPage = ob_get_contents();
+		updatePageInCache('lastUpdateText', $newPage);
+		ob_end_clean(); 
+		echo $newPage;			
+	}
+	echo ")";			
+?>	
 	Contact: 	
 		<a href="https://twitter.com/arno152153">
 			<img border="0" alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" width="15px" height="15px">
 		</a>
 	</div>
-    </nav>
+
 
 	<div class="left-widget left200">	
 		<h1 class="widget-title">Nombre de stations</h1>

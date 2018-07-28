@@ -42,7 +42,7 @@
 	<!-- Base MAP END-->
 	
 	<!-- LOCATION CONTROLE -->   
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
 
 	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
@@ -78,14 +78,9 @@
 			</div>	
 			";
 	}
-		
+	include "./inc/menu.inc.php";	
 	?>
-	<nav class="navbar bg-light"><b>
-      <a class="nav-link" href="./">Accueil</a>
-	  <a class="nav-link" href="javascript:refresh(estimatedVelibNumber);">Carte</a>
-	  <a class="nav-link" href="./liste-des-stations.php">Liste des stations</a>
-    </b>
-	</nav>
+
     <div id="mapid"></div>
     <script type="text/javascript">		
 		var locations;

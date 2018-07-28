@@ -49,7 +49,7 @@
 	<!-- full screen END-->
 	
 	<!-- custom controle -- refresh and toggle button -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">	
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">	-->
 	<script src="./inc/Leaflet.Control.Custom.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	
@@ -72,13 +72,9 @@
 			";
 	}
 		
+	include "./inc/menu.inc.php";
 	?>
-	<nav class="navbar bg-light"><b>
-      <a class="nav-link" href="./">Accueil</a>
-	  <a class="nav-link" href="./carte-des-stations.php">Carte</a>
-	  <a class="nav-link" href="./liste-des-stations.php">Liste des stations</a>
-    </b>
-	</nav>
+
     <div id="mapid"></div>
     <script type="text/javascript">		
 		var locations = [];

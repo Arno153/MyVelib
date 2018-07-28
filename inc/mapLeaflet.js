@@ -570,6 +570,7 @@ function getMvtMapData(mvtJmN)
 function displayMvtMap()
 {
 	var HS;
+	document.getElementById('gads').contentDocument.location.reload(true);
 	removeMarkersToMap();
 	
 	for (i = 0; i < locations.length; i++) 
