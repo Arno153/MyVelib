@@ -1056,8 +1056,47 @@
 	</script>
 	
 	<div id="mypub">
-		<iframe id="gads" src="./inc/ads.inc.html" width="100%" height="600px" />  	
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		
+		<!-- velib3 -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:300px;height:600px"
+			 data-ad-client="ca-pub-4705968908052303"
+			 data-ad-slot="8893891084"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- velib -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:970px;height:250px"
+			 data-ad-client="ca-pub-4705968908052303"
+			 data-ad-slot="5109142449"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- velib4 -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:336px;height:280px"
+			 data-ad-client="ca-pub-4705968908052303"
+			 data-ad-slot="9256444048"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- velib4 -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:336px;height:280px"
+			 data-ad-client="ca-pub-4705968908052303"
+			 data-ad-slot="9256444048"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
 	</div>
 	
-	  </body>
+	</body>
 </html>
