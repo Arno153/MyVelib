@@ -179,13 +179,33 @@
 						if (mysqli_num_rows($result)>0)
 						{
 							while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
-								{
-									echo "<TR>";	
-									echo "<TD>".($row["estimatedVelibNumber"])." ( + Park+: ".$row["estimatedVelibNumberOverflow"].")</TD>";	
-									echo "</TR>";	
+								{									
+									$estimatedVelibNumber3D =$row["estimatedVelibNumber"];
+									$estimatedVelibNumberOverflow3D = $row["estimatedVelibNumberOverflow"];
 								}				
 						}
 				}
+				
+				if ($result = getEstimatedVelibCount2D($link)) 
+				{
+						if (mysqli_num_rows($result)>0)
+						{
+							while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
+								{									
+									$estimatedVelibNumber2D =$row["estimatedVelibNumber"];
+									$estimatedVelibNumberOverflow2D = $row["estimatedVelibNumberOverflow"];
+								}				
+						}
+				}				
+				
+				echo "<TR>";	
+				echo "
+						<TD>
+							Estimation sur 3J: ".$estimatedVelibNumber3D." ( + Park+: ".$estimatedVelibNumberOverflow3D.")<br>
+							Estimation sur 2J: ".$estimatedVelibNumber2D." ( + Park+: ".$estimatedVelibNumberOverflow2D.")
+						</TD>";	
+				echo "</TR>";	
+				
 		?>		
 		</TABLE>		
 		<?php
@@ -198,7 +218,7 @@
 		?>
 
 		<p class="notes">* les velib en cours d'utilisation ne sont pas comptés</p>		
-		<p class="notes">* le nombre estimé de velib est obtenu en soustrayant le nombre min de velib enregitré par chaque station sur les 3 derniers jours</p>	
+		<p class="notes">* le nombre estimé de velib est obtenu en soustrayant le nombre min de velib enregitré par chaque station sur les 2 / 3 derniers jours</p>	
 	</div>
 	
 	<div class="left-widget left360 col2">

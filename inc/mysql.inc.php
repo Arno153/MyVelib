@@ -286,6 +286,43 @@
 			return False;
 	}
 	
+	function getEstimatedVelibCount2D($link)
+	{
+		$query = 
+		"
+		SELECT
+          sum(`stationNbBike`         + `stationNbEBike` -        stationMinVelibNDay) as estimatedVelibNumber,
+          sum(`stationNbBikeOverflow` + `stationNbEBikeOverflow`- stationVelibMinVelibOverflow) as  estimatedVelibNumberOverflow
+		FROM
+          `velib_station`
+          LEFT JOIN
+                    (
+                             SELECT
+                                      `stationCode`                                                                      ,
+                                      MIN( `stationVelibMinVelib` - stationVelibMinVelibOverflow ) AS stationMinVelibNDay,
+                                      MIN(stationVelibMinVelibOverflow)                            AS stationVelibMinVelibOverflow
+                             FROM
+                                      `velib_station_min_velib`
+                             WHERE
+                                      1
+                                      AND `stationStatDate` > DATE_ADD(NOW(), INTERVAL -2 DAY)
+                             GROUP BY
+                                      `stationCode`
+                    )
+                    AS min_Velib
+                    ON
+                              min_Velib.`stationCode` = `velib_station`.`stationCode`
+		WHERE
+          `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
+          and stationHidden = 0
+		";
+		
+		if ($result = mysqli_query($link, $query)) 
+			return $result;
+		else	
+			return False;
+	}
+	
 	function getVelibNbrStats($link){
 	
 		$query = 
