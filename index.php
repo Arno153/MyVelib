@@ -218,7 +218,7 @@
 		?>
 
 		<p class="notes">* les velib en cours d'utilisation ne sont pas comptés</p>		
-		<p class="notes">* le nombre estimé de velib est obtenu en soustrayant le nombre min de velib enregitré par chaque station sur les 2 / 3 derniers jours</p>	
+		<p class="notes">* le nombre estimé de velib est obtenu en soustrayant le nombre min de velib enregistré par chaque station sur les 2 / 3 derniers jours</p>	
 	</div>
 	
 	<div class="left-widget left360 col2">
@@ -1039,9 +1039,6 @@
 		Les données utilisées proviennent de <a href="https://www.velib-metropole.fr" target="_blank">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.<br>
 		Si vous n'avez pas encore vu les tutoriels velib et la liste des symboles de la V-box un petit tour chez <a href="https://www.velib-metropole.fr/discover/tutorials" target="_blank"> velib metropole</a> pourrait vous éviter des problèmes...
 		<br> Tous les symboles de la V-BOX <a href="http://blog.velib-metropole.fr/wp-content/uploads/2018/03/PICTOS_LISTE_VELIB-19_02_18.pdf" target="_blank">encore chez velib metropole</a> 
-		<br><br>
-		J'aurai aimé que velib nous dise quelles stations sont fonctionnelles à l'instant T mais ce n'est pas le cas.<br>
-		Alors, à partir du parti pris simpliste, "une station dont les données ne changent pas ne marche pas", j'essaye de déterminer sur quelles stations on peut probablement (ne pas) compter.
 		<br><br>
 		Ces tableaux et cartes sont une interprétation des données proposées par vélib métropole en espérant ne pas les avoir trop déformées. 
 		<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Licence Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png"/></a>		
