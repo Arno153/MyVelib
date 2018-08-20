@@ -291,7 +291,7 @@
 					- <img src="./images/marker_u_green0.png" alt="inconnue" width="12"> Inconnue
 		
 		
-		<br>* Le mode "Estimé" essaye d'évaluer le nombre réel de velib disponnible dans une stations en soustrayant aux données officielles le nombre min de velib enregitré par la station sur les 2 ou 3 derniers jours
+		<br>* Le mode "Estimé" essaye d'évaluer le nombre réel de velib disponibles dans une station en soustrayant aux données officielles le nombre min de velib enregistré par la station sur les 2 ou 3 derniers jours
 		<br>* L'absence de mouvement ne présume pas du dysfonctionnement d'une station, l'inverse est également vrai... 
 		<b>Tous les symboles de la V-BOX <a href="http://blog.velib-metropole.fr/wp-content/uploads/2018/02/PICTOS_LISTE_VELIB-.pdf" target="_blank">chez velib metropole</a> </b>
 		<br>* <b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.

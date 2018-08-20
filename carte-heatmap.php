@@ -151,7 +151,7 @@
     </script>
 	
 	<div class="disclaimer">
-		Estimation de la densité de mouvement des velibs basée sur le nombre de retraits identifiés pour chaque station. 
+		Estimation de la densité de mouvements des velibs basée sur le nombre de retraits identifiés pour chaque station. 
 		<br><b> Donnée de la journée en cours quelque soit l'heure à laquelle vous consultez cette page!!!</b>
 	
 		<b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
