@@ -117,6 +117,20 @@ CREATE TABLE `velib_station_min_velib` (
   `updateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `velib_station_status`
+--
+
+DROP TABLE IF EXISTS `velib_station_status`;
+CREATE TABLE IF NOT EXISTS `velib_station_status` (
+  `id` int(11) NOT NULL,
+  `stationCode` varchar(10) COLLATE utf8_bin NOT NULL COMMENT 'code station api veli sans les 0 devant',
+  `stationState` varchar(50) COLLATE utf8_bin NOT NULL,
+  `stationStatusDate` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 --
 -- Index pour les tables exportées
 --
@@ -154,6 +168,13 @@ ALTER TABLE `velib_station`
 ALTER TABLE `velib_station_min_velib`
   ADD PRIMARY KEY (`stationCode`,`stationStatDate`);
 
+--
+-- Index pour la table `velib_station_status`
+--
+ALTER TABLE `velib_station_status`
+  ADD KEY `id` (`id`,`stationState`);  
+  
+  
 --
 -- AUTO_INCREMENT pour les tables exportées
 --

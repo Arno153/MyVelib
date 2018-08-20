@@ -566,6 +566,44 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 							error_log( date("Y-m-d H:i:s")." - erreur lors de la mise à jour de la station ".$stationCode);
 							printf("Errormessage: %s\n", mysqli_error($link));
 						}
+						
+						
+						if($stationState == $row["stationState"])
+						{
+							if($debugVerbose) echo "<br> Le status de la station n'a pas changé";					
+						}
+						else
+						{
+							$r = 
+								"
+									INSERT INTO `velib_station_status`
+									(
+										`id`,
+										`stationCode`,
+										`stationState`,
+										`stationStatusDate`
+									)
+									VALUES
+									(
+										'$row[id]',
+										'$row[stationCode]' ,
+										'$stationState' ,
+										now()			
+									)
+								";		
+									
+							if(!mysqli_query($link, $r))
+							{		
+								echo "<br>CreateStatusRow error";
+								printf("Errormessage: %s\n", mysqli_error($link));
+								if($debugVerbose) echo $r;
+							}	
+							else
+							{
+								if($debugVerbose) echo "<br> CreateStatusRow ok";
+							}							
+						}
+						
 					
 						// 2 : génération du log fichier
 						//$logstring = $logstring.date('H:i:s j/m/y').";".rtrim($r).";\r";
@@ -797,6 +835,38 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				{
 				printf ("New Record has id %d.\n", mysqli_insert_id($link));
 				}
+				
+
+				$r = 
+					"
+						INSERT INTO `velib_station_status`
+						(
+							`id`,
+							`stationCode`,
+							`stationState`,
+							`stationStatusDate`
+						)
+						VALUES
+						(
+							LAST_INSERT_ID(),
+							'$row[stationCode]' ,
+							'$stationState' ,
+							now()			
+						)
+					";		
+						
+				if(!mysqli_query($link, $r))
+				{		
+					echo "<br>CreateStatusRow error";
+					printf("Errormessage: %s\n", mysqli_error($link));
+					if($debugVerbose) echo $r;
+				}	
+				else
+				{
+					if($debugVerbose) echo "<br> CreateStatusRow ok";
+				}
+				
+			
 				
 				// 2 : génération du log
 				//$logstring = $logstring.date('H:i:s j/m/y').";".rtrim($r).";\r";
