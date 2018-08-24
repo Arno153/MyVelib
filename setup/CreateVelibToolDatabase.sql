@@ -26,6 +26,7 @@ CREATE TABLE `velib_activ_station_stat` (
   `nbStationUpdatedLAst6Hour` int(11) DEFAULT NULL,
   `nbStationAtThisDate` int(11) DEFAULT NULL,
   `nbrVelibExit` int(11) DEFAULT NULL,
+  `nbrEvelibExit` int(11) DEFAULT NULL,
   `networkNbBike` int(11) DEFAULT NULL,
   `networkNbBikeOverflow` int(11) DEFAULT NULL,
   `networkEstimatedNbBike` int(11) DEFAULT NULL,
@@ -117,6 +118,18 @@ CREATE TABLE `velib_station_min_velib` (
   `updateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+
+CREATE TABLE `velib_station_min_velib` (
+  `stationCode` varchar(10) COLLATE latin1_general_ci NOT NULL,
+  `stationStatDate` date NOT NULL,
+  `stationVelibMinVelib` int(11) NOT NULL,
+  `stationVelibMaxVelib` int(11) NOT NULL DEFAULT '0',
+  `stationVelibMinVelibOverflow` int(11) DEFAULT NULL,
+  `stationVelibMaxVelibOverflow` int(11) DEFAULT NULL,
+  `stationVelibExit` int(11) DEFAULT '0',
+  `stationEVelibExit` int(11) DEFAULT NULL,
+  `updateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- --------------------------------------------------------
 
 --

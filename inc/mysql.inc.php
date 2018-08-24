@@ -80,7 +80,8 @@
 		"
 			SELECT
 					 `date`,
-					 SUM(`nbrVelibExit`) nbLocation
+					 SUM(`nbrVelibExit`) nbLocation,
+					 SUM(`nbrEVelibExit`) nbLocationVAE
 			FROM
 					 `velib_activ_station_stat`
 			WHERE

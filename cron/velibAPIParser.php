@@ -624,7 +624,11 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 								max(0, $row['stationNbBike'] - $stationNbBike) + 
 								max(0, $row['stationNbBikeOverflow'] - $stationNbBikeOverflow) + 
 								max(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);
+
+						$stationEVelibExit = max(0, $row['stationNbEBike'] - $stationNbEBike) + 
+								max(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);								
 						
+						if($debugVerbose) echo "<br> stationVelibExit : $stationVelibExit dont VAE : $stationEVelibExit ";
 						
 						// Alimentation statistiques mvt de la station
 						$r = 
@@ -639,6 +643,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 									`stationVelibMinVelibOverflow`, 
 									`stationVelibMaxVelibOverflow`, 
 									`stationVelibExit`,
+									`stationEVelibExit`,
 									`updateDate`
 								) 
 							VALUES 
@@ -650,6 +655,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 									'$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ,
 									'$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ,	
 									'$stationVelibExit',
+									'$stationEVelibExit',
 									now()
 								) 
 							ON DUPLICATE KEY UPDATE 
@@ -660,6 +666,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 								stationVelibMinVelibOverflow = LEAST(stationVelibMinVelibOverflow, '$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ),
 								stationVelibMaxVelibOverflow = greatest(stationVelibMaxVelibOverflow, '$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ),	
 								stationVelibExit = stationVelibExit + '$stationVelibExit',								
+								stationEVelibExit = stationEVelibExit + '$stationEVelibExit',	
 								updateDate = now()
 						";
 						if($debugVerbose)

@@ -494,15 +494,40 @@
 					if($i%$nbcol==($nbcol-1))
 						echo '],';
 				}
-				echo "  type: 'scatter'}];";
+				echo "  type: 'scatter', name: 'Tous'},{";
+
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
 				
+					 ;
+					echo '"'.$tablo[$i]['nbLocationVAE'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo '],';
+				}
+				echo "  type: 'scatter', name: 'VAE'}];";				
+
+	
 				echo "
 				var layout = 
 				{ 
 					title: 'Nombre estimé d\'utilisations', 
 					paper_bgcolor: '#f8f9fa', 
 					plot_bgcolor: '#f8f9fa',					
-					showlegend: false,
+					showlegend: true,
 					margin: {
 								l: 30,
 								r: 20,
