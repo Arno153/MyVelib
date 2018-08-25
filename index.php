@@ -513,6 +513,30 @@
 					echo 'y: [';
 				
 					 ;
+					echo '"'.$tablo[$i]['nbLocationMeca'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo '],';
+				}
+				echo "  type: 'scatter', visible: 'legendonly', name: 'Velib'}, {";	
+				
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+				
+					 ;
 					echo '"'.$tablo[$i]['nbLocationVAE'].'", ';
 
 					if($i%$nbcol==($nbcol-1))
