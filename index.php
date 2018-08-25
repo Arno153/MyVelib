@@ -360,7 +360,7 @@
 					}
 				}
 				
-				echo "<div id='GraphOuvStationSemaine' class='left-widget widgetGraph'>";
+				echo "<div id='GraphOuvStationSemaine' class='left-widget widgetGraph'> <button id='button_GraphOuvStationSemaine' class='graphFullScreenButton'>+</button>";
 				echo "<script>";
 				echo "var data = [{";
 				
@@ -467,7 +467,7 @@
 				
 				//
 				
-				echo "<div id='GraphEvolutionUtilisation' class='left-widget widgetGraph'>";
+				echo "<div id='GraphEvolutionUtilisation' class='left-widget widgetGraph'><button id='button_GraphEvolutionUtilisation' class='graphFullScreenButton'>+</button>";
 				echo "<script>";
 				echo "var data = [{";
 				
@@ -582,7 +582,7 @@
 				//else echo mysqli_error($link);
 	
 					
-				echo "<div id='GraphStationActives' class='left-widget widgetGraph'>";
+				echo "<div id='GraphStationActives' class='left-widget widgetGraph'><button id='button_GraphStationActives' class='graphFullScreenButton'>+</button>";
 				//var_dump($tablo2);
 				
 				echo "<script>";
@@ -719,7 +719,7 @@
 				
 				//
 				
-				echo "<div id='GraphEvolutionNombreVelib' class='widgetGraph2' >";
+				echo "<div id='GraphEvolutionNombreVelib' class='widgetGraph2' > <button id='button_GraphEvolutionNombreVelib' class='graphFullScreenButton'>+</button>";
 				echo "<script>";
 				echo "var data = [{";
 				
@@ -1120,6 +1120,143 @@
 		  }
 		}
 	</script>
+
+	<!-- graph to full screen -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
+	<script>
+
+		var button_GraphEvolutionUtilisation = 1;
+		$('#button_GraphEvolutionUtilisation').click
+			(
+				function(e)
+				{				
+					$('#GraphEvolutionUtilisation').toggleClass('fullscreen'); 
+					var update = 
+					{
+						width: $('#GraphEvolutionUtilisation').width(), 
+						height: $('#GraphEvolutionUtilisation').height()  
+					};
+					
+					Plotly.relayout('GraphEvolutionUtilisation', update)
+					
+					if( button_GraphEvolutionUtilisation ==0)
+					{
+						$("#button_GraphEvolutionUtilisation").text('+');
+						button_GraphEvolutionUtilisation=1;
+						$("#fullscreenhider").hide();
+						$('body').css('overflow', 'auto');
+						
+					}
+					else
+					{					
+						$("#button_GraphEvolutionUtilisation").text('x');
+						button_GraphEvolutionUtilisation=0;
+						$("#fullscreenhider").fadeIn("slow");
+						$('body').css('overflow', 'hidden');
+					}
+				}
+			);		
+			
+			
+			
+		var button_GraphOuvStationSemaine = 1;
+		$('#button_GraphOuvStationSemaine').click
+			(
+				function(e)
+				{				
+					$('#GraphOuvStationSemaine').toggleClass('fullscreen'); 
+					var update = 
+					{
+						width: $('#GraphOuvStationSemaine').width(), 
+						height: $('#GraphOuvStationSemaine').height() 
+					};
+					
+					Plotly.relayout('GraphOuvStationSemaine', update)
+					
+					if( button_GraphOuvStationSemaine ==0)
+					{
+						$("#button_GraphOuvStationSemaine").text('+');
+						button_GraphOuvStationSemaine=1;
+						$("#fullscreenhider").hide();
+						$('body').css('overflow', 'auto');
+					}
+					else
+					{					
+						$("#button_GraphOuvStationSemaine").text('x');
+						button_GraphOuvStationSemaine=0;
+						$("#fullscreenhider").fadeIn("slow");
+						$('body').css('overflow', 'hidden');
+					}
+				}
+			);	
+			
+		
+		var button_GraphStationActives = 1;
+		$('#button_GraphStationActives').click
+			(
+				function(e)
+				{				
+					$('#GraphStationActives').toggleClass('fullscreen'); 
+					var update = 
+					{
+						width: $('#GraphStationActives').width(), 
+						height: $('#GraphStationActives').height() 
+					};
+					
+					Plotly.relayout('GraphStationActives', update)
+					
+					if( button_GraphStationActives ==0)
+					{
+						$("#button_GraphStationActives").text('+');
+						button_GraphStationActives=1;
+						$("#fullscreenhider").hide();
+						$('body').css('overflow', 'auto');
+					}
+					else
+					{					
+						$("#button_GraphStationActives").text('x');
+						button_GraphStationActives=0;
+						$("#fullscreenhider").fadeIn("slow");
+						$('body').css('overflow', 'hidden');
+					}
+				}
+			);		
+			
+			
+		var button_GraphEvolutionNombreVelib = 1;
+		$('#button_GraphEvolutionNombreVelib').click
+			(
+				function(e)
+				{				
+					$('#GraphEvolutionNombreVelib').toggleClass('fullscreen'); 
+					var update = 
+					{
+						width: $('#GraphEvolutionNombreVelib').width(), 
+						height: $('#GraphEvolutionNombreVelib').height()  
+					};
+					
+					Plotly.relayout('GraphEvolutionNombreVelib', update)
+					
+					if( button_GraphEvolutionNombreVelib ==0)
+					{
+						$("#button_GraphEvolutionNombreVelib").text('+');
+						button_GraphEvolutionNombreVelib=1;
+						$("#fullscreenhider").hide();
+						$('body').css('overflow', 'auto');
+					}
+					else
+					{					
+						$("#button_GraphEvolutionNombreVelib").text('x');
+						button_GraphEvolutionNombreVelib=0;
+						$("#fullscreenhider").fadeIn("slow");
+						$('body').css('overflow', 'hidden');
+					}
+				}
+			);
+	</script>
+	<div id="fullscreenhider" style="display: none;"></div>
+	<!-- graph to full screen END-->
 	
 	<div id="mypub">
 		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>

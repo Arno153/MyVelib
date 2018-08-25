@@ -51,14 +51,41 @@ body
 
 .widgetGraph
 {
+	position: relative;
 	height : 210px;
 	width: 30.8%;
 	text-align: center;
 	padding-bottom: 35px;
 }
 
+.widgetGraph.fullscreen{
+    z-index: 99999; 
+    width: 98% ; 
+    height: 90%; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+ }
+ 
+ .graphFullScreenButton
+ {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	border: none;
+	font-size: initial;
+	font-weight: bold;
+	border-radius: 50%;
+	background-color: #ccc;
+	height: 24px;
+	width: 24px;
+	padding: 0 0 4px 1px;
+ }
+
+
 .widgetGraph2
 {
+	position: relative;
 	height : 450px;
 	text-align: center;
     float: left;
@@ -69,6 +96,29 @@ body
 	margin: 1rem 0.5rem 0.5rem 0.5rem;
     border: 2px solid #ccc !important;
     border-radius: 16px;
+}
+
+.widgetGraph2.fullscreen{
+    z-index: 99999; 
+    width: 98% ;
+    height: 87%; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+ }
+ 
+ #fullscreenhider
+{
+	position:fixed;
+	top: 0;
+	left: 0;
+	width:100%;
+	height:120%;
+	margin-top: 0; 
+	margin-left: 0; 
+	z-index: 75000;
+	background-color:gray;
+	opacity:0.9;
 }
 
 .widget-short {
@@ -467,6 +517,14 @@ input[type="range"]::-webkit-slider-thumb {
 		padding-bottom: 35px;
 	}
 	
+	.widgetGraph.fullscreen{
+		width: 96% !important;  
+	 }	
+	 
+	.widgetGraph2.fullscreen{
+		width: 97% !important;  
+	 }	
+	
 
 	
 }
@@ -493,6 +551,11 @@ input[type="range"]::-webkit-slider-thumb {
 	{
 		padding-bottom: 35px
 	}
+	
+	.widgetGraph.fullscreen{
+		width: 97% !important;  
+	 }	
+	
 }
 
 @media (max-width: 750px)
