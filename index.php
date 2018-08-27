@@ -984,14 +984,50 @@
 					if($i%$nbcol==($nbcol-1))
 						echo ']';
 				}				
-				echo " }, type: 'scatter', name : 'Estimé,<br>Indisponible '}"; 
+				echo " }, type: 'scatter',  name : 'Estimé,<br>Indisponible '},{"; 
+
+				//serie 6
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+					
+					$percEstimVelib = $tablo[$i]['avgEstimatedVelib']/$tablo[$i]['avgVelib'] *100;
+
+					echo '"'.$percEstimVelib.'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " , type: 'scatter', visible: 'legendonly', yaxis: 'y2', name : 'Estimé,<br>% dispo '}";
 				
 				echo "];
 				var layout = 
 				{ 
 					title: 'Nombre de Velib', 
 					paper_bgcolor: '#f8f9fa', 
-					plot_bgcolor: '#f8f9fa',					
+					plot_bgcolor: '#f8f9fa',
+					yaxis: {
+							tickfont: {},
+						  }, 
+					yaxis2: {						
+								overlaying: 'y', 
+								tickfont: {color: 'rgb(55, 34, 29)'}, 
+								side: 'right',
+								showgrid: false,
+								range: [0, 100]
+							},						
 					showlegend: true,
 					margin: {
 								l: 40,
