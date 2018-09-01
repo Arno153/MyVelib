@@ -181,7 +181,7 @@
 		110 < <img src="./images/marker_red150.png" alt="Rouge" width="12"> <
 		200 < <img src="./images/marker_purple220.png" alt="Violet" width="12">
 		<br>Station non opérationnelle selon Velib <img src="./images/marker_greenx10.png" alt="Croix" width="12"> 
-		<br><b>Les valeurs > à 300 sont affichées comme 300</b>
+		<br><b>Les valeurs > à 400 sont affichées comme 400</b>
 		<br>
 		<br><b> Données de la journée en cours quelque soit l'heure à laquelle vous consultez cette page!!!</b>
 		<br><b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
