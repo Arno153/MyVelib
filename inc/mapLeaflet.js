@@ -597,19 +597,19 @@ function displayMvtMap()
 		{
 			iconurl = './images/marker_'+'grey'+HS+nbBikeMarker+'.png';			
 		} 			
-		else if( nbBikeMarker < 10)
+		else if( nbBikeMarker < 20)
 		{
 			iconurl = './images/marker_'+'yellow'+HS+nbBikeMarker+'.png';
 		} 
-		else if( nbBikeMarker < 25)
+		else if( nbBikeMarker < 50)
 		{
 			iconurl = './images/marker_'+'orange'+HS+nbBikeMarker+'.png';	
 		}
-		else if( nbBikeMarker < 50)
+		else if( nbBikeMarker < 110)
 		{
 			iconurl = './images/marker_'+'green'+HS+nbBikeMarker+'.png';				
 		}
-		else if( nbBikeMarker < 75)
+		else if( nbBikeMarker < 200)
 		{
 			iconurl = './images/marker_'+'red'+HS+nbBikeMarker+'.png';				
 		}			

@@ -176,10 +176,10 @@
 		* Stations Velib par nombre de mouvements enregistrés : 
 		Aucun: <img src="./images/marker_grey0.png" alt="Gris" width="12">, 
 		1 < <img src="./images/marker_yellow5.png" alt="Jaune" width="12"> <
-		10 < <img src="./images/marker_orange20.png" alt="Orange" width="12"> <
-		25 < <img src="./images/marker_green50.png" alt="Vert" width="12"> <
-		50 < <img src="./images/marker_red60.png" alt="Rouge" width="12"> <
-		75 < <img src="./images/marker_purple80.png" alt="Violet" width="12">
+		20 < <img src="./images/marker_orange30.png" alt="Orange" width="12"> <
+		50 < <img src="./images/marker_green60.png" alt="Vert" width="12"> <
+		110 < <img src="./images/marker_red150.png" alt="Rouge" width="12"> <
+		200 < <img src="./images/marker_purple220.png" alt="Violet" width="12">
 		<br>Station non opérationnelle selon Velib <img src="./images/marker_greenx10.png" alt="Croix" width="12"> 
 		<br><b>Les valeurs > à 300 sont affichées comme 300</b>
 		<br>
