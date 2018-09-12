@@ -146,18 +146,28 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 
 error_log( date("Y-m-d H:i:s")." - Collecte des données Velib");
 
+if($debugVelibRawData)
+{
+	echo "vardump SomeVelibRawData</br>";
+	echo $SomeVelibRawData;
+	echo "</br>";
+}
+
 $VelibDataArray = json_decode($SomeVelibRawData, true);
+error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
 
 if($debugVelibRawData)
 {
-	echo "vardump</br>";
+	echo "vardump VelibDataArray</br>";
 	var_dump($VelibDataArray);
+	echo "</br>";
 }
 
 if(!is_array($VelibDataArray))
 {
 	echo "<br> Retour inattendu de l'api Velib";
 	error_log( date("Y-m-d H:i:s")." - Retour inattendu de l'api Velib");
+	error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
 	exit;
 }
 
