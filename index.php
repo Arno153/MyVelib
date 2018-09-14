@@ -70,7 +70,9 @@
 			"
 			<div class='maintenance'>
 				<!-- !!! Mode maintenance actif !!! -->
-					Les données diffusées actuellement par velib métropole présentent des variations cycliques du nombre de vélo en station probablement non representatives des mouvements réels.
+					Mon processus de collecte des données Velib est actuellement perturbé.</br>
+					Les données statistiques affichées depuis le 10 septembre sont erronées. </br>
+					Les données temps réel sont affectées dans une moindre mesure. 
 			</div>	
 			";
 	}
