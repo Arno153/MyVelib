@@ -154,7 +154,7 @@ if($debugVelibRawData)
 }
 
 $VelibDataArray = json_decode($SomeVelibRawData, true);
-error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
+//error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
 
 if($debugVelibRawData)
 {
@@ -168,6 +168,7 @@ if(!is_array($VelibDataArray))
 	echo "<br> Retour inattendu de l'api Velib";
 	error_log( date("Y-m-d H:i:s")." - Retour inattendu de l'api Velib");
 	error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
+	error_log(date("Y-m-d H:i:s").$SomeVelibRawData);
 	exit;
 }
 
