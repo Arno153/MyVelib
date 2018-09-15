@@ -12,6 +12,7 @@ $debug = false;
 $debugVerbose = false;
 $debugVelibRawData= false;
 $velibExit = 0;
+$EvelibExit = 0;
 
 echo date(DATE_RFC2822);
 	echo "<br>";
@@ -718,6 +719,10 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 								max(0, $row['stationNbBike'] - $stationNbBike) + 
 								max(0, $row['stationNbBikeOverflow'] - $stationNbBikeOverflow) + 
 								max(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);
+								
+							$EvelibExit = $EvelibExit + 
+								max(0, $row['stationNbEBike'] - $stationNbEBike) + 
+								max(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);								
 						}	
 						else	
 							echo "<br> retrait ici? NON"; 
@@ -935,6 +940,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				  `nbStationUpdatedLAst6Hour` ,
 				  `nbStationAtThisDate`,
 				  `nbrVelibExit`,
+				  `nbrEVelibExit`,
 				  `networkNbBike`,
 				  `networkNbBikeOverflow`,
 				  `networkEstimatedNbBike`,
@@ -991,6 +997,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 								and `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
 				  ),
 				  $velibExit,
+				  $EvelibExit,
 				  (select sum(stationNbBike)+sum(stationNbEBike) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ), 
 				  (select sum(stationNbBikeOverflow)+sum(stationNbEBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ),
 				  (		
@@ -1090,6 +1097,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 						 and `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
 		   ),
 			`nbrVelibExit` = `nbrVelibExit` + $velibExit,
+			`nbrEVelibExit` = `nbrEVelibExit` + $EvelibExit,			
 			`networkNbBike` = (select sum(stationNbBike)+sum(stationNbEBike) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ), 
 			`networkNbBikeOverflow` = (select sum(stationNbBikeOverflow)+sum(stationNbEBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ),
 			`networkEstimatedNbBike`	 = (		
