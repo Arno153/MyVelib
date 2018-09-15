@@ -154,7 +154,6 @@ if($debugVelibRawData)
 }
 
 $VelibDataArray = json_decode($SomeVelibRawData, true);
-//error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
 
 if($debugVelibRawData)
 {
