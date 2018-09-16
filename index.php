@@ -173,7 +173,7 @@
 		<br>
 		<TABLE class="table-compact">
 		<TR>
-		<TH>Nombre estimé de Velib disponibles</TH>
+		<TH>Nombre estimé de Velib disponibles en station</TH>
 		</TR>	
 		<?php
 				if ($result = getEstimatedVelibCount($link)) 
@@ -1045,7 +1045,7 @@
 				echo "
 				<p class='notes'>
 					Ce graphique propose une représentation du nombre moyen, minimum et maximum de velib présents en station. <br>
-					Les courbes officielles reprènent les données brutes de l'API Velib. Les courbes estimées essayent d'évaluer le nombre de velib réellements disponnibles/utilisables en soustrayant aux données officielles le nombre minimum de velib enregitré pour chaque station au cours des 3 derniers jours.<br>
+					Les courbes officielles reprènent les données brutes de l'API Velib. Les courbes estimées essayent d'évaluer le nombre de velib réellements disponibles/utilisables en soustrayant aux données officielles le nombre minimum de velib enregitré pour chaque station au cours des 3 derniers jours.<br>
 					Ces courbes ne prennent pas en compte le nombre de velib en cours d'utilisation.
 				</p>";				
 				echo "</div>";
