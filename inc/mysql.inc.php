@@ -94,7 +94,7 @@
 								   `velib_activ_station_stat`
 							WHERE
 								   `nbrVelibExit` > 5000
-								   AND DATE       < DATE(NOW())
+								   AND DATE       < '2018-08-01'
 					 )
 					 AND DATE < DATE(NOW() )
 			GROUP BY
@@ -102,6 +102,20 @@
 			ORDER BY
 					 `date` 	
 		";
+		
+		/* La clause ci dessous de la requette permet d'éliminer de la série les incidents du printemps qui par leurs oscillation donnait des chiffres abérant
+							 `date` NOT IN
+					 (
+							SELECT DISTINCT
+								   `date`
+							FROM
+								   `velib_activ_station_stat`
+							WHERE
+								   `nbrVelibExit` > 5000
+								   AND DATE       < '2018-08-01'
+					 )
+		*/
+		
 		
 		if ($result = mysqli_query($link, $query)) 
 			return $result;
