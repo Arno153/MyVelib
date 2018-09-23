@@ -55,8 +55,7 @@
 			<div class='maintenance'>
 				<!-- !!! Mode maintenance actif !!! -->
 					Mon processus de collecte des données Velib est actuellement perturbé.</br>
-					Les données statistiques affichées depuis le 10 septembre sont erronées. </br>
-					Les données temps réel sont affectées dans une moindre mesure. 
+					Les données de cette page, peu sensible à la régularité de la collecte, sont affectées localement. 
 			</div>	
 			";
 		}
