@@ -9,11 +9,15 @@ function InvalidCache()
 function isCacheValid($page)
 {
 	$debugCacheMgt = false;
+	$noCacheMode = false;
 	
 	if( filemtime(dirname(__FILE__).'/../cache/invalidCache.cache') <= filemtime(dirname(__FILE__).'/../cache/'.$page.'.cache')	)
 	{
 		if($debugCacheMgt) error_log("Live Cache Mgt - Page: ".$page." is valid and will not be rebuilded");	
-		return True;
+		if($noCacheMode)
+			return False;
+		else
+			return True;
 	}
 	else
 	{
@@ -25,11 +29,15 @@ function isCacheValid($page)
 function isCacheValid1H($page)
 {
 	$debugCacheMgt = false;
+	$noCacheMode = false;
 	
 	if( time() <= filemtime(dirname(__FILE__).'/../cache/'.$page.'.cache')+3600	)
 	{
 		if($debugCacheMgt) error_log("1H Cache Mgt - Page: ".$page." is valid and will not be rebuilded");
-		return True;
+		if($noCacheMode)
+			return False;
+		else
+			return True;
 	}
 	else
 	{	
