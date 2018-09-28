@@ -37,6 +37,7 @@ if (mysqli_num_rows($result)>0)
 		/// recupérer l'adresse --> adresse.data.gouv.fr					
 		$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$row['stationLat'].'&lon='.$row['stationLon'].'&type=housenumber';
 		if($debugVerbose) echo $wsUrl;
+		$newStationAdress = "Not Available";
 		
 		$googleGeocodeAPIRawData = file_get_contents($wsUrl);
 		$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);

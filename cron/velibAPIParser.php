@@ -651,8 +651,10 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 									`stationStatDate`, 
 									`stationVelibMinVelib`, 
 									`stationVelibMaxVelib`, 
+									`stationVelibMinEVelib`, 
 									`stationVelibMinVelibOverflow`, 
 									`stationVelibMaxVelibOverflow`, 
+									`stationVelibMinEVelibOverflow`, 
 									`stationVelibExit`,
 									`stationEVelibExit`,
 									`updateDate`
@@ -663,8 +665,10 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 									now(),
 									'$stationNbBike' + '$stationNbBikeOverflow' +'$stationNbEBike' + '$stationNbEBikeOverflow' ,
 									'$stationNbBike' + '$stationNbBikeOverflow' +'$stationNbEBike' + '$stationNbEBikeOverflow' ,
+									'$stationNbEBike' + '$stationNbEBikeOverflow' ,									
 									'$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ,
 									'$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ,	
+									'$stationNbEBikeOverflow' ,
 									'$stationVelibExit',
 									'$stationEVelibExit',
 									now()
@@ -674,8 +678,10 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 								stationStatDate = now(), 
 								stationVelibMinVelib = LEAST(stationVelibMinVelib, '$stationNbBike' + '$stationNbBikeOverflow' +'$stationNbEBike' + '$stationNbEBikeOverflow' ),
 								stationVelibMaxVelib = greatest(stationVelibMaxVelib, '$stationNbBike' + '$stationNbBikeOverflow' +'$stationNbEBike' + '$stationNbEBikeOverflow' ),
+								stationVelibMinEVelib = LEAST(stationVelibMinEVelib, '$stationNbEBike' + '$stationNbEBikeOverflow' ),
 								stationVelibMinVelibOverflow = LEAST(stationVelibMinVelibOverflow, '$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ),
 								stationVelibMaxVelibOverflow = greatest(stationVelibMaxVelibOverflow, '$stationNbBikeOverflow' + '$stationNbEBikeOverflow' ),	
+								stationVelibMinVelibOverflow = LEAST(stationVelibMinVelibOverflow, '$stationNbEBikeOverflow' ),
 								stationVelibExit = stationVelibExit + '$stationVelibExit',								
 								stationEVelibExit = stationEVelibExit + '$stationEVelibExit',	
 								updateDate = now()
@@ -747,6 +753,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				/// recupérer l'adresse --> adresse.data.gouv.fr					
 				$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$row['stationLat'].'&lon='.$row['stationLon'].'&type=housenumber';
 				if($debugVerbose) echo $wsUrl;
+				$stationAdress = "Not Available";
 				
 				$googleGeocodeAPIRawData = file_get_contents($wsUrl);
 				$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
@@ -827,7 +834,9 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					`stationKioskState`,
 					`stationAdress`, 
 					`stationOperativeDate`, 
-					`stationLastExit`  ) 
+					`stationLastExit`,
+					`stationLocationHasChanged` 
+					) 
 				VALUES (
 					'$stationName', 
 					'$stationCode', 
@@ -846,7 +855,8 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					'$stationKioskState', 
 					left('$stationAdress',300),
 					case WHEN '$stationState' = 'Operative' then now() else null end,
-					now()
+					now(),
+					1
 					)";
 				
 				if(!mysqli_query($link, $r))
@@ -906,6 +916,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				$logstring = $logstring."\n";
 				
 				echo "</br> station not found in db --> Created";
+
 			}	
 			else
 			{

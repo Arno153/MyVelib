@@ -37,17 +37,28 @@ function getapiQuery_web($dureeEstimation)
 					else stationMinVelibNDay
 				end) as stationMinVelibNDay
 				,
+				(case when stationMinEVelibNDay IS NULL
+					then stationNbEBike
+					else stationMinEVelibNDay
+				end) as stationMinEVelibNDay
+				,				
 				(case when stationVelibMinVelibOverflow IS NULL
 					then stationNbBikeOverflow+ stationNbEBikeOverflow
 					else stationVelibMinVelibOverflow
-				end) as stationVelibMinVelibOverflow					
+				end) as stationVelibMinVelibOverflow,	
+				(case when stationVelibMinEVelibOverflow IS NULL
+					then stationNbEBikeOverflow
+					else stationVelibMinEVelibOverflow
+				end) as stationVelibMinEVelibOverflow				
 			FROM 
 				`velib_station` LEFT JOIN 
 				   (
 							SELECT
 									`stationCode`,
 									MIN(`stationVelibMinVelib` - stationVelibMinVelibOverflow) AS stationMinVelibNDay,
-									MIN( stationVelibMinVelibOverflow ) AS stationVelibMinVelibOverflow
+									MIN(`stationVelibMinEVelib` - stationVelibMinEVelibOverflow) AS stationMinEVelibNDay,
+									MIN( stationVelibMinVelibOverflow ) AS stationVelibMinVelibOverflow,
+									MIN( stationVelibMinEVelibOverflow ) AS stationVelibMinEVelibOverflow
 							FROM
 									 `velib_station_min_velib`
 							wHERE
