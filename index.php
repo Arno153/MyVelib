@@ -71,8 +71,8 @@
 			<div class='maintenance'>
 				<!-- !!! Mode maintenance actif !!! -->
 					Mon processus de collecte des données Velib est actuellement perturbé.</br>
-					Les données statistiques affichées depuis le 10 septembre sont erronées. </br>
-					Les données temps réel sont affectées dans une moindre mesure. 
+					Les statistiques d'utilisation du 10 au 13 sont indisponible, depuis elles sont sous estimées par rapport au reste de la série. </br>
+					Les autres données, moins sensible à la régularité de la collecte, sont affectées plus marginalement. 
 			</div>	
 			";
 	}
@@ -450,6 +450,7 @@
 				
 				echo "Plotly.newPlot('GraphOuvStationSemaine', data, layout,{displayModeBar: false});";
 				echo '</script>';
+				echo "<p class='notes'>* Stations opérationnelles, suivant la date de première ouverture</p>";
 				echo "</div>";
 				
 				//
@@ -1046,7 +1047,7 @@
 				<p class='notes'>
 					Ce graphique propose une représentation du nombre moyen, minimum et maximum de velib présents en station. <br>
 					Les courbes officielles reprènent les données brutes de l'API Velib. Les courbes estimées essayent d'évaluer le nombre de velib réellements disponibles/utilisables en soustrayant aux données officielles le nombre minimum de velib enregitré pour chaque station au cours des 3 derniers jours.<br>
-					Ces courbes ne prennent pas en compte le nombre de velib en cours d'utilisation.
+					Ces courbes ne prennent pas en compte le nombre de velib en cours d'utilisation et/ou de déplacement par les équipes de régulation.
 				</p>";				
 				echo "</div>";
 

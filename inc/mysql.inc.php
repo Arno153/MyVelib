@@ -65,6 +65,28 @@
 			group by date_format(`stationOperativeDate`, '%v')		
 		";
 		
+		
+		$query = 
+		"
+		SELECT 
+			count(vss.id) as nbStationWeek,
+			vss.week as week    
+		FROM 
+			(select 
+				velib_station_status.`id`,  
+				date_format(min(`stationStatusDate`), '%v') as week  
+			from `velib_station_status` 
+			where  `velib_station_status`.stationState = 'Operative'
+			 group by `velib_station_status`.id
+			) vss
+			inner join velib_station vs on vs.id = vss.id
+		WHERE 
+			vs.stationHidden = 0
+			and vs.stationState = 'Operative'
+			and vs.`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
+		group by week
+		";
+		
 		if ($result = mysqli_query($link, $query)) 
 			return $result;
 		else	
