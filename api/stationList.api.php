@@ -126,7 +126,7 @@
 			";
 			break;
 		case "web" :
-			if($dureeEstimation ==0) $dureeEstimation = 3; //si donnée off, l'api envoie l'estimation 3J pour affichage dans l'infoWindows
+			if($dureeEstimation ==0) $dureeEstimation = 3; //si donnée officielle demandées, l'api envoie l'estimation 3J pour affichage dans l'infoWindows
 			$query = getapiQuery_web($dureeEstimation);		
 			break;
 		case "heatmap" :

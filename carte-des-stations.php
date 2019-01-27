@@ -90,7 +90,7 @@
 		var HS;	
 			
 
-		// on recupéère le choix du mode officiel ou estimé depuis un cookies
+		// lecture cookies
 		function getCookie(cname) {
 			var name = cname + "=";
 			var decodedCookie = decodeURIComponent(document.cookie);
@@ -107,7 +107,7 @@
 			return false;
 		}
 		
-		
+		// on recupère le choix du mode officiel ou estimé depuis un cookies
 		var estimatedVelibNumber = 0;
 		if(getCookie("estimatedVelibNumber")==3)
 		{
@@ -117,7 +117,17 @@
 		{
 			estimatedVelibNumber = 2;
 		}
-	
+
+		// on recupéère le choix du mode Tout/Velib/VAE depuis un cookies
+		var VAEMode = 0;
+		if(getCookie("VAEMode")==1)
+		{
+			VAEMode = 1;
+		}
+		else if(getCookie("VAEMode")==2)
+		{
+			VAEMode = 2;
+		}	
 		
 		
 		var zoomp = getUrlParam('zoom');
@@ -161,7 +171,7 @@
 								{
 									click: function(data)
 									{
-										refresh(estimatedVelibNumber);									
+										refresh(estimatedVelibNumber, 0, VAEMode);									
 									},
 								}
 						})
@@ -175,9 +185,9 @@
 		// `fullscreenchange` Event that's fired when entering or exiting fullscreen.
 		mymap.on('fullscreenchange', function () {
 			if (mymap.isFullscreen()) {
-				refresh(estimatedVelibNumber);
+				refresh(estimatedVelibNumber,0,VAEMode);
 			} else {
-				refresh(estimatedVelibNumber);
+				refresh(estimatedVelibNumber,0,VAEMode);
 			}
 		});
 		
@@ -208,16 +218,15 @@
 		}).addTo(mymap);
 		
 		//load stations to the map
-		getStations(estimatedVelibNumber);
+		getStations(estimatedVelibNumber,0,VAEMode);
 		
 		// add adress search control		
 		L.Control.geocoder().addTo(mymap);
 
-		// create a cutom control to switch between api velib nbr and estimated velib nbr	
-
+		// create a cutom control to switch between api velib nbr and estimated velib nbr
 		var cc2 = L.control.custom({
 							position: 'bottomleft',
-							title: 'switch',
+							title: 'Mode d\'estimation',
 							content : 
 								//'<label class="switch switch-left-right"><input class="switch-input" type="checkbox" /><span class="switch-label" data-on="Estimé" data-off="Officiel"></span> <span class="switch-handle"></span></label>',
 								//'<label class="switch switch-left-right"><input id="mySwitch" class="switch-input" type="checkbox" /><span class="switch-label" data-on="Estimé" data-off="Officiel"></span> <span class="switch-handle"></span></label>',
@@ -235,7 +244,7 @@
 											{											
 												//alert('3J');
 												estimatedVelibNumber = 3;
-												refresh(3);												
+												refresh(3,0,VAEMode);												
 											}	
 										}
 										document.getElementById("switch_3_left").onclick = function() {									
@@ -243,7 +252,7 @@
 											{											
 												//alert('Officiel');
 												estimatedVelibNumber = 0;
-												refresh(0);												
+												refresh(0,0,VAEMode);												
 											}	
 										}	
 										document.getElementById("switch_3_right").onclick = function() {									
@@ -251,7 +260,7 @@
 											{											
 												//alert('2J');
 												estimatedVelibNumber = 2;
-												refresh(2);												
+												refresh(2,0,VAEMode);												
 											}	
 										}										
 										
@@ -275,6 +284,66 @@
 			document.getElementById("switch_3_center").checked=true;
 		}
 		;						
+
+		// create a cutom control to switch between all, meca and VAE mode
+		var cc3 = L.control.custom({
+							position: 'bottomleft',
+							title: 'Type de Velib',
+							content : 
+								'<div class="switch-field"><input type="radio" id="VAE_3_left" name="VAE_3" value="0" checked/><label class="compact-switch" for="VAE_3_left">Tous<br></label><input type="radio" id="VAE_3_center" name="VAE_3" value="1" /><label class="compact-switch" for="VAE_3_center">Velib</label><input type="radio" id="VAE_3_right" name="VAE_3" value="2" /><label class="compact-switch" for="VAE_3_right">VAE</label></div>',
+							style   :
+							{
+								padding: '0px',
+							},
+							events:
+								{
+									click: function(data)
+									{
+										document.getElementById("VAE_3_center").onclick = function() {									
+											if(document.getElementById("VAE_3_center").checked)
+											{											
+												//alert('3J');
+												VAEMode = 1;
+												refresh(estimatedVelibNumber,0,1);												
+											}	
+										}
+										document.getElementById("VAE_3_left").onclick = function() {									
+											if(document.getElementById("VAE_3_left").checked)
+											{											
+												//alert('Officiel');
+												VAEMode = 0;
+												refresh(estimatedVelibNumber,0,0);												
+											}	
+										}	
+										document.getElementById("VAE_3_right").onclick = function() {									
+											if(document.getElementById("VAE_3_right").checked)
+											{											
+												//alert('2J');
+												VAEMode = 2;
+												refresh(estimatedVelibNumber,0,2);												
+											}	
+										}										
+										
+										
+										// on stoque le choix dans un cookies
+										var d = new Date();
+										d.setTime(d.getTime() + (30*24*60*60*1000));
+										var expires = "expires="+ d.toUTCString();
+										document.cookie = "VAEMode" + "=" + VAEMode + ";" + expires + ";path=/";
+									},
+								}
+						})
+						.addTo(mymap);
+						
+		if(VAEMode == 2)
+		{
+			document.getElementById("VAE_3_right").checked=true;
+		}
+		else if(VAEMode == 1)
+		{
+			document.getElementById("VAE_3_center").checked=true;
+		}
+		;			
 		
     </script>
 	

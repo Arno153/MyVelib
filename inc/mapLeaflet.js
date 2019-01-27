@@ -1,11 +1,12 @@
-function refresh(estimatedVelibNumber, bloqueTF)
+function refresh(estimatedVelibNumber, bloqueTF, VAEFlag )
 {
-	bloqueTF = typeof bloqueTF !== 'undefined' ?  bloqueTF : 0;
+	bloqueTF = typeof bloqueTF !== 'undefined' ?  bloqueTF : 0; //si 1 : vélib bloqué (min 2J ou 3J), si 0 velib dispo
+	VAEFlag =  typeof VAEFlag !== 'undefined' ?  VAEFlag : 0; //0 = tous, 1 = Meca, 2 = VAE 
 	//var varUrl = 'carte-des-stations.php?lat='+map.getCenter().lat()+'&lon='+map.getCenter().lng()+'&zoom='+map.getZoom();		
 	//window.location.href=varUrl;
 	removeMarkersToMap();
 	//addMarkersToMap();
-	getStations(estimatedVelibNumber, bloqueTF );
+	getStations(estimatedVelibNumber, bloqueTF, VAEFlag );
 	document.getElementById('gads').contentDocument.location.reload(true);
 }
 
@@ -96,9 +97,10 @@ function handleLocationError(browserHasGeolocation, infoWindow2, pos) {
 	infoWindow2.open(map);
   }
 
-function getStations(estimatedVelibNumber,bloqueTF)
+function getStations(estimatedVelibNumber,bloqueTF,VAEFlag)
 {
-   bloqueTF = typeof bloqueTF !== 'undefined' ?  bloqueTF : 0;
+   bloqueTF = typeof bloqueTF !== 'undefined' ?  bloqueTF : 0; //si 1 : vélib bloqué (min 2J ou 3J), si 0 velib dispo
+   VAEFlag =  typeof VAEFlag !== 'undefined' ?  VAEFlag : 0; //0 = tous, 1 = Meca, 2 = VAE 
    
    var xmlhttp;
 	// compatible with IE7+, Firefox, Chrome, Opera, Safari
@@ -115,7 +117,7 @@ function getStations(estimatedVelibNumber,bloqueTF)
 			if (this.status === 200) {
 				console.log("Réponse reçue: %s", this.responseText);
 				locations = JSON.parse(	this.responseText);
-				addMarkersToMap(estimatedVelibNumber, bloqueTF);
+				addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag);
 				
 			} else {
 				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
@@ -270,7 +272,7 @@ function removeMarkersToMap()
 
 }
 
-function addMarkersToMap(estimatedVelibNumber, bloqueTF)
+function addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag)
 {
 	for (i = 0; i < locations.length; i++) 
 	{ 
@@ -297,19 +299,33 @@ function addMarkersToMap(estimatedVelibNumber, bloqueTF)
 		}
 		
 		// détermination de la valeur nbr velib du marker en fonction du mode
-		if(estimatedVelibNumber==0)
+		if(estimatedVelibNumber==0) // nombre de velib officiel
 		{
-			nbBikeMarker = (parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])).toString();
+			//0 = tous, 1 = Meca, 2 = VAE 
+			if(VAEFlag == 0)
+				nbBikeMarker = (parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])).toString();
+			else if (VAEFlag ==1)
+				nbBikeMarker = parseInt(locations[i]['stationNbBike']).toString();
+			else if (VAEFlag ==2)
+				nbBikeMarker = parseInt(locations[i]['stationNbEBike']).toString();
 		}
 		else
 		{
 			if(bloqueTF ==1)
 				nbBikeMarker = Math.max(0,parseInt(locations[i]['stationMinVelibNDay'])).toString();
 			else
-				nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinVelibNDay'])).toString();
+			{				
+				//0 = tous, 1 = Meca, 2 = VAE 
+				if(VAEFlag == 0)
+					nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinVelibNDay'])).toString();
+				else if (VAEFlag ==1)
+					nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])-parseInt(locations[i]['stationMinVelibNDay'])+parseInt(locations[i]['stationMinEVelibNDay'])).toString();
+				else if (VAEFlag ==2)					
+					nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinEVelibNDay'])).toString();
+			}
 		}
 		
-		if(bloqueTF ==1)
+		if(bloqueTF ==1) // selection du market pour la carte velib bloqué
 		{
 			if(nbBikeMarker<1)
 			{
@@ -412,7 +428,7 @@ function addMarkersToMap(estimatedVelibNumber, bloqueTF)
 				estimatedVelibNumberDisplayedIW = estimatedVelibNumber;
 			
 			infoWindowContent = infoWindowContent +
-			'<br> Sur les '+estimatedVelibNumberDisplayedIW+' derniers jours il n\'y a jamais eu moins de ' + locations[i]['stationMinVelibNDay'] + ' velib (et '+locations[i]['stationVelibMinVelibOverflow']+' en park+)' ; 
+			'<br> Sur les '+estimatedVelibNumberDisplayedIW+' derniers jours il n\'y a jamais eu moins de ' + locations[i]['stationMinVelibNDay'] + ' velib ( dont ' + locations[i]['stationMinEVelibNDay'] + ' VAE) (et '+locations[i]['stationVelibMinVelibOverflow']+' en park+)' ; 
 			
 			if( (parseInt(locations[i]['stationMinVelibNDay'])+parseInt(locations[i]['stationVelibMinVelibOverflow'])) == locations[i]['tot_station_nb_bike'] )
 			{			
