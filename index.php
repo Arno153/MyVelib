@@ -425,8 +425,12 @@
 					var layout = 
 						{ 
 							title: 'Ouvertures de stations (par semaine)', 
+							xaxis:
+							{
+								tickformat: '%Y %W',
+							},
 							yaxis: {
-									tickfont: {color: 'rgb(31, 119, 180)'},
+									tickfont: {color: 'rgb(31, 119, 180)'},									
 									showgrid: false
 								  }, 
 							yaxis2: {						

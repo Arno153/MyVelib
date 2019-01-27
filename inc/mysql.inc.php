@@ -54,37 +54,48 @@
 	function getStationCountByOperativeDate($link)
 	{
 
-		$query = 
+		/*$query = 
 		"
 			SELECT 
 				count(`id`) as nbStationWeek, 
-				date_format(`stationOperativeDate`, '%v') as week
+				date_format(`stationOperativeDate`, '%Y-%v') as week
 			FROM `velib_station` 
 			where stationState = 'Operative' 
 				and stationHidden = 0
-			group by date_format(`stationOperativeDate`, '%v')		
-		";
+			group by date_format(`stationOperativeDate`, '%Y-%v')		
+		";*/
 		
 		
 		$query = 
 		"
-		SELECT 
-			count(vss.id) as nbStationWeek,
-			vss.week as week    
-		FROM 
-			(select 
-				velib_station_status.`id`,  
-				date_format(min(`stationStatusDate`), '%v') as week  
-			from `velib_station_status` 
-			where  `velib_station_status`.stationState = 'Operative'
-			 group by `velib_station_status`.id
+			SELECT
+				COUNT(vss.id) AS nbStationWeek,
+				STR_TO_DATE(
+					CONCAT(vss.week, ' Monday'),
+					'%x%v %W'
+				) AS week
+			FROM
+				(
+				SELECT
+					velib_station_status.`id`,
+					DATE_FORMAT(MIN(`stationStatusDate`),
+					'%Y%v') AS WEEK
+				FROM
+					`velib_station_status`
+				WHERE
+					`velib_station_status`.stationState = 'Operative'
+				GROUP BY
+					`velib_station_status`.id
 			) vss
-			inner join velib_station vs on vs.id = vss.id
-		WHERE 
-			vs.stationHidden = 0
-			and vs.stationState = 'Operative'
-			and vs.`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
-		group by week
+			INNER JOIN velib_station vs ON
+				vs.id = vss.id
+			WHERE
+				vs.stationHidden = 0 AND vs.stationState = 'Operative' AND vs.`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
+			GROUP BY
+				STR_TO_DATE(
+					CONCAT(vss.week, ' Monday'),
+					'%x%v %W'
+				)
 		";
 		
 		if ($result = mysqli_query($link, $query)) 
