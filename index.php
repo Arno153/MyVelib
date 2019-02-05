@@ -1022,7 +1022,7 @@
 				echo "];
 				var layout = 
 				{ 
-					title: 'Nombre de Velib', 
+					title: 'Nombre de Velib (Electrique et mécanique)', 
 					paper_bgcolor: '#f8f9fa', 
 					plot_bgcolor: '#f8f9fa',
 					yaxis: {
@@ -1368,7 +1368,7 @@
 				echo "];
 				var layout = 
 				{ 
-					title: 'Nombre de VAE', 
+					title: 'Nombre de Velib à assistance élec.', 
 					paper_bgcolor: '#f8f9fa', 
 					plot_bgcolor: '#f8f9fa',
 					yaxis: {
