@@ -406,6 +406,40 @@
 			return False;
 	}
 	
+	function getEVelibNbrStats($link){
+	
+		$query = 
+			"
+			SELECT 
+				`date`,
+				min(`networkNbEBike`) minVelib,
+				max(`networkNbEBike`) maxVelib,
+				round(avg(`networkNbEBike`)) avgVelib,
+				min(`networkNbEBikeOverflow`) minVelibOverflow,
+				max(`networkNbEBikeOverflow`) maxVelibOverflow,
+				round(avg(`networkNbEBikeOverflow`)) avgVelibOverflow,    
+				min(`networkEstimatedNbEBike`) minEstimatedVelib,
+				max(`networkEstimatedNbEBike`) maxEstimatedVelib,
+				round(avg(`networkEstimatedNbEBike`)) avgEstimatedVelib,    
+				min(`networkEstimatedNbEBikeOverflow`) minEstimatedVelibOverflow,
+				max(`networkEstimatedNbEBikeOverflow`) maxEstimatedVelibOverflow,
+				round(avg(`networkEstimatedNbEBikeOverflow`)) avgEstimatedVelibOverflow,
+				min(`networkNbEBike` - `networkEstimatedNbEBike`) minEstimatedUnavailableVelib,
+				max(`networkNbEBike` - `networkEstimatedNbEBike`) maxEstimatedUnavailableVelib,
+				round(avg(`networkNbEBike`-`networkEstimatedNbEBike`)) avgEstimatedUnavailableVelib				
+			FROM `velib_activ_station_stat` 
+			WHERE 
+				`date` > '2018-02-13'
+			group by `date`
+			order by `date`
+			";
+		
+		if ($result = mysqli_query($link, $query)) 
+			return $result;
+		else	
+			return False;
+	}
+	
 	function getMovedStationList($link){
 		return getStationList($link, "`stationLocationHasChanged` = 1" , "order by `stationInsertedInDb` desc");
 	}		

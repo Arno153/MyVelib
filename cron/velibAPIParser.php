@@ -955,7 +955,11 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				  `networkNbBike`,
 				  `networkNbBikeOverflow`,
 				  `networkEstimatedNbBike`,
-				  `networkEstimatedNbBikeOverflow`
+				  `networkEstimatedNbBikeOverflow`,
+				  `networkNbEBike`,
+				  `networkNbEBikeOverflow`,
+				  `networkEstimatedNbEBike`,
+				  `networkEstimatedNbEBikeOverflow`				  
 		   )
 		   values
 		   ( 	
@@ -1056,7 +1060,55 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					WHERE
 						`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
 						and stationHidden = 0			  
-				  )				  
+				  ),
+				  (select sum(stationNbEBike) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ), 
+				  (select sum(stationNbEBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ),
+				  (		
+					SELECT
+						sum( `stationNbEBike` - stationMinEVelibNDay) as estimatedEVelibNumber
+					FROM `velib_station`
+						LEFT JOIN
+							(
+                             SELECT
+                                      `stationCode`                                                                      ,
+                                      MIN( `stationVelibMinEVelib` - stationVelibMinEVelibOverflow ) AS stationMinEVelibNDay,
+                                      MIN(stationVelibMinEVelibOverflow)                            AS stationVelibMinEVelibOverflow
+                             FROM
+                                      `velib_station_min_velib`
+                             WHERE
+                                      1
+                                      AND `stationStatDate` > DATE_ADD(NOW(), INTERVAL -3 DAY)
+                             GROUP BY
+                                      `stationCode`
+							) AS min_Velib
+						ON min_Velib.`stationCode` = `velib_station`.`stationCode`
+					WHERE
+						`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
+						and stationHidden = 0				  
+				  ),
+				 (		
+					SELECT
+						sum(`stationNbEBikeOverflow`- stationVelibMinEVelibOverflow) as  estimatedEVelibNumberOverflowr
+					FROM `velib_station`
+						LEFT JOIN
+							(
+                             SELECT
+                                      `stationCode`                                                                      ,
+                                      MIN( `stationVelibMinEVelib` - stationVelibMinEVelibOverflow ) AS stationMinEVelibNDay,
+                                      MIN(stationVelibMinEVelibOverflow)                            AS stationVelibMinEVelibOverflow
+                             FROM
+                                      `velib_station_min_velib`
+                             WHERE
+                                      1
+                                      AND `stationStatDate` > DATE_ADD(NOW(), INTERVAL -3 DAY)
+                             GROUP BY
+                                      `stationCode`
+							) AS min_Velib
+						ON min_Velib.`stationCode` = `velib_station`.`stationCode`
+					WHERE
+						`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
+						and stationHidden = 0			  
+				  )					  
 		   )
 		ON DUPLICATE KEY UPDATE
 		   `date`  =`date`  ,
@@ -1156,7 +1208,55 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					WHERE
 						`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
 						and stationHidden = 0			  
-				  )				
+				  ),
+			`networkNbEBike` = (select sum(stationNbEBike) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ), 
+			`networkNbEBikeOverflow` = (select sum(stationNbEBikeOverflow) from velib_station where `stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) and stationHidden = 0  ),
+			`networkEstimatedNbEBike`	 = (		
+					SELECT
+						sum( `stationNbEBike` -        stationMinEVelibNDay) as estimatedEVelibNumber
+					FROM `velib_station`
+						LEFT JOIN
+							(
+                             SELECT
+                                      `stationCode`                                                                      ,
+                                      MIN( `stationVelibMinEVelib` - stationVelibMinEVelibOverflow ) AS stationMinEVelibNDay,
+                                      MIN(stationVelibMinEVelibOverflow)                            AS stationVelibMinEVelibOverflow
+                             FROM
+                                      `velib_station_min_velib`
+                             WHERE
+                                      1
+                                      AND `stationStatDate` > DATE_ADD(NOW(), INTERVAL -3 DAY)
+                             GROUP BY
+                                      `stationCode`
+							) AS min_Velib
+						ON min_Velib.`stationCode` = `velib_station`.`stationCode`
+					WHERE
+						`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
+						and stationHidden = 0				  
+				  ),
+			`networkEstimatedNbEBikeOverflow`= (		
+					SELECT
+						sum( `stationNbEBikeOverflow`- stationVelibMinEVelibOverflow) as  estimatedEVelibNumberOverflowr
+					FROM `velib_station`
+						LEFT JOIN
+							(
+                             SELECT
+                                      `stationCode`                                                                      ,
+                                      MIN( `stationVelibMinEVelib` - stationVelibMinEVelibOverflow ) AS stationMinEVelibNDay,
+                                      MIN(stationVelibMinEVelibOverflow)                            AS stationVelibMinEVelibOverflow
+                             FROM
+                                      `velib_station_min_velib`
+                             WHERE
+                                      1
+                                      AND `stationStatDate` > DATE_ADD(NOW(), INTERVAL -3 DAY)
+                             GROUP BY
+                                      `stationCode`
+							) AS min_Velib
+						ON min_Velib.`stationCode` = `velib_station`.`stationCode`
+					WHERE
+						`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR)
+						and stationHidden = 0			  
+				  )					  
 	";
 	//echo $r;
 	if(!mysqli_query($link, $r))

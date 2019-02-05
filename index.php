@@ -1055,6 +1055,352 @@
 				</p>";				
 				echo "</div>";
 
+				// graph nb Evelib
+				$tablo=[];
+				if ($result = getEVelibNbrStats($link)) 
+				{
+					if (mysqli_num_rows($result)>0)
+					{
+						//détermine le nombre de colonnes
+						$nbcol=mysqli_num_rows($result);				
+						while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
+						{
+							$tablo[] = $row;
+						}				
+					}
+				}
+				
+				//
+				
+				echo "<div id='GraphEvolutionNombreEVelib' class='widgetGraph2' > <button id='button_GraphEvolutionNombreEVelib' class='graphFullScreenButton'>+</button>";
+				echo "<script>";
+				echo "var data = [{";
+				
+				$nb=count($tablo);
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+				
+					 ;
+					echo '"'.$tablo[$i]['avgVelib'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}
+				
+				echo ",
+						error_y: {
+						  type: 'data',
+						  symmetric: false,
+						  ";
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'array: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['maxVelib']-$tablo[$i]['avgVelib']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo '],';
+				}
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'arrayminus: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['avgVelib']-$tablo[$i]['minVelib']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " }, type: 'scatter', name : 'Officiel'},{";
+				
+				//serie 2
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+				
+					 ;
+					echo '"'.$tablo[$i]['avgVelibOverflow'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}
+				
+				echo ",
+						error_y: {
+						  type: 'data',
+						  symmetric: false,
+						  ";
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'array: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['maxVelibOverflow']-$tablo[$i]['avgVelibOverflow']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo '],';
+				}
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'arrayminus: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['avgVelibOverflow']-$tablo[$i]['minVelibOverflow']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " }, type: 'scatter', visible: 'legendonly', name : 'Officiel,<br>En Overflow'},{";				
+				//serie 3
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+				
+					 ;
+					echo '"'.$tablo[$i]['avgEstimatedVelib'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}
+				
+				echo ",
+						error_y: {
+						  type: 'data',
+						  symmetric: false,
+						  ";
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'array: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['maxEstimatedVelib']-$tablo[$i]['avgEstimatedVelib']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo '],';
+				}
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'arrayminus: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['avgEstimatedVelib']-$tablo[$i]['minEstimatedVelib']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " }, type: 'scatter', name : 'Estimé'},{";	
+				//serie 4
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+				
+					 ;
+					echo '"'.$tablo[$i]['avgEstimatedVelibOverflow'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}
+				
+				echo ",
+						error_y: {
+						  type: 'data',
+						  symmetric: false,
+						  ";
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'array: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['maxEstimatedVelibOverflow']-$tablo[$i]['avgEstimatedVelibOverflow']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo '],';
+				}
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'arrayminus: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['avgEstimatedVelibOverflow']-$tablo[$i]['minEstimatedVelibOverflow']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " }, type: 'scatter', visible: 'legendonly', name : 'Estimé,<br>en Overflow '},{";				
+				
+				//serie 5
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+				
+					 ;
+					echo '"'.$tablo[$i]['avgEstimatedUnavailableVelib'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}
+				
+				echo ",
+						error_y: {
+						  type: 'data',
+						  symmetric: false,
+						  ";
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'array: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['maxEstimatedUnavailableVelib']-$tablo[$i]['avgEstimatedUnavailableVelib']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo '],';
+				}
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'arrayminus: [';
+				
+					 ;
+					echo '"'.($tablo[$i]['avgEstimatedUnavailableVelib']-$tablo[$i]['minEstimatedUnavailableVelib']).'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " }, type: 'scatter',  name : 'Estimé,<br>Indisponible '},{"; 
+
+				//serie 6
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+					
+					$percEstimVelib = $tablo[$i]['avgEstimatedVelib']/$tablo[$i]['avgVelib'] *100;
+
+					echo '"'.$percEstimVelib.'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " , type: 'scatter', visible: 'legendonly', yaxis: 'y2', name : 'Estimé,<br>% dispo '}";
+				
+				echo "];
+				var layout = 
+				{ 
+					title: 'Nombre de VAE', 
+					paper_bgcolor: '#f8f9fa', 
+					plot_bgcolor: '#f8f9fa',
+					yaxis: {
+							tickfont: {},
+						  }, 
+					yaxis2: {						
+								overlaying: 'y', 
+								tickfont: {color: 'rgb(55, 34, 29)'}, 
+								side: 'right',
+								showgrid: false,
+								range: [0, 100]
+							},						
+					showlegend: true,
+					margin: {
+								l: 40,
+								r: 20,
+								b: 40,
+								t: 30,
+								pad: 4
+							  }
+				};";
+				
+				echo "Plotly.newPlot('GraphEvolutionNombreEVelib', data, layout,{displayModeBar: false});";
+				echo '</script>';
+				echo "
+				<p class='notes'>
+					Ce graphique propose une représentation du nombre moyen, minimum et maximum de VAE présents en station. <br>
+					Les courbes officielles reprènent les données brutes de l'API Velib. Les courbes estimées essayent d'évaluer le nombre de VAE réellements disponibles/utilisables en soustrayant aux données officielles le nombre minimum de VAE enregitré pour chaque station au cours des 3 derniers jours.<br>
+					Ces courbes ne prennent pas en compte le nombre de VAE en cours d'utilisation et/ou de déplacement par les équipes de régulation.
+				</p>";				
+				echo "</div>";				
+				
 
 				//fin mise en cache
 				$newPage = ob_get_contents(); //recup contenu à cacher
@@ -1297,6 +1643,38 @@
 					}
 				}
 			);
+
+		var button_GraphEvolutionNombreEVelib = 1;
+		$('#button_GraphEvolutionNombreEVelib').click
+			(
+				function(e)
+				{				
+					$('#GraphEvolutionNombreEVelib').toggleClass('fullscreen'); 
+					var update = 
+					{
+						width: $('#GraphEvolutionNombreEVelib').width(), 
+						height: $('#GraphEvolutionNombreEVelib').height()  
+					};
+					
+					Plotly.relayout('GraphEvolutionNombreEVelib', update)
+					
+					if( button_GraphEvolutionNombreVelib ==0)
+					{
+						$("#button_GraphEvolutionNombreEVelib").text('+');
+						button_GraphEvolutionNombreVelib=1;
+						$("#fullscreenhider").hide();
+						$('body').css('overflow', 'auto');
+					}
+					else
+					{					
+						$("#button_GraphEvolutionNombreEVelib").text('x');
+						button_GraphEvolutionNombreVelib=0;
+						$("#fullscreenhider").fadeIn("slow");
+						$('body').css('overflow', 'hidden');
+					}
+				}
+			);			
+			
 	</script>
 	<div id="fullscreenhider" style="display: none;"></div>
 	<!-- graph to full screen END-->
