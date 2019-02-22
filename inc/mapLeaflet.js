@@ -285,6 +285,8 @@ function addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag)
 			HS = '';
 		}
 		
+		/* 
+		// Ne plus afficher l'électrification sur la carte
 		if(locations[i]['stationConnected']=='1' )
 		{
 			pow = 'p_';
@@ -296,7 +298,9 @@ function addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag)
 		else 
 		{
 			pow = '';
-		}
+		}*/
+		
+		pow = '';
 		
 		// détermination de la valeur nbr velib du marker en fonction du mode
 		if(estimatedVelibNumber==0) // nombre de velib officiel

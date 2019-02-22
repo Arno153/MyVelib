@@ -355,11 +355,11 @@
 		<<img src="./images/marker_purple0.png" alt="Violet" width="12">  --
 		<img src="./images/marker_grey0.png" alt="Gris" width="12"> : En travaux / Fermée -- NB: Malus pour les stations sans retraits
 		<br>* Données communautaire: <img src="./images/marker_greenx10.png" alt="Croix" width="12"> Signalée HS
-		*** Alimentation Electrique: 
+		<!-- *** Alimentation Electrique: 
 					<img src="./images/marker_p_green0.png" alt="Enedis Powered" width="12"> Enedis 
 					- <img src="./images/marker_green0.png" alt="batterie" width="12"> Sur batterie
 					- <img src="./images/marker_u_green0.png" alt="inconnue" width="12"> Inconnue
-		
+		-->
 		
 		<br>* Le mode "Estimé" essaye d'évaluer le nombre réel de velib disponibles dans une station en soustrayant aux données officielles le nombre min de velib enregistré par la station sur les 2 ou 3 derniers jours
 		<br>* L'absence de mouvement ne présume pas du dysfonctionnement d'une station, l'inverse est également vrai... 
