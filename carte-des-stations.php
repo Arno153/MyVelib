@@ -365,7 +365,7 @@
 		<br>* L'absence de mouvement ne présume pas du dysfonctionnement d'une station, l'inverse est également vrai... 
 		<b>Tous les symboles de la V-BOX <a href="http://blog.velib-metropole.fr/wp-content/uploads/2018/02/PICTOS_LISTE_VELIB-.pdf" target="_blank">chez velib metropole</a> </b>
 		<br>* <b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
-		<br>Contact: <a href="https://twitter.com/arno152153"><img border="0" alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" width="15px" height="15px"></a>
+
 		<?php /*
 			$link = mysqlConnect();
 			echo " (Dernière collecte: ".getLastUpdate($link).")</h3>";		

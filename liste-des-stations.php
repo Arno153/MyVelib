@@ -75,10 +75,6 @@
 	}
 	echo ")";					
 	?>	
-	Contact: 	
-	<a href="https://twitter.com/arno152153">
-		<img border="0" alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" width="15px" height="15px">
-	</a>
 	</div>		
 
 

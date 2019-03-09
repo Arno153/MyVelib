@@ -187,7 +187,6 @@
 		<br>
 		<br><b> Données de la journée en cours quelque soit l'heure à laquelle vous consultez cette page!!!</b>
 		<br><b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
-		<br>Contact: <a href="https://twitter.com/arno152153"><img border="0" alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" width="15px" height="15px"></a>
 	</div>	
 	
 	<div id="mypub">
