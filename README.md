@@ -4,7 +4,7 @@ Code source du site velib.philibert.info: analyse et interprétation des donnée
 
 ## Installation: 
 	--> créer  la base de donnée MySQL à l'aide du script sql suivant: ./setup/CreateVelibToolDatabase.sql 
- 	--> Renseigner le paramétrage Mysql dans ./inc/mysql.inc.php ($server, $user, $password, $db)
+ 	--> Renseigner le paramétrage Mysql dans ./inc/config.inc.php ($server, $user, $password, $db)
  	--> Remplacer "API-Key" par une clé d'api google map valide dans ./cron/stationLocationHasMoved.php
 	--> Remplacer l'identifiant google analystics ou supprimer le js des pages
  	--> Adapter le .htaccess si le site n'est pas en https (NB: https requis pour la géolocalisation  sur la carte)
