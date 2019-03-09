@@ -22,7 +22,8 @@ Code source du site velib.philibert.info: analyse et interprétation des donnée
 		*** Leaflet.Locate : https://github.com/domoritz/leaflet-locatecontrol
 		*** Leaflet.fullscreen: https://github.com/Leaflet/Leaflet.fullscreen
 
-	* Le script tiles.php et les dossiers tiles associés sont inspirés du proxy php proposé par le wiki OSM https://wiki.openstreetmap.org/wiki/ProxySimplePHP afin de réduire la charge sur les server openstreet map
+	* Le script tiles.php et les dossiers tiles associés sont inspirés du proxy php proposé par le wiki OSM
+	https://wiki.openstreetmap.org/wiki/ProxySimplePHP afin de réduire la charge sur les server openstreet map
 
 
 ## Autres ressources 
