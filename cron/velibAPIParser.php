@@ -751,7 +751,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				
 				
 				/// recupérer l'adresse --> adresse.data.gouv.fr					
-				$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$row['stationLat'].'&lon='.$row['stationLon'].'&type=housenumber';
+				$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$stationLat.'&lon='.$stationLon.'&type=housenumber';
 				if($debugVerbose) echo $wsUrl;
 				$stationAdress = "Not Available";
 				
@@ -881,7 +881,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 						VALUES
 						(
 							LAST_INSERT_ID(),
-							'$row[stationCode]' ,
+							'$stationCode' ,
 							'$stationState' ,
 							now()			
 						)
