@@ -39,20 +39,20 @@ if (mysqli_num_rows($result)>0)
 		if($debugVerbose) echo $wsUrl;
 		$newStationAdress = "Not Available";
 		
-		$googleGeocodeAPIRawData = file_get_contents($wsUrl);
-		$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
+		$GeocodeAPIRawData = file_get_contents($wsUrl);
+		$GeocodeAPIDataArray = json_decode($GeocodeAPIRawData, true);
 
 		if($debugVerbose)
 		{
 			echo "vardump</br>";
-			var_dump($googleGeocodeAPIDataArray);	
+			var_dump($GeocodeAPIDataArray);	
 		}
 		$quitter = 0;
 		
-		if(count($googleGeocodeAPIDataArray)!=3) //parce que lorsque le quota est atteint la reponse est un array(3)
+		if(count($GeocodeAPIDataArray)!=3) //parce que lorsque le quota est atteint la reponse est un array(3)
 		{	
 			if($debugVerbose) echo "</br> --- --- ---dépiller le retour ws  --- </br>";
-			foreach($googleGeocodeAPIDataArray as $keyL1 => $valueL1)
+			foreach($GeocodeAPIDataArray as $keyL1 => $valueL1)
 			{
 				if($keyL1 == 'features')
 				{
@@ -122,7 +122,7 @@ if (mysqli_num_rows($result)>0)
 		}
 		else
 		{
-			echo "<br> something goes wrong with google geocode api";
+			echo "<br> something goes wrong with geocode api";
 		}
 		sleep(1);
 	}
