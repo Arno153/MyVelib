@@ -50,19 +50,6 @@ CREATE TABLE `velib_api_sanitize` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `velib_nbrlocation`
---
-
-DROP TABLE IF EXISTS `velib_nbrlocation`;
-CREATE TABLE `velib_nbrlocation` (
-  `date` date NOT NULL,
-  `heure` int(11) NOT NULL,
-  `nbRetraitVAE` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `velib_network`
 --
 
@@ -183,12 +170,6 @@ ALTER TABLE `velib_activ_station_stat`
 ALTER TABLE `velib_api_sanitize`
   ADD PRIMARY KEY (`JsonDate`),
   ADD KEY `JsonMD5` (`JsonMD5`);
-
---
--- Index pour la table `velib_nbrlocation`
---
-ALTER TABLE `velib_nbrlocation`
-  ADD PRIMARY KEY (`date`,`heure`);
 
 --
 -- Index pour la table `velib_network`
