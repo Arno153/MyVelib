@@ -75,6 +75,17 @@ CREATE TABLE `velib_network` (
   `Max_Value` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(1, 'LastUpdate', '2010-01-01 00:00:00', '2010-01-01 00:00:00', '2010-01-01 00:00:00');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(2, 'operative_station_nbr', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(3, 'velib_nbr', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(4, 'evelib_nbr', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(5, 'inactive_station_nbr', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(6, 'velib_nbr_overflow', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(7, 'evelib_nbr_overflow', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(8, 'evelib_nbr2', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(9, 'velib_nbr2', '0', '0', '0');
+
 -- --------------------------------------------------------
 
 --
