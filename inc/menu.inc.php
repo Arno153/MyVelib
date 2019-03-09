@@ -5,7 +5,7 @@
   <ul>
      <li><a href="https://velib.philibert.info/"><i class="fa fa-fw fa-bicycle"></i> Accueil</a></li>
      <li><a href="https://velib.philibert.info/carte-des-stations.php"><i class="fa fa-fw fa-leanpub"></i> Carte</a></li>
-     <li class="has-sub"><span class="submenu-button"></span><a href="#">Plus</a>
+     <li class="has-sub"><span class="submenu-button"></span><a href="#">Plus de cartes</a>
         <ul>
            <li><a href="https://velib.philibert.info/liste-des-stations.php"><i class="fa fa-fw fa-bars"></i> Liste des stations</a></li>
            <li><a href="https://velib.philibert.info/carte-des-mouvements.php"><i class="fa fa-fw fa-map-o"></i> Carte des mouvements</a></li>
@@ -13,5 +13,11 @@
 		   <li><a href="https://velib.philibert.info/carte-des-velib-bloques.php"><i class="fa fa-fw fa-map-o"></i> Carte des velib bloqués</a></li>
         </ul>
      </li>
+     <li class="has-sub"><span class="submenu-button"></span><a href="#">Contact et autres</a>
+        <ul>
+           <li><a href="https://twitter.com/arno152153"><img alt="Twitter" src="https://abs.twimg.com/favicons/favicon.ico" width="12px" height="12px" border="0"> Me contacter </a></li>           
+           <li><a href="https://github.com/Arno153/MyVelib"><img alt="Twitter" src="https://github.githubassets.com/favicon.ico" width="12px" height="12px" border="0"> Sources du projet</a></li>
+        </ul>
+     </li>	 
   </ul>
 </div>
