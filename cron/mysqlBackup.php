@@ -37,10 +37,16 @@ function backupDatabaseTables($tables = '*'){
             $tables[] = $row[0];
         }		
     }
+
+	$fileTime = time();
+	//open file
+	$handle = fopen('./../backup_files/db-backup-'.$fileTime.'.sql','w+');	
 	
     //loop through the tables
-    foreach($tables as $table){
+    foreach($tables as $table)
+	{
 		//echo "table: ".$table."<br>";
+		//echo "memory used ".memory_get_usage()."<br>";
         $result = $db->query("SELECT * FROM $table");
         $numColumns = $result->field_count;
 
@@ -50,31 +56,46 @@ function backupDatabaseTables($tables = '*'){
         $row2 = $result2->fetch_row(); 
 
         $return .= "\n\n".$row2[1].";\n\n";
+		$i = 0;
+		
+		while($row = $result->fetch_row())
+		{
+			$return .= "INSERT INTO $table VALUES(";
 
-        for($i = 0; $i < $numColumns; $i++){
-            while($row = $result->fetch_row()){
-                $return .= "INSERT INTO $table VALUES(";
+			for($j=0; $j < $numColumns; $j++){
+				$row[$j] = addslashes($row[$j]);
+				
+				$row[$j] = preg_replace("/\n/","\\n",$row[$j]);
 
-                for($j=0; $j < $numColumns; $j++){
-                    $row[$j] = addslashes($row[$j]);
-					
-                    $row[$j] = preg_replace("/\n/","\\n",$row[$j]);
+				if (isset($row[$j])) { $return .= '"'.$row[$j].'"' ; } else { $return .= '""'; }
+				if ($j < ($numColumns-1)) { $return.= ','; }
+			}
+			$return .= ");\n";
+			$i=$i+1;
+			
+			if($i==100000) //ecriture fichier toute les 100k lignes pour limiter la conso mémoire
+			{
+				//write to file
+				//echo "memory used ".memory_get_usage()."<br>";
+				fwrite($handle,$return);
+				//"table: ".$table." partially saved to file <br><br>";
+				//echo "memory used ".memory_get_usage()."<br>";				
+				$return = "";
+				$i=0;				
+			}		
 
-                    if (isset($row[$j])) { $return .= '"'.$row[$j].'"' ; } else { $return .= '""'; }
-                    if ($j < ($numColumns-1)) { $return.= ','; }
-                }
-                $return .= ");\n";
-
-            }
-        }
+		}
 
         $return .= "\n\n\n";
 		
+		//write to file
+		fwrite($handle,$return);		
+		$return = "";
+		
+		// echo "memory used ".memory_get_usage()."<br>";
+		// echo "table: ".$table." saved to file <br><br>";		
     }
-
-    //save file
-    $handle = fopen('./../backup_files/db-backup-'.time().'.sql','w+');
-    fwrite($handle,$return);
-    fclose($handle);
 	
+	//close file
+	fclose($handle);
 }
