@@ -18,9 +18,10 @@ Code source du site velib.philibert.info: analyse et interprétation des donnée
 	* Leaflet: https://leafletjs.com/
 	* Leaflet plugins: https://leafletjs.com/plugins.html
 	En particulier:
-		*** Leaflet.Control.Custom.js --> fork de https://github.com/yigityuce/Leaflet.Control.Custom
-		*** Leaflet.Locate : https://github.com/domoritz/leaflet-locatecontrol
-		*** Leaflet.fullscreen: https://github.com/Leaflet/Leaflet.fullscreen
+		*** Controles: Leaflet.Control.Custom.js --> fork de https://github.com/yigityuce/Leaflet.Control.Custom
+		*** geolocalisation: Leaflet.Locate : https://github.com/domoritz/leaflet-locatecontrol
+		*** Basculer en fulscreen: Leaflet.fullscreen: https://github.com/Leaflet/Leaflet.fullscreen
+		*** Recherche de lieu: leaflet-control-geocoder: https://github.com/perliedman/leaflet-control-geocoder 
 
 	* Le script tiles.php et les dossiers tiles associés sont inspirés du proxy php proposé par le wiki OSM
 	https://wiki.openstreetmap.org/wiki/ProxySimplePHP afin de réduire la charge sur les server openstreet map
