@@ -372,6 +372,24 @@
 			return False;
 	}
 	
+	function getEstimatedVelibInUse($link)
+	{
+		$query = 
+		"select 
+			(SELECT current_value FROM `velib_network` WHERE `network_key` = 'nbrVelibUtilises') velibInUse,
+			(SELECT max_value FROM `velib_network` WHERE `network_key` = 'nbrVelibUtilises') maxVelibInUse,			
+			(SELECT current_value FROM `velib_network` WHERE `network_key` = 'nbrEVelibUtilises') eVelibInUse,
+			(SELECT max_value FROM `velib_network` WHERE `network_key` = 'nbrEVelibUtilises') maxEVelibInUse
+		from `velib_network`
+		LIMIT 1
+		";
+		
+		if ($result = mysqli_query($link, $query)) 
+			return $result;
+		else	
+			return False;
+	}	
+	
 	function getVelibNbrStats($link){
 	
 		$query = 

@@ -13,6 +13,8 @@ $debugVerbose = false;
 $debugVelibRawData= false;
 $velibExit = 0;
 $EvelibExit = 0;
+$velibReturn = 0;
+$EvelibReturn = 0;
 
 echo date(DATE_RFC2822);
 	echo "<br>";
@@ -728,11 +730,48 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 								
 							$EvelibExit = $EvelibExit + 
 								max(0, $row['stationNbEBike'] - $stationNbEBike) + 
-								max(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);								
-						}	
-						else	
-							echo "<br> retrait ici? NON"; 
+								max(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);	
+								
+						}
 						
+						if(
+							$row['stationNbBike'] < $stationNbBike
+							or $row['stationNbEBike'] < $stationNbEBike
+							or $row['stationNbBikeOverflow'] < $stationNbBikeOverflow 
+							or $row['stationNbEBikeOverflow'] < $stationNbEBikeOverflow 							
+						) 
+						{							
+							if($debugVerbose)							
+							{	
+							echo "<br> Retour ici? Oui"; 
+							echo "</br> velibReturn init value =".$velibReturn."</br>";	
+							}
+							
+							$velibReturn = $velibReturn +
+								min(0, $row['stationNbEBike'] - $stationNbEBike) + 
+								min(0, $row['stationNbBike'] - $stationNbBike) + 
+								min(0, $row['stationNbBikeOverflow'] - $stationNbBikeOverflow) + 
+								min(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);	
+
+							$EvelibReturn = $EvelibReturn + 
+								min(0, $row['stationNbEBike'] - $stationNbEBike) + 
+								min(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);									
+
+								
+							if($debugVerbose)							
+							{									
+								echo $row['stationNbBike'] ."</br>";
+								echo $stationNbBike ."</br>";
+								echo $row['stationNbEBike'] ."</br>";
+								echo $stationNbEBike."</br>"; 
+								echo "</br> nombre de retour ici ="; 
+								echo min(0,  $row['stationNbEBike'] - $stationNbEBike) 
+									+ min(0, $row['stationNbBike'] - $stationNbBike) 
+									+ min(0, $row['stationNbBikeOverflow'] - $stationNbBikeOverflow) 
+									+ min(0, $row['stationNbEBikeOverflow'] - $stationNbEBikeOverflow);							
+							}							
+						
+						}
 						echo " <br>--> updated<br>";
 					}
 					else echo "<br>pas de diapason - update skipped<br>";
@@ -1376,6 +1415,38 @@ if(!mysqli_query($link, $r))
 	printf("Errormessage: %s\n", mysqli_error($link));
 	//echo $r;
 }
+
+error_log( date("Y-m-d H:i:s")." - exit: ".$velibExit."(".$EvelibExit.") - return: ".-$velibReturn."(".-$EvelibReturn.")");
+
+// maj nbr velib utilisés
+$r = 
+"UPDATE `velib_network` 
+SET 
+	`Current_Value` = GREATEST(0,`Current_Value` + $velibExit - $EvelibExit + $velibReturn - $EvelibReturn),
+	`Max_Value` = GREATEST(Max_Value,GREATEST(0,`Current_Value` + $velibExit - $EvelibExit + $velibReturn - $EvelibReturn)),
+	`Min_Value` = LEAST(Min_Value,GREATEST(0,`Current_Value` + $velibExit - $EvelibExit + $velibReturn - $EvelibReturn))
+WHERE `network_key` = 'nbrVelibUtilises' ";
+if(!mysqli_query($link, $r))
+{
+	printf("Errormessage: %s\n", mysqli_error($link));
+	//echo $r;
+}
+
+// maj nbr velib VAE utilisés
+$r = 
+"UPDATE `velib_network` 
+SET 
+	`Current_Value` = GREATEST(0,`Current_Value` + $EvelibExit + $EvelibReturn),
+	`Max_Value` = GREATEST(Max_Value,GREATEST(0,`Current_Value` + $EvelibExit + $EvelibReturn)),
+	`Min_Value` = LEAST(Min_Value,GREATEST(0,`Current_Value` + $EvelibExit + $EvelibReturn))
+WHERE `network_key` = 'nbrEVelibUtilises' ";
+if(!mysqli_query($link, $r))
+{
+	printf("Errormessage: %s\n", mysqli_error($link));
+	//echo $r;
+}
+
+
 
 echo "</br>data updated";
 

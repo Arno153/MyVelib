@@ -144,11 +144,11 @@
 				ob_start();			
 				// debut mise en cache	
 		?>
-		<h1 class="widget-title">Nombre de Vélib en station</h1>
+		<h1 class="widget-title">Nombre de Vélib</h1>
 		<TABLE class="table-compact">
 		<TR>
-		<TH>Nombre de Velib</TH>
-		<TH>Nombre de Velib Elec.</TH>
+		<TH>Nbr de Velib en station</TH>
+		<TH>Nbr de Velib Elec. en station</TH>
 		</TR>	
 		<?php
 				if ($result = getVelibCount($link)) 
@@ -158,8 +158,8 @@
 							while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
 								{
 									echo "<TR>";	
-									echo "<TD>".($row["velibs"]-$row["velibs_overflow"])." ( + Park+: ".$row["velibs_overflow"].")<br> ( Max: ".$row["velibs_max"].")<br> (Max depuis 01/07: ".$row["velibs_max_072018"].")</TD>";	
-									echo "<TD>".($row["VAE"]-$row["VAE_overflow"])." ( + Park+: ".$row["VAE_overflow"].")<br> ( Max: ".$row["VAE_Max"].")<br> (Max depuis 01/07: ".$row["VAE_Max_072018"].")</TD>"; 
+									echo "<TD>".($row["velibs"]-$row["velibs_overflow"])." ( + Park+: ".$row["velibs_overflow"].")<br> ( Max: ".$row["velibs_max"].")</TD>";	
+									echo "<TD>".($row["VAE"]-$row["VAE_overflow"])." ( + Park+: ".$row["VAE_overflow"].")<br> ( Max: ".$row["VAE_Max"].")</TD>"; 
 									echo "</TR>";	
 								}				
 						}
@@ -167,6 +167,7 @@
 		?>
 		</TABLE>
 		<br>
+
 		<TABLE class="table-compact">
 		<TR>
 		<TH>Nombre estimé de Velib disponibles en station</TH>
@@ -205,7 +206,33 @@
 				echo "</TR>";	
 				
 		?>		
+		</TABLE>
+		<p class="notes">* les velib en cours d'utilisation ne sont pas comptés</p>		
+		<p class="notes">* le nombre estimé de velib en station est obtenu en soustrayant le nombre min de velib enregistré par chaque station sur les 2 / 3 derniers jours</p>	
+		<br>		
+		<TABLE class="table-compact" style="visibility: hidden;">
+		<TR>
+		<TH>Nombre estimé de Velib en cours d'utilisation</TH>
+		</TR>	
+		<?php
+				if ($result = getEstimatedVelibInUse($link)) 
+				{
+					if (mysqli_num_rows($result)>0)
+					{
+						$row = mysqli_fetch_array($result, MYSQLI_ASSOC);	
+					}
+				}
+				
+				echo "<TR>";	
+				echo "
+						<TD>
+							Velib loués: ".$row["velibInUse"]."  -  VAE loués: ".$row["eVelibInUse"]."
+						</TD>";	
+				echo "</TR>";	
+				
+		?>		
 		</TABLE>		
+				
 		<?php
 				//fin mise en cache
 				$newPage = ob_get_contents(); //recup contenu à cacher
@@ -215,8 +242,6 @@
 			}				
 		?>
 
-		<p class="notes">* les velib en cours d'utilisation ne sont pas comptés</p>		
-		<p class="notes">* le nombre estimé de velib est obtenu en soustrayant le nombre min de velib enregistré par chaque station sur les 2 / 3 derniers jours</p>	
 	</div>
 	
 	<div class="left-widget left360 col2">
