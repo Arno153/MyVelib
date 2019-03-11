@@ -73,7 +73,7 @@ function backupDatabaseTables($tables = '*'){
 			$return .= ");\n";
 			$i=$i+1;
 			
-			if($i==100000) //ecriture fichier toute les 100k lignes pour limiter la conso mémoire
+			if($i==25000) //ecriture fichier toute les 100k lignes pour limiter la conso mémoire
 			{
 				//write to file
 				//echo "memory used ".memory_get_usage()."<br>";
