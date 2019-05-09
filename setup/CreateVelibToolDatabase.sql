@@ -72,6 +72,9 @@ INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value)
 INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(7, 'evelib_nbr_overflow', '0', '0', '0');
 INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(8, 'evelib_nbr2', '0', '0', '0');
 INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(9, 'velib_nbr2', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(10, 'nbrVelibUtilises', '0', '0', '0');
+INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(11, 'nbrEVelibUtilises', '0', '0', '0');
+
 
 -- --------------------------------------------------------
 
