@@ -605,8 +605,8 @@ function displayMvtMap()
 		
 		// détermination de la valeur du marker 
 		nbBikeMarker = (parseInt(locations[i]['stationVelibExit'])).toString();
-		if(nbBikeMarker>300)
-			nbBikeMarker = 300;
+		if(nbBikeMarker>400)
+			nbBikeMarker = 400;
 		
 		if(locations[i]['stationState'] =='Operative')
 			HS = "";
