@@ -1,12 +1,13 @@
-function refresh(estimatedVelibNumber, bloqueTF, VAEFlag )
+function refresh(estimatedVelibNumber, bloqueTF, VAEFlag, placeVelib )
 {
 	bloqueTF = typeof bloqueTF !== 'undefined' ?  bloqueTF : 0; //si 1 : vélib bloqué (min 2J ou 3J), si 0 velib dispo
 	VAEFlag =  typeof VAEFlag !== 'undefined' ?  VAEFlag : 0; //0 = tous, 1 = Meca, 2 = VAE 
+	placeVelib = typeof placeVelib !== 'undefined' ?  placeVelib : 0; //0 = Velib, 1 = places 
 	//var varUrl = 'carte-des-stations.php?lat='+map.getCenter().lat()+'&lon='+map.getCenter().lng()+'&zoom='+map.getZoom();		
 	//window.location.href=varUrl;
 	removeMarkersToMap();
 	//addMarkersToMap();
-	getStations(estimatedVelibNumber, bloqueTF, VAEFlag );
+	getStations(estimatedVelibNumber, bloqueTF, VAEFlag, placeVelib );
 	document.getElementById('gads').contentDocument.location.reload(true);
 }
 
@@ -97,10 +98,11 @@ function handleLocationError(browserHasGeolocation, infoWindow2, pos) {
 	infoWindow2.open(map);
   }
 
-function getStations(estimatedVelibNumber,bloqueTF,VAEFlag)
+function getStations(estimatedVelibNumber,bloqueTF,VAEFlag, placeVelib)
 {
    bloqueTF = typeof bloqueTF !== 'undefined' ?  bloqueTF : 0; //si 1 : vélib bloqué (min 2J ou 3J), si 0 velib dispo
    VAEFlag =  typeof VAEFlag !== 'undefined' ?  VAEFlag : 0; //0 = tous, 1 = Meca, 2 = VAE 
+   placeVelib = typeof placeVelib !== 'undefined' ?  placeVelib : 0; //0 = Velib, 1 = places 
    
    var xmlhttp;
 	// compatible with IE7+, Firefox, Chrome, Opera, Safari
@@ -117,7 +119,7 @@ function getStations(estimatedVelibNumber,bloqueTF,VAEFlag)
 			if (this.status === 200) {
 				console.log("Réponse reçue: %s", this.responseText);
 				locations = JSON.parse(	this.responseText);
-				addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag);
+				addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag, placeVelib);
 				
 			} else {
 				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
@@ -272,7 +274,7 @@ function removeMarkersToMap()
 
 }
 
-function addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag)
+function addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag, placeVelib )
 {
 	for (i = 0; i < locations.length; i++) 
 	{ 
@@ -302,30 +304,38 @@ function addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag)
 		
 		pow = '';
 		
-		// détermination de la valeur nbr velib du marker en fonction du mode
-		if(estimatedVelibNumber==0) // nombre de velib officiel
+		if(placeVelib ==1)
 		{
-			//0 = tous, 1 = Meca, 2 = VAE 
-			if(VAEFlag == 0)
-				nbBikeMarker = (parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])).toString();
-			else if (VAEFlag ==1)
-				nbBikeMarker = parseInt(locations[i]['stationNbBike']).toString();
-			else if (VAEFlag ==2)
-				nbBikeMarker = parseInt(locations[i]['stationNbEBike']).toString();
+			
+			nbBikeMarker = (parseInt(locations[i]['nbFreeEDock']) +  parseInt(locations[i]['nbFreeDock'])).toString();
 		}
 		else
 		{
-			if(bloqueTF ==1)
-				nbBikeMarker = Math.max(0,parseInt(locations[i]['stationMinVelibNDay'])).toString();
-			else
-			{				
+			// détermination de la valeur nbr velib du marker en fonction du mode
+			if(estimatedVelibNumber==0) // nombre de velib officiel
+			{
 				//0 = tous, 1 = Meca, 2 = VAE 
 				if(VAEFlag == 0)
-					nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinVelibNDay'])).toString();
+					nbBikeMarker = (parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])).toString();
 				else if (VAEFlag ==1)
-					nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])-parseInt(locations[i]['stationMinVelibNDay'])+parseInt(locations[i]['stationMinEVelibNDay'])).toString();
-				else if (VAEFlag ==2)					
-					nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinEVelibNDay'])).toString();
+					nbBikeMarker = parseInt(locations[i]['stationNbBike']).toString();
+				else if (VAEFlag ==2)
+					nbBikeMarker = parseInt(locations[i]['stationNbEBike']).toString();
+			}
+			else
+			{
+				if(bloqueTF ==1)
+					nbBikeMarker = Math.max(0,parseInt(locations[i]['stationMinVelibNDay'])).toString();
+				else
+				{				
+					//0 = tous, 1 = Meca, 2 = VAE 
+					if(VAEFlag == 0)
+						nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])+parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinVelibNDay'])).toString();
+					else if (VAEFlag ==1)
+						nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbBike'])-parseInt(locations[i]['stationMinVelibNDay'])+parseInt(locations[i]['stationMinEVelibNDay'])).toString();
+					else if (VAEFlag ==2)					
+						nbBikeMarker = Math.max(0,parseInt(locations[i]['stationNbEBike'])-parseInt(locations[i]['stationMinEVelibNDay'])).toString();
+				}
 			}
 		}
 		

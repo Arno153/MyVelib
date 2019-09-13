@@ -129,6 +129,17 @@
 			VAEMode = 2;
 		}	
 		
+		// on recupéère le choix du mode Tout/Velib/VAE depuis un cookies
+		var placeVelib = 0;
+		if(getCookie("placeVelib")==0)
+		{
+			placeVelib = 0;
+		}
+		else if(getCookie("placeVelib")==1)
+		{
+			placeVelib = 1;
+		}
+		
 		
 		var zoomp = getUrlParam('zoom');
 		if(zoomp == undefined){
@@ -171,7 +182,7 @@
 								{
 									click: function(data)
 									{
-										refresh(estimatedVelibNumber, 0, VAEMode);									
+										refresh(estimatedVelibNumber, 0, VAEMode, placeVelib);									
 									},
 								}
 						})
@@ -218,7 +229,7 @@
 		}).addTo(mymap);
 		
 		//load stations to the map
-		getStations(estimatedVelibNumber,0,VAEMode);
+		getStations(estimatedVelibNumber,0,VAEMode, placeVelib);
 		
 		// add adress search control		
 		L.Control.geocoder().addTo(mymap);
@@ -230,7 +241,7 @@
 							content : 
 								//'<label class="switch switch-left-right"><input class="switch-input" type="checkbox" /><span class="switch-label" data-on="Estimé" data-off="Officiel"></span> <span class="switch-handle"></span></label>',
 								//'<label class="switch switch-left-right"><input id="mySwitch" class="switch-input" type="checkbox" /><span class="switch-label" data-on="Estimé" data-off="Officiel"></span> <span class="switch-handle"></span></label>',
-								'<div class="switch-field"><input type="radio" id="switch_3_left" name="switch_3" value="0" checked/><label for="switch_3_left">Officiel<br></label><input type="radio" id="switch_3_center" name="switch_3" value="3" /><label for="switch_3_center">Estimé<br>3J</label><input type="radio" id="switch_3_right" name="switch_3" value="2" /><label for="switch_3_right">Estimé<br>2J</label></div>',
+								'<div class="switch-field" id = "cc2"><input type="radio" id="switch_3_left" name="switch_3" value="0" checked/><label for="switch_3_left">Officiel<br></label><input type="radio" id="switch_3_center" name="switch_3" value="3" /><label for="switch_3_center">Estimé<br>3J</label><input type="radio" id="switch_3_right" name="switch_3" value="2" /><label for="switch_3_right">Estimé<br>2J</label></div>',
 							style   :
 							{
 								padding: '0px',
@@ -290,7 +301,7 @@
 							position: 'bottomleft',
 							title: 'Type de Velib',
 							content : 
-								'<div class="switch-field"><input type="radio" id="VAE_3_left" name="VAE_3" value="0" checked/><label class="compact-switch" for="VAE_3_left">Tous<br></label><input type="radio" id="VAE_3_center" name="VAE_3" value="1" /><label class="compact-switch" for="VAE_3_center">Velib</label><input type="radio" id="VAE_3_right" name="VAE_3" value="2" /><label class="compact-switch" for="VAE_3_right">VAE</label></div>',
+								'<div class="switch-field" id="cc3"><input type="radio" id="VAE_3_left" name="VAE_3" value="0" checked/><label class="compact-switch" for="VAE_3_left">Tous<br></label><input type="radio" id="VAE_3_center" name="VAE_3" value="1" /><label class="compact-switch" for="VAE_3_center">Velib</label><input type="radio" id="VAE_3_right" name="VAE_3" value="2" /><label class="compact-switch" for="VAE_3_right">VAE</label></div>',
 							style   :
 							{
 								padding: '0px',
@@ -343,7 +354,73 @@
 		{
 			document.getElementById("VAE_3_center").checked=true;
 		}
-		;			
+		;		
+
+
+		var cc4 = L.control.custom({
+							position: 'bottomleft',
+							title: 'Places libres ou Velib disponibles (chiffre officiel)',
+							content : 
+								//'<label class="switch switch-left-right"><input class="switch-input" type="checkbox" /><span class="switch-label" data-on="Velib" data-off="Place"></span> <span class="switch-handle"></span></label>',
+								//'<label class="switch switch-left-right"><input id="mySwitch" class="switch-input" type="checkbox" /><span class="switch-label" data-on="Estimé" data-off="Officiel"></span> <span class="switch-handle"></span></label>',
+								'<div class="switch-field"><input type="radio" id="switch_2_left" name="switch_0" value="0" checked/><label class="compact-switch" for="switch_2_left">Velib<br></label><input type="radio" id="switch_2_right" name="switch_0" value="1" /><label class="compact-switch" for="switch_2_right">Places</label></div>',
+							style   :
+							{
+								padding: '0px',
+							},
+							events:
+								{
+									click: function(data)
+									{
+										document.getElementById("switch_2_left").onclick = function() {									
+											if(document.getElementById("switch_2_left").checked)
+											{											
+												//alert('Velib');
+												placeVelib = 0;
+												document.getElementById("cc3").style.display = "block";
+												document.getElementById("cc2").style.display = "block";												
+												refresh(0,0,0,placeVelib);												
+											}	
+										}
+										document.getElementById("switch_2_right").onclick = function() {									
+											if(document.getElementById("switch_2_right").checked)
+											{											
+												//alert('Place');
+												placeVelib = 1;
+												document.getElementById("cc3").style.display = "none";
+												document.getElementById("cc2").style.display = "none";
+												refresh(0,0,0,placeVelib);												
+											}	
+										}							
+										
+										
+										// on stoque le choix dans un cookies
+										var d = new Date();
+										d.setTime(d.getTime() + (30*24*60*60*1000));
+										var expires = "expires="+ d.toUTCString();
+										document.cookie = "placeVelib" + "=" + placeVelib + ";" + expires + ";path=/";
+									},
+								}
+						})
+						.addTo(mymap);	
+
+
+						if(placeVelib == 0)
+						{
+							document.getElementById("switch_2_left").checked=true;
+							
+							document.getElementById("cc3").style.display = "block";
+							document.getElementById("cc2").style.display = "block";
+
+						}
+						else if(placeVelib == 1)
+						{
+							document.getElementById("switch_2_right").checked=true;
+							
+							document.getElementById("cc3").style.display = "none";
+							document.getElementById("cc2").style.display = "none";
+						}
+						;						
 		
     </script>
 	
