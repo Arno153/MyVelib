@@ -314,7 +314,9 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					$stationNbFreeDock == $row["nbFreeDock"] and
 					$stationNbFreeEDock == $row["nbFreeEDock"] and 
 					$stationNbBikeOverflow == $row["stationNbBikeOverflow"] and 
-					$stationNbEBikeOverflow == $row["stationNbEBikeOverflow"]
+					$stationNbEBikeOverflow == $row["stationNbEBikeOverflow"] and 
+					(round($stationLat - ($row["stationLat"]+0),5)) == 0 and
+					(round($stationLon - ($row["stationLon"]+0),5)) == 0
 				)
 				{ // Pas de changement - update pour topper que la station est tjs là";
 					
@@ -428,7 +430,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 
 					
 					
-					if($stationNbEDock+$stationNbDock + $stationNbFreeDock + $stationNbFreeEDock+$stationNbBike+$stationNbEBike !=0)
+					if(($stationNbEDock+$stationNbDock + $stationNbFreeDock + $stationNbFreeEDock+$stationNbBike+$stationNbEBike !=0) or $stationLocationHasChanged  == 1)
 					{	
 						// si la station est signalée HS, alors on recupère le max de  "delta(max-min) quotidien" de la station depuis le signalement
 						// 
