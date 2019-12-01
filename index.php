@@ -147,8 +147,8 @@
 		<h1 class="widget-title">Nombre de Vélib</h1>
 		<TABLE class="table-compact">
 		<TR>
-		<TH>Nbr de Velib en station</TH>
-		<TH>Nbr de Velib Elec. en station</TH>
+		<TH>Velib en station*</TH>
+		<TH>Velib Elec. en station*</TH>
 		</TR>	
 		<?php
 				if ($result = getVelibCount($link)) 
@@ -170,7 +170,7 @@
 
 		<TABLE class="table-compact">
 		<TR>
-		<TH>Nombre estimé de Velib disponibles en station</TH>
+		<TH>Nombre estimé** de Velib disponibles en station*</TH>
 		</TR>	
 		<?php
 				if ($result = getEstimatedVelibCount($link)) 
@@ -208,7 +208,7 @@
 		?>		
 		</TABLE>
 		<p class="notes">* les velib en cours d'utilisation ne sont pas comptés</p>		
-		<p class="notes">* le nombre estimé de velib en station est obtenu en soustrayant le nombre min de velib enregistré par chaque station sur les 2 / 3 derniers jours</p>	
+		<p class="notes">** le nombre estimé de velib en station est obtenu en soustrayant le nombre min de velib enregistré par chaque station sur les 2 / 3 derniers jours</p>	
 		<br>		
 		<TABLE class="table-compact" style="visibility: hidden;">
 		<TR>
@@ -1012,7 +1012,8 @@
 					if($i%$nbcol==($nbcol-1))
 						echo ']';
 				}				
-				echo " }, type: 'scatter',  name : 'Estimé,<br>Indisponible '},{"; 
+				echo " }, type: 'scatter',  name : 'Estimé,<br>Indisponible '},
+				{"; 
 
 				//serie 6
 				for($i=0;$i<$nb;$i++)
@@ -1038,7 +1039,61 @@
 					if($i%$nbcol==($nbcol-1))
 						echo ']';
 				}				
-				echo " , type: 'scatter', visible: 'legendonly', yaxis: 'y2', name : 'Estimé,<br>% dispo '}";
+				echo " , type: 'scatter', visible: 'legendonly', yaxis: 'y2', name : 'Estimé,<br>% dispo '},
+				{";
+				
+				//serie 7
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+					
+					$percEstimVelib = $tablo[$i]['avgEVelib']/$tablo[$i]['avgVelib'] *100;
+
+					echo '"'.$percEstimVelib.'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " , type: 'scatter', visible: 'legendonly', yaxis: 'y2', name : 'Officiel,<br>% Velib Elec '},
+				{";		
+
+				//serie 8
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+						echo 'x: [';
+					
+					echo '"'.$tablo[$i]['date'].'", ';
+
+					if($i%$nbcol==($nbcol-1))
+					echo '],';
+
+				}		
+				for($i=0;$i<$nb;$i++)
+				{
+					if($i%$nbcol==0)
+					echo 'y: [';
+					
+					$percEstimVelib = $tablo[$i]['avgEstimatedEVelib']/$tablo[$i]['avgEstimatedVelib'] *100;
+
+					echo '"'.$percEstimVelib.'", ';
+
+					if($i%$nbcol==($nbcol-1))
+						echo ']';
+				}				
+				echo " , type: 'scatter', visible: 'legendonly', yaxis: 'y2', name : 'Estimé,<br>% Velib Elec '}";						
 				
 				echo "];
 				var layout = 
