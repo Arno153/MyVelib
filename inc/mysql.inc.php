@@ -130,6 +130,7 @@
 								   AND DATE       < '2018-08-01'
 					 )
 					 AND DATE < DATE(NOW() )
+					and `date` > '2018-02-13'
 			GROUP BY
 					 `date`
 			ORDER BY
@@ -475,6 +476,95 @@
 	function getNewStationList($link){
 		return getStationList($link, "`stationInsertedInDb` > DATE_ADD(NOW(), INTERVAL -5 DAY)" , "order by `stationInsertedInDb` desc");
 	}	
+	
+	function getTodayAnd10bigestDay($link)
+	{
+		$query=
+		"
+		SELECT
+			 a.date,
+			 heure,
+			 SUM(`nbrVelibExit`) nbLocation,
+			 SUM(`nbrEVelibExit`) nbLocationVAE,
+			 SUM(`nbrVelibExit`) - SUM(`nbrEVelibExit`) nbLocationMeca
+		FROM
+			 `velib_activ_station_stat` a inner join
+			 (
+				SELECT date
+				FROM velib_activ_station_stat
+				WHERE
+					date NOT IN
+					(
+					SELECT DISTINCT date
+					FROM velib_activ_station_stat
+					WHERE nbrVelibExit > 5000 AND DATE < '2018-08-01'
+					)
+					and date <> DATE(NOW() )
+				GROUP BY date
+				ORDER BY SUM(`nbrVelibExit`) DESC
+				limit 5
+			) b on a.date = b.date
+		GROUP BY
+				 a.date, heure
+		union
+		SELECT
+			 c.date,
+			 heure,
+			 SUM(`nbrVelibExit`) nbLocation,
+			 SUM(`nbrEVelibExit`) nbLocationVAE,
+			 SUM(`nbrVelibExit`) - SUM(`nbrEVelibExit`) nbLocationMeca
+		FROM
+			 `velib_activ_station_stat` c
+		where c.DATE = DATE(NOW() ) and c.heure!= HOUR(NOW())
+		GROUP BY
+				 c.date, heure
+		ORDER BY
+				 date, heure  
+		";
+		
+		if ($result = mysqli_query($link, $query)) 
+			return $result;
+		else	
+			return False;
+		
+	}
+	
+	function getAvailableVelibByCP($link)
+	{
+		$query=
+		"
+			SELECT
+				stationCP,
+				stationCommune,
+				count(id) nbStations,
+				SUM(`stationNbBike` + `stationNbEBike`) AS officialVelibNumber,
+				SUM(`stationNbBikeOverflow` + `stationNbEBikeOverflow`) AS officialVelibNumberOverflow,
+				SUM(`stationNbBike` + `stationNbEBike` - stationMinVelibNDay) AS estimatedVelibNumber,
+				SUM(`stationNbBikeOverflow` + `stationNbEBikeOverflow` - stationVelibMinVelibOverflow) AS estimatedVelibNumberOverflow
+			FROM velib_station
+						LEFT JOIN(
+							SELECT 
+								`stationCode`,
+								MIN(`stationVelibMinVelib` - stationVelibMinVelibOverflow) AS stationMinVelibNDay,
+								MIN(stationVelibMinVelibOverflow) AS stationVelibMinVelibOverflow
+							FROM `velib_station_min_velib`
+							WHERE 1 AND `stationStatDate` > DATE_ADD(NOW(), INTERVAL -3 DAY)
+							GROUP BY `stationCode`
+						) AS min_Velib ON min_Velib.`stationCode` = `velib_station`.`stationCode`
+			WHERE 
+				`stationLastView` > DATE_ADD(NOW(), INTERVAL -48 HOUR) 
+				AND stationHidden = 0
+                and `stationState` not in( 'Close', 'Work in progress')				
+			group by stationCP, stationCommune
+			order by stationCommune, stationCP
+		";
+		
+		if ($result = mysqli_query($link, $query)) 
+			return $result;
+		else	
+			return False;
+		
+	}
 	
 	//private
 	function getStationList($link, $filter, $sort)

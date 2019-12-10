@@ -795,6 +795,8 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$stationLat.'&lon='.$stationLon.'&type=housenumber';
 				if($debugVerbose) echo $wsUrl;
 				$stationAdress = "Not Available";
+				$stationCP;
+				$stationCommune = '';
 				
 				$googleGeocodeAPIRawData = file_get_contents($wsUrl);
 				$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
@@ -828,11 +830,22 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 										if(is_array($valueL3))
 										{
 											if( isset($valueL3['housenumber']) && isset($valueL3['street']) && isset($valueL3['postcode']) && isset($valueL3['city']))
+											{
 												$stationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['postcode']." ".$valueL3['city'];
+												$stationCP = $valueL3['postcode'];
+												$stationCommune = $valueL3['city'];
+											}
 											else
+											{
 												$stationAdress = $valueL3['label'];
+												if(isset($valueL3['postcode']))
+													$stationCP = $valueL3['postcode'];
+												if(isset($valueL3['city']))
+													$stationCommune = $valueL3['city'];												
+											}
 											
 											$stationAdress = mysqli_real_escape_string($link, $stationAdress); //ici on à l'adresse
+											$stationCommune = mysqli_real_escape_string($link, $stationCommune);
 											$quitter = 1;
 											break;
 											
@@ -876,7 +889,9 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					`stationAdress`, 
 					`stationOperativeDate`, 
 					`stationLastExit`,
-					`stationLocationHasChanged` 
+					`stationLocationHasChanged` ,
+					stationCP,
+					stationCommune
 					) 
 				VALUES (
 					'$stationName', 
@@ -897,7 +912,9 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					left('$stationAdress',300),
 					case WHEN '$stationState' = 'Operative' then now() else null end,
 					now(),
-					1
+					1,
+					'$stationCP',
+					'$stationCommune'
 					)";
 				
 				if(!mysqli_query($link, $r))

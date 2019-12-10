@@ -38,6 +38,8 @@ if (mysqli_num_rows($result)>0)
 		$wsUrl = 'https://api-adresse.data.gouv.fr/reverse/?lat='.$row['stationLat'].'&lon='.$row['stationLon'].'&type=housenumber';
 		if($debugVerbose) echo $wsUrl;
 		$newStationAdress = "Not Available";
+		$newStationCP;
+		$newStationCommune = '';
 		
 		$GeocodeAPIRawData = file_get_contents($wsUrl);
 		$GeocodeAPIDataArray = json_decode($GeocodeAPIRawData, true);
@@ -72,11 +74,22 @@ if (mysqli_num_rows($result)>0)
 									if(is_array($valueL3))
 									{
 										if( isset($valueL3['housenumber']) && isset($valueL3['street']) && isset($valueL3['postcode']) && isset($valueL3['city']))
-											$newStationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['postcode']." ".$valueL3['city'];
+										{
+												$newStationAdress = $valueL3['housenumber'].", ".$valueL3['street'].", ".$valueL3['postcode']." ".$valueL3['city'];
+												$newStationCP = $valueL3['postcode'];
+												$newStationCommune = $valueL3['city'];												
+										}
 										else
+										{
 											$newStationAdress = $valueL3['label'];
+											if(isset($valueL3['postcode']))
+												$newStationCP = $valueL3['postcode'];
+											if(isset($valueL3['city']))
+												$newStationCommune = $valueL3['city'];	
+										}
 										
 										$newStationAdress = mysqli_real_escape_string($link, $newStationAdress); //ici on à l'adresse
+										$newStationCommune = mysqli_real_escape_string($link, $newStationCommune);
 										$quitter = 1;
 										break;
 										
@@ -104,6 +117,8 @@ if (mysqli_num_rows($result)>0)
 			UPDATE `velib_station` 
 				SET 
 					`stationAdress` = left('$newStationAdress',300),
+					stationCP = '$newStationCP',
+					stationCommune = left('$newStationCommune',255),
 					`stationLocationHasChanged` = 0
 				where `id`='$row[id]';
 			";
