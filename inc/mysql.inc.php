@@ -8,7 +8,7 @@
 			error_log(date("Y-m-d H:i:s")." - Unable to connect mysql :".mysqli_connect_errno());
 			header('HTTP/1.1 503 Service Temporarily Unavailable');
 			header('Status: 503 Service Temporarily Unavailable');
-			header('Retry-After: 10');//300 seconds
+			header('Retry-After: 30');//300 seconds
 			include 'maintenance.html';			
 			exit;
 		}
@@ -540,7 +540,8 @@
 				SUM(`stationNbBike` + `stationNbEBike`) AS officialVelibNumber,
 				SUM(`stationNbBikeOverflow` + `stationNbEBikeOverflow`) AS officialVelibNumberOverflow,
 				SUM(`stationNbBike` + `stationNbEBike` - stationMinVelibNDay) AS estimatedVelibNumber,
-				SUM(`stationNbBikeOverflow` + `stationNbEBikeOverflow` - stationVelibMinVelibOverflow) AS estimatedVelibNumberOverflow
+				SUM(`stationNbBikeOverflow` + `stationNbEBikeOverflow` - stationVelibMinVelibOverflow) AS estimatedVelibNumberOverflow,
+				sum(`stationNbBike`+`stationNbEBike` + `nbFreeDock`+`nbFreeEDock`) as nbBornes
 			FROM velib_station
 						LEFT JOIN(
 							SELECT 

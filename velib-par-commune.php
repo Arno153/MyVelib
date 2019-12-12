@@ -105,7 +105,9 @@
 							echo "CP";
 							echo "</TH><TH>";
 							echo "Nombre de<br>stations";
-							echo "</TH><TH>";							
+							echo "</TH><TH>";	
+							echo "Nombre total<br>de bornes";
+							echo "</TH><TH>";									
 							echo "Nombre de velib<br>dispo ";
 							echo "</TH><TH>";
 							echo "Nombre de velib<br>dispo en overflow";
@@ -130,6 +132,8 @@
 								echo "</TD><TD>";
 								echo $row["nbStations"];
 								echo "</TD><TD>";
+								echo $row["nbBornes"];
+								echo "</TD><TD>";								
 								echo $row["officialVelibNumber"];
 								echo "</TD><TD>";
 								echo $row["officialVelibNumberOverflow"];
