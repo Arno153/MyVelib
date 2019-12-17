@@ -567,6 +567,31 @@
 		
 	}
 	
+	function getNetworkRationAtHour($link, $hour)
+	{
+		$query=
+		"
+			SELECT 
+				`date`,			
+				`networkNbBike`+`networkNbBikeOverflow` as networkNbBike,
+				`networkEstimatedNbBike`+`networkEstimatedNbBikeOverflow` as networkEstimatedNbBike,
+				`networkNbDock`,
+				`networkNbDock` / (`networkNbBike`+`networkNbBikeOverflow`) as dockBikeRation,
+				`networkNbDock` / (`networkEstimatedNbBike`+`networkEstimatedNbBikeOverflow`) as estimatedDockBikeRatio
+			FROM `velib_activ_station_stat`  
+			where 
+				`heure` = ".$hour."				
+			and `networkNbDock` is not null
+			ORDER BY `velib_activ_station_stat`.`date`  DESC
+		";
+		
+		if ($result = mysqli_query($link, $query)) 
+			return $result;
+		else	
+			return False;
+		
+	}
+	
 	//private
 	function getStationList($link, $filter, $sort)
 	{
