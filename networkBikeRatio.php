@@ -254,7 +254,7 @@
 								tickfont: {color: 'rgb(55, 34, 29)'}, 
 								side: 'right',
 								showgrid: false,
-								range: [2, 5]
+								range: [2, 6]
 							},						
 					showlegend: true,
 					margin: {
@@ -441,7 +441,7 @@
 								tickfont: {color: 'rgb(55, 34, 29)'}, 
 								side: 'right',
 								showgrid: false,
-								range: [2, 5]
+								range: [2, 6]
 							},						
 					showlegend: true,
 					margin: {
@@ -626,7 +626,7 @@
 								tickfont: {color: 'rgb(55, 34, 29)'}, 
 								side: 'right',
 								showgrid: false,
-								range: [4, 7]
+								range: [4, 9]
 							},						
 					showlegend: true,
 					margin: {

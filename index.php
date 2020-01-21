@@ -383,7 +383,7 @@
 					}
 				}
 				
-				echo "<div id='GraphOuvStationSemaine' class='left-widget widgetGraph'> <button id='button_GraphOuvStationSemaine' class='graphFullScreenButton'>+</button>";
+				echo "<div id='GraphOuvStationSemaine' class='widgetGraph2'> <button id='button_GraphOuvStationSemaine' class='graphFullScreenButton'>+</button>";
 				echo "<script>";
 				echo "var data = [{";
 				
@@ -495,7 +495,7 @@
 				
 				//
 				
-				echo "<div id='GraphEvolutionUtilisation' class='left-widget widgetGraph'><button id='button_GraphEvolutionUtilisation' class='graphFullScreenButton'>+</button>";
+				echo "<div id='GraphEvolutionUtilisation' class='widgetGraph2'><button id='button_GraphEvolutionUtilisation' class='graphFullScreenButton'>+</button>";
 				echo "<script>";
 				echo "var data = [{";
 				
@@ -610,7 +610,7 @@
 				//else echo mysqli_error($link);
 	
 					
-				echo "<div id='GraphStationActives' class='left-widget widgetGraph'><button id='button_GraphStationActives' class='graphFullScreenButton'>+</button>";
+				echo "<div id='GraphStationActives' class='widgetGraph2'><button id='button_GraphStationActives' class='graphFullScreenButton'>+</button>";
 				//var_dump($tablo2);
 				
 				echo "<script>";

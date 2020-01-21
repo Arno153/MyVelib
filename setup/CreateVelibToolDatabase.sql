@@ -1,7 +1,7 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.4
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
---									 
+--
 
 --
 -- Base de données :  `velib`
@@ -32,7 +32,8 @@ CREATE TABLE `velib_activ_station_stat` (
   `networkNbEBike` int(11) DEFAULT NULL,
   `networkNbEBikeOverflow` int(11) DEFAULT NULL,
   `networkEstimatedNbEBike` int(11) DEFAULT NULL,
-  `networkEstimatedNbEBikeOverflow` int(11) DEFAULT NULL
+  `networkEstimatedNbEBikeOverflow` int(11) DEFAULT NULL,
+  `networkNbDock` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -114,7 +115,9 @@ CREATE TABLE `velib_station` (
   `stationSignaledElectrified` int(1) NOT NULL DEFAULT '2' COMMENT '0:non - 1-oui - 2:unknown',
   `stationSignaledElectrifiedDate` datetime DEFAULT NULL,
   `stationHidden` tinyint(1) NOT NULL DEFAULT '0',
-  `stationLocationHasChanged` tinyint(1) NOT NULL DEFAULT '0'
+  `stationLocationHasChanged` tinyint(1) NOT NULL DEFAULT '0',
+  `stationCP` int(11) DEFAULT NULL,
+  `stationCommune` varchar(255) COLLATE utf8_bin DEFAULT NULL															 
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -139,8 +142,9 @@ CREATE TABLE `velib_station_min_velib` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
 PARTITION BY RANGE COLUMNS(stationStatDate)
 (
-PARTITION p0 VALUES LESS THAN ('2018-12-31') ENGINE=InnoDB,
-PARTITION p1 VALUES LESS THAN (MAXVALUE) ENGINE=InnoDB
+PARTITION p0 VALUES LESS THAN ('2019-06-30') ENGINE=InnoDB,
+PARTITION p1 VALUES LESS THAN ('2019-11-30') ENGINE=InnoDB,
+PARTITION p2 VALUES LESS THAN (MAXVALUE) ENGINE=InnoDB
 );
 
 -- --------------------------------------------------------
@@ -186,8 +190,9 @@ ALTER TABLE `velib_network`
 --
 ALTER TABLE `velib_station`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `stationCode` (`stationCode`);
-
+  ADD KEY `stationCode` (`stationCode`),
+  ADD KEY `stationState` (`stationState`) USING BTREE;
+  
 --
 -- Index pour la table `velib_station_min_velib`
 --

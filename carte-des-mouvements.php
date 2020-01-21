@@ -177,13 +177,13 @@
 	<div class="disclaimer">
 		* Stations Velib par nombre de mouvements enregistrés : 
 		Aucun: <img src="./images/marker_grey0.png" alt="Gris" width="12">, 
-		1 < <img src="./images/marker_yellow5.png" alt="Jaune" width="12"> <
-		20 < <img src="./images/marker_orange30.png" alt="Orange" width="12"> <
-		50 < <img src="./images/marker_green60.png" alt="Vert" width="12"> <
-		110 < <img src="./images/marker_red150.png" alt="Rouge" width="12"> <
-		200 < <img src="./images/marker_purple220.png" alt="Violet" width="12">
+		1 < <img src="./images/marker_yellow25.png" alt="Jaune" width="12"> <
+		50 < <img src="./images/marker_orange75.png" alt="Orange" width="12"> <
+		100 < <img src="./images/marker_green150.png" alt="Vert" width="12"> <
+		200 < <img src="./images/marker_red300.png" alt="Rouge" width="12"> <
+		350 < <img src="./images/marker_purple500.png" alt="Violet" width="12">
 		<br>Station non opérationnelle selon Velib <img src="./images/marker_greenx10.png" alt="Croix" width="12"> 
-		<br><b>Les valeurs > à 400 sont affichées comme 400</b>
+		<br><b>Les valeurs > à 800 sont affichées comme 800</b>
 		<br>
 		<br><b> Données de la journée en cours quelque soit l'heure à laquelle vous consultez cette page!!!</b>
 		<br><b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.

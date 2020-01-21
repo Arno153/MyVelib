@@ -139,6 +139,7 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 		}
 		echo "<br> MD5 = ".$jsonMd5." On ignore automatiquement ce json suivant son MD5 <br>";
 		echo "<br> KO";
+		md5BlackListKO();
 		exit;
 	}
 		

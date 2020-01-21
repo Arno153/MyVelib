@@ -615,8 +615,8 @@ function displayMvtMap()
 		
 		// détermination de la valeur du marker 
 		nbBikeMarker = (parseInt(locations[i]['stationVelibExit'])).toString();
-		if(nbBikeMarker>400)
-			nbBikeMarker = 400;
+		if(nbBikeMarker>800)
+			nbBikeMarker = 800;
 		
 		if(locations[i]['stationState'] =='Operative')
 			HS = "";
@@ -627,19 +627,19 @@ function displayMvtMap()
 		{
 			iconurl = './images/marker_'+'grey'+HS+nbBikeMarker+'.png';			
 		} 			
-		else if( nbBikeMarker < 20)
+		else if( nbBikeMarker < 50)
 		{
 			iconurl = './images/marker_'+'yellow'+HS+nbBikeMarker+'.png';
 		} 
-		else if( nbBikeMarker < 50)
+		else if( nbBikeMarker < 100)
 		{
 			iconurl = './images/marker_'+'orange'+HS+nbBikeMarker+'.png';	
 		}
-		else if( nbBikeMarker < 110)
+		else if( nbBikeMarker < 200)
 		{
 			iconurl = './images/marker_'+'green'+HS+nbBikeMarker+'.png';				
 		}
-		else if( nbBikeMarker < 200)
+		else if( nbBikeMarker < 350)
 		{
 			iconurl = './images/marker_'+'red'+HS+nbBikeMarker+'.png';				
 		}			

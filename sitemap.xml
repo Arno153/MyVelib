@@ -10,7 +10,7 @@
     <loc>https://velib.philibert.info/liste-des-stations.php</loc>
     <lastmod>2018-02-15</lastmod>
     <changefreq>daily</changefreq>
-    <priority>3</priority>
+    <priority>1</priority>
   </url>
   <url>
     <loc>https://velib.philibert.info/carte-des-stations.php</loc>
@@ -22,18 +22,18 @@
     <loc>https://velib.philibert.info/carte-des-mouvements.php</loc>
     <lastmod>2018-02-15</lastmod>
     <changefreq>daily</changefreq>
-    <priority>2</priority>
+    <priority>1</priority>
   </url> 
   <url>
     <loc>https://velib.philibert.info/carte-heatmap.php</loc>
     <lastmod>2018-02-15</lastmod>
     <changefreq>daily</changefreq>
-    <priority>3</priority>
+    <priority>1</priority>
   </url>
     <url>
     <loc>https://velib.philibert.info/carte-des-velib-bloques.php</loc>
     <lastmod>2018-02-15</lastmod>
     <changefreq>daily</changefreq>
-    <priority>3</priority>
+    <priority>1</priority>
   </url>  
 </urlset>
