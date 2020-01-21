@@ -29,7 +29,7 @@
 	}	
 	
 	
-	//error_log( date("Y-m-d H:i:s")." - v=".$version." d=".$dureeEstimation);
+	error_log( date("Y-m-d H:i:s")." - v=".$version." d=".$dureeEstimation);
 	
 	switch($version)
 	{
@@ -132,6 +132,9 @@
 		case "heatmap" :
 			$query = getapiQuery_heatmap($dureeEstimation);			
 			break;
+		case "heatmapVelib" :
+			$query = getapiQuery_heatmapVelib();	
+			break;			
 	}
 	
 	if(isCacheValid("stationList.api.".$version."-".$dureeEstimation.".json"))

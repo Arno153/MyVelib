@@ -11,7 +11,7 @@
 	  gtag('config', 'UA-113973828-2');
 	</script>
 
-	<title>Velib Paris - Carte officieuse - Heat Map des mouvements</title>
+	<title>Velib Paris - Carte officieuse - Heat Map des velib en station</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="description" content="Carte officieuse des stations du nouveau velib 2018: stations qui fonctionnent ou peut être pas, nombre de velos et VAE disponibles..." />
 	<meta name="keywords" content="velib, velib 2018, velib2018, velib 2, cartes, geolocalisation, gps, autour de moi, station, vélo, paris, fonctionnent, disponibles, HS, en panne" />
@@ -48,9 +48,7 @@
 	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 	<!-- full screen END-->
 	
-	<!-- custom controle -- refresh and toggle button -->
-	<script src="./inc/Leaflet.Control.Custom.js"></script>
-	<!-- custom controle -- END -->
+
 	
 	<!-- heatmap -->
 	<script src="./inc/leaflet-heat.js"></script>
@@ -85,7 +83,6 @@
 		var markers = [];
 		var HS;		
 
-		var mvtDate = 0;		
 
 		var zoomp = 13;
 		var latp = 48.86;
@@ -119,42 +116,13 @@
 
 		
 		//load stations to the map
-		getHeatmapData(mvtDate);
-		
-		// slider management
-		var cc2 = L.control.custom({
-							position: 'bottomleft',
-							title: 'switch',
-							content : 
-								'<div class="value">Aujourd\'hui</div><input type="range" min="0" max="10" step="1" value="0">',
-							style   :
-							{
-								padding: '0px',
-							}
-						})
-						.addTo(mymap);		
-				
-		var elem = document.querySelector('input[type="range"]');
+		getVelibHeatmapData();
 
-		var rangeValue = debounce(function(){
-		  var newValue = elem.value;
-		  mvtDate = newValue;
-		  getHeatmapData(mvtDate);
-		  if(elem.value==0)
-			  newValue = "Aujourd'hui";
-		  else if(elem.value==1)
-			  newValue = "Hier";
-		  else newValue = "J-"+newValue;
-		  var target = document.querySelector('.value');
-		  target.innerHTML = newValue;
-		},300);
-				
-		elem.addEventListener("input", rangeValue);	
     </script>
 	
 	<div class="disclaimer">
-		Estimation de la densité de mouvements des velibs basée sur le nombre de retraits identifiés pour chaque station. 
-	
+		Représentation de la densité de velib disponnible en station. 
+		<BR>
 		<b>Ce site n'est pas un site officiel de vélib.</b> Les données utilisées proviennent de <a href="www.velib-metropole.fr">www.velib-metropole.fr</a> et appartiennent à leur propriétaire.
 	</div>	
 	

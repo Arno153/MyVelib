@@ -8,7 +8,8 @@
      <li><span class="submenu-button"></span><a href="#">+ de cartes</a>
         <ul>
            <li><a href="./carte-des-mouvements.php"><i class="fa fa-fw fa-map-o"></i> Carte des mouvements</a></li>
-           <li><a href="./carte-heatmap.php"><i class="fa fa-fw fa-map-o"></i> Heat Map</a></li>
+           <li><a href="./carte-heatmap.php"><i class="fa fa-fw fa-map-o"></i> Heat Map des mouvements</a></li>
+		   <li><a href="./carte-heatmap-velib.php"><i class="fa fa-fw fa-map-o"></i> Heat Map des Velib</a></li>
 		   <li><a href="./carte-des-velib-bloques.php"><i class="fa fa-fw fa-map-o"></i> Carte des velib bloqués</a></li>
         </ul>
      </li>

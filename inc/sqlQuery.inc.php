@@ -101,8 +101,25 @@ function getapiQuery_heatmap($dureeEstimation)
 			WHERE  
 			  `stationHidden` = 0  
 			order by 1, 2 asc
-		";
-	
+		";	
+}
+
+function getapiQuery_heatmapVelib()
+{
+	return
+		"
+			SELECT
+			  vs.`stationCode`,
+			   	stationNbBike + stationNbEBike as stationNbBike,
+			  `stationLat`,
+			  `stationLon`,
+			  `stationState`
+			FROM
+			  `velib_station` vs 
+			WHERE  
+			  `stationHidden` = 0  
+			order by 1, 2 asc
+		";	
 }
 
 ?>

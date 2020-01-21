@@ -511,6 +511,63 @@ function addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag, placeVelib )
 } 
 
 
+//js for velib dispo heatmap
+function getVelibHeatmapData()
+{
+   var xmlhttp;
+	// compatible with IE7+, Firefox, Chrome, Opera, Safari
+	xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function(){
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			callback(xmlhttp.responseText);
+		}
+	}
+	
+	xmlhttp.onreadystatechange = function(event) {
+		// XMLHttpRequest.DONE === 4
+		if (this.readyState === XMLHttpRequest.DONE) {
+			if (this.status === 200) {
+				console.log("Réponse reçue: %s", this.responseText);
+				//var jsonDataArray = JSON.parse(	this.responseText);
+				locations = JSON.parse(	this.responseText);;
+				displayVelibHeatMap();
+				
+			} else {
+				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
+
+			}
+		}
+	};
+	
+	url='./api/stationList.api.php?v=heatmapVelib&d=0';
+	xmlhttp.open("POST", url, true);
+	xmlhttp.send();			
+}	
+
+
+function displayVelibHeatMap()
+{
+	var heatMapData = [];
+	var maxValue = 0;
+	for(var i = 0; i< locations.length;i++)
+	{	
+		if(parseInt(locations[i]['stationNbBike'])>maxValue)
+			maxValue = parseInt(locations[i]['stationNbBike']);	
+	}
+	
+	
+	for(var i = 0; i< locations.length;i++)
+	{
+		if(parseInt(locations[i]['stationNbBike'])>0)
+		{	
+			heatMapData.push([locations[i]['stationLat'], locations[i]['stationLon'],(locations[i]['stationNbBike'])/maxValue]);
+		}
+	}	
+	
+//heatMapData = heatMapData.map(function (p) { return [p[0], p[1]]; });
+var heat = L.heatLayer(heatMapData, {radius: 25, maxZoom: 10, minOpacity:0.05 }).addTo(mymap);
+}
+
 
 
 
