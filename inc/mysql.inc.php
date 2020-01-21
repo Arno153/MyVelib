@@ -678,6 +678,7 @@
 					  `nbFreeDock`+
 					  `nbFreeEDock` > 0 
 				   and stationHidden           = 0
+				   and `stationLastChange` > DATE_ADD(NOW(), INTERVAL -92 DAY)
 		";
 		
 		if($filter!="")
