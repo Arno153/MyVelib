@@ -18,6 +18,15 @@ $EvelibReturn = 0;
 
 echo date(DATE_RFC2822);
 	echo "<br>";
+	
+if(velibAPIParser_IsLocked())
+{
+	echo "No parallel run - process stopped !!!";
+	error_log("velibAPIParser - No parallel run - process stopped");
+	exit;
+}
+else 
+	velibAPIParser_SetLock();
 
 // velib data collection
 try
@@ -1546,6 +1555,7 @@ if ($result = mysqli_query($link, $query))
 
 mysqlClose($link);
 InvalidCache();
+velibAPIParser_RemoveLock();
 
 // 3 : opérations sur le fichier...
 if(fputs($openLogFile, $logstring)===FALSE)
