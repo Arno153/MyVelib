@@ -107,10 +107,10 @@ function velibAPIParser_IsLocked()
 {
 	if( file_get_contents(dirname(__FILE__).'/../cache/velibAPIParser.lock') == "LOCKED")
 	{
-		if(time() + 90 > filemtime(dirname(__FILE__).'/../cache/velibAPIParser.lock'))
-			return True;
-		else
+		if( filemtime(dirname(__FILE__).'/../cache/velibAPIParser.lock') < (time() - 90 ))
 			return False;
+		else
+			return True;
 	}
 	else
 		return False;
