@@ -282,7 +282,7 @@ input[type="range"] {
   display: block;
   -webkit-appearance: none;
   background-color: #bdc3c7;
-  width: 300px;
+  width: 240px;
   height: 5px;
   border-radius: 5px;
   margin: 0 auto;

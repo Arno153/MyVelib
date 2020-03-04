@@ -55,6 +55,11 @@
 	
 	<!-- custom controle -- END -->
 	
+	<!-- JQUERY UI SLIDER -- BEGIN -->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<!-- JQUERY UI SLIDER -- END -->
+		
   </head>
   <body>
 	<?php	
@@ -88,6 +93,9 @@
 		var lonp = 2.34;
 		
 		var mvtDate = 0;
+		var minMvt = 0;
+		var maxMvt = 50000;
+		var absMaxMvt = 750;
 
 		
 		// initiate leaflet map
@@ -115,7 +123,7 @@
 								{
 									click: function(data)
 									{
-										getMvtMapData(mvtDate);									
+										getMvtMapData(mvtDate, minMvt, maxMvt);									
 									},
 								}
 						})
@@ -139,15 +147,14 @@
 
 		
 		//load stations to the map
-		getMvtMapData(mvtDate);
+		getMvtMapData(mvtDate,minMvt, maxMvt);
 
-
-		// slider management
+		// slider management - Date
 		var cc2 = L.control.custom({
 							position: 'bottomleft',
 							title: 'switch',
 							content : 
-								'<div class="value">Aujourd\'hui</div><input type="range" min="0" max="10" step="1" value="0">',
+								'<div class="value" id="date">Aujourd\'hui</div><input type="range" class="date" min="0" max="10" step="1" value="0">',
 							style   :
 							{
 								padding: '0px',
@@ -155,22 +162,57 @@
 						})
 						.addTo(mymap);		
 				
-		var elem = document.querySelector('input[type="range"]');
+		var elem = document.querySelector('input[class="date"]');
 
 		var rangeValue = debounce(function(){
 		  var newValue = elem.value;
 		  mvtDate = newValue;
-		  getMvtMapData(mvtDate);
+		  getMvtMapData(mvtDate, minMvt, maxMvt);
 		  if(elem.value==0)
 			  newValue = "Aujourd'hui";
 		  else if(elem.value==1)
 			  newValue = "Hier";
 		  else newValue = "J-"+newValue;
-		  var target = document.querySelector('.value');
+		  var target = document.querySelector('div[id="date"]');
 		  target.innerHTML = newValue;
 		},300);
 
-		elem.addEventListener("input", rangeValue);		
+		elem.addEventListener("input", rangeValue);			
+
+		// slider management - Plage
+		var cc3 = L.control.custom({
+							position: 'bottomleft',
+							title: 'switch',
+							content : 
+								'<p><input type="text" id="amount" readonly style="border:0; " class="value"></p><div id="slider-range"></div>',
+							style   :
+							{
+								padding: '0px',
+							}
+						})
+						.addTo(mymap);
+
+		var rangeSlider;
+				
+		$( function() {
+		rangeSlider = $( "#slider-range" ).slider({
+		  range: true,
+		  min: 0,
+		  max: 750,
+		  values: [ 0, 750 ],
+		  slide: function( event, ui ) {
+			$( "#amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+		  },
+		  stop: function( event, ui ) {
+			getMvtMapData(mvtDate,ui.values[ 0 ],ui.values[ 1]);
+			minMvt = ui.values[ 0 ];
+			maxMvt = ui.values[ 1 ];			
+		  }
+		});
+		$( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) +
+		  " - " + $( "#slider-range" ).slider( "values", 1 ) );		
+		} );
+	
     </script>
 	
 	

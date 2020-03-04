@@ -629,7 +629,7 @@ var heat = L.heatLayer(heatMapData, {radius: 30, maxZoom: 10, minOpacity:0.05 })
 }
 
 //js for mouvements map  
-function getMvtMapData(mvtJmN)
+function getMvtMapData(mvtJmN, minMvt, maxMvt)
 {
    var xmlhttp;
 	// compatible with IE7+, Firefox, Chrome, Opera, Safari
@@ -646,8 +646,11 @@ function getMvtMapData(mvtJmN)
 			if (this.status === 200) {
 				console.log("Réponse reçue: %s", this.responseText);
 				locations = JSON.parse(	this.responseText);
-				displayMvtMap();
-				
+				absMaxMvt = displayMvtMap(minMvt, maxMvt);
+				$( "#slider-range" ).slider( "option", "max", absMaxMvt );
+				if(maxMvt > absMaxMvt){ maxMvt = absMaxMvt; }
+				$( "#slider-range" ).slider( "values", 1, maxMvt );
+				$( "#slider-range" ).slider( "enable" );
 			} else {
 				console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
 
@@ -661,9 +664,10 @@ function getMvtMapData(mvtJmN)
 }	
 
 
-function displayMvtMap()
+function displayMvtMap(minMvt, maxMvt)
 {
 	var HS;
+	var max = 0;
 	document.getElementById('gads').contentDocument.location.reload(true);
 	removeMarkersToMap();
 	
@@ -672,50 +676,55 @@ function displayMvtMap()
 		
 		// détermination de la valeur du marker 
 		nbBikeMarker = (parseInt(locations[i]['stationVelibExit'])).toString();
-		if(nbBikeMarker>800)
-			nbBikeMarker = 800;
-		
-		if(locations[i]['stationState'] =='Operative')
-			HS = "";
-		else
-			HS = "x"
-		
-		if( nbBikeMarker == 0)
+		if(nbBikeMarker > max){ max = nbBikeMarker*1;}
+		if( nbBikeMarker>=minMvt && nbBikeMarker <= maxMvt)
 		{
-			iconurl = './images/marker_'+'grey'+HS+nbBikeMarker+'.png';			
-		} 			
-		else if( nbBikeMarker < 50)
-		{
-			iconurl = './images/marker_'+'yellow'+HS+nbBikeMarker+'.png';
-		} 
-		else if( nbBikeMarker < 100)
-		{
-			iconurl = './images/marker_'+'orange'+HS+nbBikeMarker+'.png';	
-		}
-		else if( nbBikeMarker < 200)
-		{
-			iconurl = './images/marker_'+'green'+HS+nbBikeMarker+'.png';				
-		}
-		else if( nbBikeMarker < 350)
-		{
-			iconurl = './images/marker_'+'red'+HS+nbBikeMarker+'.png';				
-		}			
-		else
-		{
-			iconurl = './images/marker_'+'purple'+HS+nbBikeMarker+'.png';	
-		}		
+			if(nbBikeMarker>800)
+				nbBikeMarker = 800;
 			
-		marker = L.marker([locations[i]['stationLat'], locations[i]['stationLon']], 
-		{
-			icon: L.icon({
-					iconUrl: iconurl,
-					iconAnchor: [11, 40],
-					popupAnchor:  [0, -41]
-				})
-		}).addTo(mymap);		
-		markers.push(marker);	
+			if(locations[i]['stationState'] =='Operative')
+				HS = "";
+			else
+				HS = "x"
+			
+			if( nbBikeMarker == 0)
+			{
+				iconurl = './images/marker_'+'grey'+HS+nbBikeMarker+'.png';			
+			} 			
+			else if( nbBikeMarker < 50)
+			{
+				iconurl = './images/marker_'+'yellow'+HS+nbBikeMarker+'.png';
+			} 
+			else if( nbBikeMarker < 100)
+			{
+				iconurl = './images/marker_'+'orange'+HS+nbBikeMarker+'.png';	
+			}
+			else if( nbBikeMarker < 200)
+			{
+				iconurl = './images/marker_'+'green'+HS+nbBikeMarker+'.png';				
+			}
+			else if( nbBikeMarker < 350)
+			{
+				iconurl = './images/marker_'+'red'+HS+nbBikeMarker+'.png';				
+			}			
+			else
+			{
+				iconurl = './images/marker_'+'purple'+HS+nbBikeMarker+'.png';	
+			}		
+				
+			marker = L.marker([locations[i]['stationLat'], locations[i]['stationLon']], 
+			{
+				icon: L.icon({
+						iconUrl: iconurl,
+						iconAnchor: [11, 40],
+						popupAnchor:  [0, -41]
+					})
+			}).addTo(mymap);		
+			markers.push(marker);	
+		}
 	}
-
+	
+	return max;
 }
 
 /**
