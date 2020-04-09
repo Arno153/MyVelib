@@ -21,8 +21,8 @@ echo date(DATE_RFC2822);
 	
 if(velibAPIParser_IsLocked())
 {
-	echo "No parallel run - process stopped !!!";
-	error_log("velibAPIParser - No parallel run - process stopped");
+	echo "No parallel run - stop !!!";
+	error_log("velibAPIParser - No parallel run - process stoped");
 	exit;
 }
 else 
@@ -34,10 +34,12 @@ try
 	if($SomeVelibRawData==false)
 	{
 		echo "ko"; 
+		velibAPIParser_RemoveLock();
 		exit;
 	}
 }catch (Exception $e) {
 		echo "ko: url is not reachable";
+		velibAPIParser_RemoveLock();
 		exit;
 }
 
@@ -47,6 +49,7 @@ if (!$link) {
     echo "Error: Unable to connect to MySQL." . PHP_EOL;
     echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
     echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+	velibAPIParser_RemoveLock();
     exit;
 }
 
@@ -123,10 +126,12 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 		if($SomeVelibRawData==false)
 		{
 			echo "ko"; 
+			velibAPIParser_RemoveLock();
 			exit;
 		}
 	}catch (Exception $e) {
 			echo "ko: url is not reachable";
+			velibAPIParser_RemoveLock();
 			exit;
 	}
 	$jsonMd5 = md5($SomeVelibRawData); //on calc le md5 du flux courrant (bis)
@@ -149,6 +154,7 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 		echo "<br> MD5 = ".$jsonMd5." On ignore automatiquement ce json suivant son MD5 <br>";
 		echo "<br> KO";
 		md5BlackListKO();
+		velibAPIParser_RemoveLock();
 		exit;
 	}
 		
@@ -181,6 +187,7 @@ if(!is_array($VelibDataArray))
 	error_log( date("Y-m-d H:i:s")." - Retour inattendu de l'api Velib");
 	error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
 	error_log(date("Y-m-d H:i:s").$SomeVelibRawData);
+	velibAPIParser_RemoveLock();
 	exit;
 }
 
