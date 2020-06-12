@@ -177,8 +177,8 @@
 				<TR>
 				<TH>Date</TH>
 				<TH>Nombre d'utilisations estimées</TH>
-				<TH>Nombre d'utilisations estimées à <?php echo date('H')+1;?>:00 heure</TH>
-				<TH>Nombre d'utilisations estimées après <?php echo date('H')+1;?>:00 heure</TH>			
+				<TH>Nombre d'utilisations estimées à <?php echo date('H')+2;?>:00 heure</TH>
+				<TH>Nombre d'utilisations estimées après <?php echo date('H')+2;?>:00 heure</TH>			
 				</TR>
 				
 		<?php
@@ -192,7 +192,7 @@
 						if($i< $nb) 
 						{
 						$nbLocations= $nbLocations + $tablo[$i]['nbLocation'];
-						if(date('H')>=$tablo[$i]['heure'])
+						if(date('H')+1>=$tablo[$i]['heure'])
 							$nbLocationsAvant= $nbLocationsAvant + $tablo[$i]['nbLocation'];
 						else
 							$nbLocationsApres= $nbLocationsApres + $tablo[$i]['nbLocation'];
