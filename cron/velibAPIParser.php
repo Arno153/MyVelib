@@ -9,6 +9,7 @@ include "./../inc/cacheMgt.inc.php";
 include "./../inc/mysql.inc.php";
 
 $debug = false;
+$debug2 = true;
 $debugVerbose = false;
 $debugVelibRawData= false;
 $velibExit = 0;
@@ -22,15 +23,39 @@ echo date(DATE_RFC2822);
 if(velibAPIParser_IsLocked())
 {
 	echo "No parallel run - stop !!!";
-	error_log("velibAPIParser - No parallel run - process stoped");
+	error_log(date("Y-m-d H:i:s")." - velibAPIParser - No parallel run - process stoped");
 	exit;
 }
 else 
 	velibAPIParser_SetLock();
 
+if($debug2)
+{
+	error_log(date("Y-m-d H:i:s")." - velibAPIParser - Get URL begin");
+}
+
 // velib data collection
 try
-{	$SomeVelibRawData = file_get_contents('https://www.velib-metropole.fr/webapi/map/details?gpsTopLatitude=49.007249184314254&gpsTopLongitude=2.92510986328125&gpsBotLatitude=48.75890477584505&gpsBotLongitude=1.7832183837890627&zoomLevel=11');
+{	
+	//$SomeVelibRawData = file_get_contents('https://www.velib-metropole.fr/webapi/map/details?gpsTopLatitude=49.007249184314254&gpsTopLongitude=2.92510986328125&gpsBotLatitude=48.75890477584505&gpsBotLongitude=1.7832183837890627&zoomLevel=11');
+
+	//	
+		// From URL to get webpage contents. 
+		$url = "https://www.velib-metropole.fr/webapi/map/details?gpsTopLatitude=49.007249184314254&gpsTopLongitude=2.92510986328125&gpsBotLatitude=48.75890477584505&gpsBotLongitude=1.7832183837890627&zoomLevel=11"; 
+		  
+		// Initialize a CURL session. 
+		$ch = curl_init();  
+		  
+		// Return Page contents. 
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+		  
+		//grab URL and pass it to the variable. 
+		curl_setopt($ch, CURLOPT_URL, $url); 
+		  
+		$SomeVelibRawData = curl_exec($ch); 
+	
+	//
+	
 	if($SomeVelibRawData==false)
 	{
 		echo "ko"; 
@@ -41,6 +66,11 @@ try
 		echo "ko: url is not reachable";
 		velibAPIParser_RemoveLock();
 		exit;
+}
+
+if($debug2)
+{
+	error_log(date("Y-m-d H:i:s")." - velibAPIParser - Get URL End");
 }
 
 //DB connect
