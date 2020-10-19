@@ -13,4 +13,6 @@
 	$password = "";
 	$db = "velib";	
 	*/
+	
+	$geoportailAPIKey = "MaCléAPI";
 ?>
