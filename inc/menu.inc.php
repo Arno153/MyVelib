@@ -18,6 +18,7 @@
            <li><a href="./liste-des-stations.php"><i class="fa fa-fw fa-bars"></i> Liste des stations</a></li>
            <li><a href="./velib-par-commune.php"><i class="fa fa-fw fa-bars"></i> Velib disponibles par commune</a></li>		   
 		   <li><a href="./top5Journee.php"><i class="fa fa-fw fa-bars"></i> Utilisations du jour et des 5 plus fortes journées</a></li>
+		   <li><a href="./15DerniersJours.php"><i class="fa fa-fw fa-bars"></i> Utilisations des 15 derniers jours</a></li>
 		   <li><a href="./networkBikeRatio.php"><i class="fa fa-fw fa-bars"></i> Ratio bornes/velib</a></li>
         </ul>
      </li>

@@ -529,7 +529,36 @@
 			return False;
 		
 	}
-	
+
+	function getLast15Day($link)
+	{
+		$query=
+		"
+		SELECT
+			 c.date,
+			 heure,
+			 SUM(`nbrVelibExit`) nbLocation,
+			 SUM(`nbrEVelibExit`) nbLocationVAE,
+			 SUM(`nbrVelibExit`) - SUM(`nbrEVelibExit`) nbLocationMeca
+		FROM
+			 `velib_activ_station_stat` c
+		where 
+			(c.DATE = DATE(NOW() ) and c.heure!= HOUR(NOW()))
+			or
+			(c.DATE != DATE(NOW() ) and c.DATE > DATE(NOW() ) -15 )
+		GROUP BY
+				 c.date, heure
+		ORDER BY
+				 date	, heure  
+		";
+		
+		if ($result = mysqli_query($link, $query)) 
+			return $result;
+		else	
+			return False;
+		
+	}
+		
 	function getAvailableVelibByCP($link)
 	{
 		$query=
