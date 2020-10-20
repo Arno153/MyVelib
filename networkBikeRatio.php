@@ -4,8 +4,8 @@
 	include "./inc/cacheMgt.inc.php";	
 	
 	if	( 
-			isCacheValid('networkBikeRatio.php.1') 
-			and isCacheValid('lastUpdateText') 
+			isCacheValidThisHour('networkBikeRatio.php.1') 
+			and isCacheValidThisHour('lastUpdateText') 
 		)
 	{
 		$cacheValide = true;
