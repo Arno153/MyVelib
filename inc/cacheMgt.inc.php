@@ -47,6 +47,26 @@ function isCacheValid1H($page)
 	}	
 }
 
+function isCacheValidThisHour($page)
+{
+	$debugCacheMgt = false;
+	$noCacheMode = false;
+	
+	if( date('H',time()) == date('H',filemtime(dirname(__FILE__).'/../cache/'.$page.'.cache')))
+	{
+		if($debugCacheMgt) error_log("This Hour Cache Mgt - Page: ".$page." is valid and will not be rebuilded");
+		if($noCacheMode)
+			return False;
+		else
+			return True;
+	}
+	else
+	{	
+		if($debugCacheMgt) error_log("This Hour Cache Mgt - Page: ".$page." is not valid anymore and will be rebuilded");
+		return False;
+	}	
+}
+
 function getPageFromCache($page)
 {
 	readfile(dirname(__FILE__).'/../cache/'.$page.'.cache');
