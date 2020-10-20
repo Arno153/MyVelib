@@ -4,12 +4,12 @@
 	include "./inc/cacheMgt.inc.php";	
 	
 	if	( 
-			isCacheValid('top10Journee.php.1') 
-			and isCacheValid('lastUpdateText') 
+			isCacheValidThisHour('top10Journee.php.1') 
+			and isCacheValidThisHour('lastUpdateText') 
 		)
 	{
 		$cacheValide = true;
-		//$link = mysqlConnect();
+		//$cacheValide = false; $link = mysqlConnect();
 	}
 	else
 	{
@@ -112,20 +112,23 @@
 				echo "<script>";
 				
 				$nb=count($tablo);
-				$xGrad = '{x: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],';
+				$xGrad = '{x: ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],';
 				
 				echo 'var data = [';
 				
 				for($j=0;$j<6;$j++)
 				{
 					echo $xGrad;
+					$y=0;
 					
 					for($i=(0+$j*24);$i<24+$j*24;$i++)
 					{
 						if($i==(0+$j*24))
 							echo 'y: [';
 						
-						if($i< $nb) echo '"'.$tablo[$i]['nbLocation'].'", ';
+						if($i< $nb and $y==intval($tablo[$i]['heure'])) {echo '"'.$tablo[$i]['nbLocation'].'", ';}
+						else {if($i< $nb) echo '"0", ';}
+						$y=$y+1;
 					}
 					echo ']';
 					
@@ -143,8 +146,8 @@
 					plot_bgcolor: '#f8f9fa',
 					xaxis:
 					{
-						tickvals:['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'],
-						range:[1,24]
+						tickvals:['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'],
+						range:[0,24]
 					},					
 					yaxis: {
 							tickfont: {},
