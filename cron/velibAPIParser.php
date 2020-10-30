@@ -5,11 +5,12 @@
 <body>
 <?php
 // velib data collection -- cron once per min
+date_default_timezone_set("Europe/Paris");
 include "./../inc/cacheMgt.inc.php";
 include "./../inc/mysql.inc.php";
 
 $debug = false;
-$debug2 = true;
+$debugURL = false;
 $debugVerbose = false;
 $debugVelibRawData= false;
 $velibExit = 0;
@@ -29,7 +30,7 @@ if(velibAPIParser_IsLocked())
 else 
 	velibAPIParser_SetLock();
 
-if($debug2)
+if($debugURL)
 {
 	error_log(date("Y-m-d H:i:s")." - velibAPIParser - Get URL begin");
 }
@@ -68,7 +69,7 @@ try
 		exit;
 }
 
-if($debug2)
+if($debugURL)
 {
 	error_log(date("Y-m-d H:i:s")." - velibAPIParser - Get URL End");
 }
@@ -192,8 +193,10 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 }	
 //si le md5 du flux courant n'est pas black-listé par le log on poursuit avec la maj des données
 // ---- nettoyage des données oscilatoire
-
+if($debug)
+{
 error_log( date("Y-m-d H:i:s")." - Collecte des données Velib");
+}
 
 if($debugVelibRawData)
 {
@@ -1503,7 +1506,10 @@ if(!mysqli_query($link, $r))
 	//echo $r;
 }
 
+if($debug)
+{
 error_log( date("Y-m-d H:i:s")." - exit: ".$velibExit."(".$EvelibExit.") - return: ".-$velibReturn."(".-$EvelibReturn.")");
+}
 
 // maj nbr velib utilisés
 $r = 
