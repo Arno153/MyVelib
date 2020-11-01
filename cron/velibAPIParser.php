@@ -291,7 +291,13 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 				}
 				else
 				{
-				if($keyL3 == "state"){ $stationState = $valueL3;} 	
+				if($keyL3 == "state")
+				{ 
+					if($valueL3=="Neutralised")
+						$stationState="Close";
+					else
+						$stationState = $valueL3;
+				} 	
 				if($keyL3 == "name"){ $stationName = $valueL3;}	
 				if($keyL3 == "code"){ $stationCode = ltrim($valueL3, '0');}	
 				if($debugVerbose)

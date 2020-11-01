@@ -269,7 +269,7 @@
 								echo "<TD>";
 								if($row["stationState"]=="Operative")
 								{
-									echo "Actives";
+									echo "En service";
 								}
 								Elseif ($row["stationState"]=="Work in progress")
 								{
@@ -328,7 +328,7 @@
 								echo "<TD>";
 								if($row["stationState"]=="Operative")
 								{
-									echo "Actives";
+									echo "En service";
 								}
 								Elseif ($row["stationState"]=="Work in progress")
 								{
