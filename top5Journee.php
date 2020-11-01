@@ -1,6 +1,7 @@
 <!DOCTYPE html> 
 <?php	
 	date_default_timezone_set("Europe/Paris");
+	setlocale(LC_TIME, 'fr_FR');
 	include "./inc/mysql.inc.php";
 	include "./inc/cacheMgt.inc.php";	
 	
@@ -133,7 +134,8 @@
 					}
 					echo ']';
 					
-					echo ", type: 'scatter',  name : '".date_format(date_create($tablo[$j*24]['date']), 'd/m/Y')."'}";
+					//echo ", type: 'scatter',  name : '".date_format(date_create($tablo[$j*24]['date']), 'd/m/Y')."'}";
+					echo ", type: 'scatter',  name : '".ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24]['date']))))."'}";
 					if($j!=9)
 						echo ",";
 				}
@@ -203,7 +205,8 @@
 						}
 					}
 					echo '<tr><td>';
-					echo date_format(date_create($tablo[$j*24]['date']), 'd/m/Y');
+					//echo date_format(date_create($tablo[$j*24]['date']), 'd/m/Y');
+					echo ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24]['date']))));
 					echo '</td><td>';
 					if($nbLocationsApres!=0) echo $nbLocations;
 					echo '</td><td>'.$nbLocationsAvant.'</td><td>';
