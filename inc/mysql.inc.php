@@ -545,7 +545,11 @@
 		where 
 			(c.DATE = DATE(NOW() ) and c.heure!= HOUR(NOW()))
 			or
-			(c.DATE != DATE(NOW() ) and c.DATE > DATE(NOW() ) -15 )
+			(
+				c.DATE != DATE(NOW() ) 
+				and 
+				c.DATE > ADDDATE(NOW(), INTERVAL -15 DAY)
+			)
 		GROUP BY
 				 c.date, heure
 		ORDER BY
