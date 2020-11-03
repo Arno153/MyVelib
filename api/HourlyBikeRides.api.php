@@ -1,18 +1,18 @@
 <?php 
 
 	include "./../inc/mysql.inc.php";
-	include "./../inc/cacheMgt.inc.php";	
+	include "./../inc/cacheMgt.inc.php";
 	
 	header('Content-type: application/json');
 
-	if(isCacheValidToday("DailyBikeRides.api.json"))
+	if(isCacheValidToday("HourlyBikeRides.api.json"))
 	{
 		//load from cach
-		getPageFromCache("DailyBikeRides.api.json");
+		getPageFromCache("HourlyBikeRides.api.json");
 	}
 	else
 	{
-		//DB connect & retrieve data	
+		//DB connect & retrieve data
 		$link = mysqlConnect();
 		if (!$link) {
 			echo "Error: Unable to connect to MySQL." . PHP_EOL;
@@ -21,7 +21,7 @@
 			exit;
 		}
 
-		$result = getRentalByDate($link);
+		$result = getMonthlyRentalByHour($link);
 		
 		if ($result) 
 		{
@@ -37,18 +37,18 @@
 					$n = $n+1;			
 				}	
 
-
 				ob_start();
 				echo json_encode($resultArray,  JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE );
 				$newPage = ob_get_contents();
-				updatePageInCache("DailyBikeRides.api.json", $newPage);
+				updatePageInCache("HourlyBikeRides.api.json", $newPage);
 				ob_end_clean(); 
 				echo $newPage;	
+				
 			}
 		}
 		else
 		{
-			//echo mysqli_error( $link );				
+			echo mysqli_error( $link );				
 		}
 
 		mysqlClose($link);

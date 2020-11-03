@@ -160,6 +160,59 @@
 		
 	}
 	
+	function getMonthlyRentalByHour($link)
+	{
+
+		$query = 
+		"
+			SELECT
+					 `date`,
+					 heure as hour,
+					 SUM(`nbrEVelibExit`) nbLocationVAE,
+					 SUM(`nbrVelibExit`) - SUM(`nbrEVelibExit`) nbLocationMeca
+			FROM
+					 `velib_activ_station_stat`
+			WHERE
+					 `date` NOT IN
+					 (
+							SELECT DISTINCT
+								   `date`
+							FROM
+								   `velib_activ_station_stat`
+							WHERE
+								   `nbrVelibExit` > 5000
+								   AND DATE       < '2018-08-01'
+					 )
+					 AND DATE < DATE(NOW() )
+					and `date` > '2018-02-13'
+			GROUP BY
+					 `date`, heure
+			ORDER BY
+					 `date` , heure	
+		";
+		
+		/* La clause ci dessous de la requette permet d'éliminer de la série les incidents du printemps qui par leurs oscillation donnait des chiffres abérant
+							 `date` NOT IN
+					 (
+							SELECT DISTINCT
+								   `date`
+							FROM
+								   `velib_activ_station_stat`
+							WHERE
+								   `nbrVelibExit` > 5000
+								   AND DATE       < '2018-08-01'
+					 )
+		*/
+		
+		
+		if ($result = mysqli_query($link, $query)) 
+			return $result;
+		else	
+			return False;
+
+		
+	}
+	
 	function getStationCountByLastEvent($link, $event) //$event : any date : `stationLastChange`, `stationLastExit`, .... 
 	{
 		$query =  
