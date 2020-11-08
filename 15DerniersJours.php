@@ -1,17 +1,21 @@
 <!DOCTYPE html> 
 <?php	
-	date_default_timezone_set("Europe/Paris");
-	setlocale(LC_TIME, 'fr_FR');
 	include "./inc/mysql.inc.php";
 	include "./inc/cacheMgt.inc.php";	
 	
+	date_default_timezone_set("Europe/Paris");
+	setlocale(LC_TIME, 'fr_FR');
+	$NbDaysDisplayed = 19;
+	$PageCacheName = $NbDaysDisplayed."DerniersJours.php";
+	$debug = false;
+	
 	if	( 
-			isCacheValidThisHour('15DerniersJours.php.1') 
+			isCacheValidThisHour($PageCacheName) 
 			and isCacheValidThisHour('lastUpdateText') 
 		)
 	{
 		$cacheValide = true;
-		//$cacheValide = false; $link = mysqlConnect();
+		if($debug) $cacheValide = false; $link = mysqlConnect();
 	}
 	else
 	{
@@ -87,7 +91,7 @@
 		
 		<?php
 			if($cacheValide == true)
-				getPageFromCache('15DerniersJours.php.1');
+				getPageFromCache($PageCacheName);
 			else
 			{
 				ob_start();			
@@ -95,7 +99,7 @@
 				
 				// graph nb velib
 				$tablo=[];
-				if ($result = getLast15Day($link)) 
+				if ($result = getLastNDay($link, $NbDaysDisplayed)) 
 				{
 					if (mysqli_num_rows($result)>0)
 					{
@@ -118,7 +122,7 @@
 				
 				echo 'var data = [';
 				
-				for($j=0;$j<15;$j++)
+				for($j=0;$j<$NbDaysDisplayed;$j++)
 				{
 					echo $xGrad;
 					$y=0;
@@ -140,7 +144,7 @@
 					if ( $j< 10 and $j!=7) echo " visible: 'legendonly',";
 					//echo "name : '".date_format(date_create($tablo[$j*24]['date']), 'd/m/Y')."'}";
 					echo "name : '".ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24]['date']))))."'}";
-					if($j!=15)
+					if($j!=$NbDaysDisplayed)
 						echo ",";
 				}
 									
@@ -148,7 +152,7 @@
 				echo "];
 				var layout = 
 				{ 
-					title: 'Nombre de utilisations des 15 derniers jours (Electrique et mécanique)', 
+					title: 'Nombre de utilisations des ".$NbDaysDisplayed." derniers jours (Electrique et mécanique)', 
 					paper_bgcolor: '#f8f9fa', 
 					plot_bgcolor: '#f8f9fa',
 					xaxis:
@@ -192,7 +196,7 @@
 				</TR>
 				
 		<?php
-				for($j=0;$j<15;$j++)
+				for($j=0;$j<$NbDaysDisplayed;$j++)
 				{
 					$nbLocations = 0;
 					$nbLocationsAvant = 0;
@@ -226,7 +230,7 @@
 
 				//fin mise en cache
 				$newPage = ob_get_contents(); //recup contenu à cacher
-				updatePageInCache('15DerniersJours.php.1', $newPage); //mise en cache
+				updatePageInCache($PageCacheName, $newPage); //mise en cache
 				ob_end_clean(); //ménage cache memoire
 				echo $newPage;	//affichage live	
 				
