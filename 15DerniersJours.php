@@ -141,8 +141,7 @@
 					echo ']';
 					
 					echo ", type: 'scatter',";
-					if ( $j< 10 and $j!=7) echo " visible: 'legendonly',";
-					//echo "name : '".date_format(date_create($tablo[$j*24]['date']), 'd/m/Y')."'}";
+					if ( $j< $NbDaysDisplayed-4 and $j!=4 and $j!= 11) echo " visible: 'legendonly',";
 					echo "name : '".ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24]['date']))))."'}";
 					if($j!=$NbDaysDisplayed)
 						echo ",";
@@ -213,7 +212,6 @@
 						}
 					}
 					echo '<tr><td>';
-					//echo date_format(date_create($tablo[$j*24]['date']), 'D d/m/Y');
 					echo ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24]['date']))));
 					echo '</td><td>';
 					if($nbLocationsApres!=0) echo $nbLocations;
