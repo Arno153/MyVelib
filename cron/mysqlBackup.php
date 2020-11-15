@@ -2,31 +2,32 @@
 
 include "./../inc/mysql.inc.php";
 include "./../inc/cacheMgt.inc.php";
-echo "Début sauvegarde BDD<br>";
 $debug = 1; //debug mode
-velibAPIParser_SetDbBackupLock(); //disable updates during backup
-$sourceFile = backupDatabaseTables($debug, "velib_"); //backup
-velibAPIParser_RemoveDbBackupLock();//enable updates after backup
+
+echo "Début sauvegarde BDD<br>";
+	velibAPIParser_SetDbBackupLock(); //disable updates during backup
+	$sourceFile = backupDatabaseTables($debug, "velib_"); //backup
+	velibAPIParser_RemoveDbBackupLock();//enable updates after backup
 echo "Fin de la sauvegarde BDD<br><br>";
 
 // compression de la sauvegarde
 echo "Début de la compression de la sauvegarde BDD<br>";
-if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);
-$gz = gzcompressfile($sourceFile);
-if($gz!= false)
-{
-	unlink ($sourceFile);
-	echo "--> succès<br>";
-}
-if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);
+	if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);
+	$gz = gzcompressfile($sourceFile);
+	if($gz!= false)
+	{
+		unlink ($sourceFile);
+		echo "--> succès<br>";
+	}
+	if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);
 echo "Fin de la compression de la sauvegarde BDD<br><br>";
 
 if($gz != false)
 {
-echo "debut de la purge des anciennes sauvegarde<br>";
-$i = purgeSQLBackup(7,30,$debug);
-echo "-->".$i." fichier(s) purgé(s)<br>";
-echo "fin de la purge des anciennes sauvegarde<br>";
+	echo "debut de la purge des anciennes sauvegarde<br>";
+		$i = purgeSQLBackup(7,30,$debug);
+		echo "-->".$i." fichier(s) purgé(s)<br>";
+	echo "fin de la purge des anciennes sauvegarde<br>";
 }
 
 /**
@@ -148,7 +149,7 @@ function purgeSQLBackup($delaiPurge, $delaiPurgeTotale, $debug)
 			$datefichier = filemtime ( $folderName.'/'.$value );
 			$interval = date_diff(new DateTime(date("Y-m-d H:i:s",$datefichier)), new DateTime("now") );	
 			$nbJourFichier = intval($interval->format('%a'));
-	
+			$jourFichier =  date("w",$datefichier);	
 			
 			if($nbJourFichier > $delaiPurgeTotale)
 			{
@@ -158,15 +159,15 @@ function purgeSQLBackup($delaiPurge, $delaiPurgeTotale, $debug)
 			}
 			else if($nbJourFichier > $delaiPurge)
 			{
-				$comment = $comment." > $delaiPurge j";
-				$comment = " > $delaiPurge j: purge sauf 1/$delaiPurge :";
-				$comment = $comment." floatval-intval: ".(floatval($nbJourFichier/$delaiPurge)-intval($nbJourFichier/$delaiPurge)).": ";
-				if((floatval($nbJourFichier/$delaiPurge)-intval($nbJourFichier/$delaiPurge))!=0)
+				$comment = " > $delaiPurge j: purge sauf dimanche :";
+				$comment = $comment." date(w,datefichier): ".$jourFichier.": ";
+				if($jourFichier!=0)
 				{
 					$comment = $comment."purge!";
 					unlink ($folderName.$value);
 					$nbFichierPurges = $nbFichierPurges +1;
 				}
+				else $comment = $comment."On garde !";
 			}
 			else $comment = $comment." <= $delaiPurge j: on garde!";
 			
