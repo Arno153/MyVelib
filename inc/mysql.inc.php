@@ -583,7 +583,7 @@
 		
 	}
 
-	function getLast15Day($link)
+	function getLastNDay($link,$NbDays)
 	{
 		$query=
 		"
@@ -601,7 +601,7 @@
 			(
 				c.DATE != DATE(NOW() ) 
 				and 
-				c.DATE > ADDDATE(NOW(), INTERVAL -15 DAY)
+				c.DATE > ADDDATE(NOW(), INTERVAL -".$NbDays." DAY)
 			)
 		GROUP BY
 				 c.date, heure
