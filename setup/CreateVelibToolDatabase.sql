@@ -100,7 +100,7 @@ CREATE TABLE `velib_station` (
   `nbFreeEDock` int(11) NOT NULL,
   `stationNbBikeOverflow` int(11) NOT NULL,
   `stationNbEBikeOverflow` int(11) NOT NULL,
-  `stationLastChange` timestamp NOT NULL COMMENT 'date du dernier changement de la station',
+  `stationLastChange` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'date du dernier changement de la station',
   `stationLastExit` datetime DEFAULT NULL COMMENT 'date du dernier retrait',
   `stationInsertedInDb` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `stationOperativeDate` datetime DEFAULT NULL,
@@ -198,6 +198,9 @@ ALTER TABLE `velib_station`
 --
 ALTER TABLE `velib_station_min_velib`
   ADD PRIMARY KEY (`stationCode`,`stationStatDate`);
+  
+ALTER TABLE `velib_station_min_velib` 
+  ADD INDEX `stationstatdate_idx` (`stationStatDate`, `stationCode`) USING BTREE; 
 
 --
 -- Index pour la table `velib_station_status`

@@ -9,9 +9,9 @@ date_default_timezone_set("Europe/Paris");
 include "./../inc/cacheMgt.inc.php";
 include "./../inc/mysql.inc.php";
 
-$debug = false;
+$debug = true;
 $debugURL = false;
-$debugVerbose = false;
+$debugVerbose = true;
 $debugVelibRawData= false;
 $velibExit = 0;
 $EvelibExit = 0;
@@ -20,6 +20,16 @@ $EvelibReturn = 0;
 
 echo date(DATE_RFC2822);
 	echo "<br>";
+	
+error_log(date("Y-m-d H:i:s")." - velibAPIParser - start");
+
+if(velibAPIParser_Locked_by_DbBackup())
+{
+	echo "DB backup running - stop !!!";
+	error_log(date("Y-m-d H:i:s")." - velibAPIParser - DB backup running  - process stoped");
+	exit;
+}
+
 	
 if(velibAPIParser_IsLocked())
 {
@@ -388,7 +398,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					SET 
 						`stationLastView`=now()
 					WHERE `id`='$row[id]'";
-					//echo $r;
+					echo $r;
 					if(!mysqli_query($link, $r))
 					{
 						printf("Errormessage: %s\n", mysqli_error($link));
@@ -1612,6 +1622,8 @@ echo("write log error");
 
 // 4 : quand on a fini de l'utiliser, on ferme le fichier
 fclose($openLogFile);
+
+error_log(date("Y-m-d H:i:s")." - velibAPIParser - stop");
 
 
 ?>

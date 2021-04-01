@@ -87,6 +87,7 @@
       $ch = curl_init($url);	 
       $fp = fopen($file, "w");
       curl_setopt($ch, CURLOPT_FILE, $fp);
+	  //curl_setopt($ch, CURLOPT_REFERER, 'https://velib.philibert.info');
       curl_setopt($ch, CURLOPT_HEADER, 0);
       $res = curl_exec($ch);
       curl_close($ch);

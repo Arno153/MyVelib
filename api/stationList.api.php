@@ -29,7 +29,7 @@
 	}	
 	
 	
-	error_log( date("Y-m-d H:i:s")." - v=".$version." d=".$dureeEstimation);
+	//error_log( date("Y-m-d H:i:s")." - v=".$version." d=".$dureeEstimation);
 	
 	switch($version)
 	{

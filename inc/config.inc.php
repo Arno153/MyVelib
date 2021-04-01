@@ -5,6 +5,7 @@
 	$user = "user";
 	$password = "password";
 	$db = "velib";
+	$port = 3306;
 	
 	//DB parameters - dev
 	/*

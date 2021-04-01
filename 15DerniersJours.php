@@ -122,19 +122,28 @@
 				
 				echo 'var data = [';
 				
+				$missingT = 0;
+				
 				for($j=0;$j<$NbDaysDisplayed;$j++)
 				{
 					echo $xGrad;
 					$y=0;
+					$missing = 0;
 					
-					for($i=(0+$j*24);$i<24+$j*24;$i++)
+					for($i=(0+$j*24-$missingT);$i<24+$j*24-$missingT;$i++)
 					{
 						
-						if($i==(0+$j*24))
+						if($i==(0+$j*24-$missingT))
 							echo 'y: [';
 						
 						if($i< $nb and $y==intval($tablo[$i]['heure'])) {echo '"'.$tablo[$i]['nbLocation'].'", ';}
-						else {if($i< $nb) echo '"0", ';}
+						else 
+							{if($i< $nb)
+								{ 
+								echo '" ", ';
+								$missing = $missing +1; 
+								}
+							}
 						$y=$y+1;
 						
 					}
@@ -142,9 +151,12 @@
 					
 					echo ", type: 'scatter',";
 					if ( $j< $NbDaysDisplayed-4 and $j!=4 and $j!= 11) echo " visible: 'legendonly',";
-					echo "name : '".ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24]['date']))))."'}";
+					echo "name : '".ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24-$missingT]['date']))))."'}";
 					if($j!=$NbDaysDisplayed)
 						echo ",";
+					
+					$missingT = $missingT + $missing;
+					//error_log(date("Y-m-d H:i:s")." - j =".$j." - missing : ".$missing);
 				}
 									
 				

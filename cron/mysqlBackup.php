@@ -75,7 +75,7 @@ function backupDatabaseTables($debug, $tables = '*'){
         $result = $db->query("SELECT * FROM $table");
         $numColumns = $result->field_count;
 
-        $return .= "DROP TABLE $table;";
+        $return .= "DROP TABLE IF EXISTS $table;";
 
         $result2 = $db->query("SHOW CREATE TABLE $table");
         $row2 = $result2->fetch_row(); 
@@ -92,7 +92,9 @@ function backupDatabaseTables($debug, $tables = '*'){
 				
 				$row[$j] = preg_replace("/\n/","\\n",$row[$j]);
 
-				if (isset($row[$j])) { $return .= '"'.$row[$j].'"' ; } else { $return .= '""'; }
+				//if (isset($row[$j])) { $return .= '"'.$row[$j].'"' ; } else { $return .= '""'; }
+				if (isset($row[$j]) && $row[$j] != "") { $return .= '"'.$row[$j].'"' ; } else { $return .= 'NULL'; }
+				
 				if ($j < ($numColumns-1)) { $return.= ','; }
 			}
 			$return .= ");\n";
