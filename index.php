@@ -458,7 +458,8 @@
 								overlaying: 'y', 
 								tickfont: {color: 'rgb(255, 127, 14)'}, 
 								side: 'right',
-								showgrid: false
+								showgrid: false,
+								rangemode: 'tozero'
 									},					
 							paper_bgcolor: '#f8f9fa', 
 							plot_bgcolor: '#f8f9fa',
