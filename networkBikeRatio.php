@@ -253,8 +253,7 @@
 								overlaying: 'y', 
 								tickfont: {color: 'rgb(55, 34, 29)'}, 
 								side: 'right',
-								showgrid: false,
-								range: [3, 8]
+								showgrid: false
 							},						
 					showlegend: true,
 					margin: {
@@ -440,8 +439,7 @@
 								overlaying: 'y', 
 								tickfont: {color: 'rgb(55, 34, 29)'}, 
 								side: 'right',
-								showgrid: false,
-								range: [3, 7]
+								showgrid: false
 							},						
 					showlegend: true,
 					margin: {
@@ -625,8 +623,7 @@
 								overlaying: 'y', 
 								tickfont: {color: 'rgb(55, 34, 29)'}, 
 								side: 'right',
-								showgrid: false,
-								range: [3, 9]
+								showgrid: false
 							},						
 					showlegend: true,
 					margin: {
