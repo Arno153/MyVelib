@@ -5,9 +5,9 @@
 	
 	date_default_timezone_set("Europe/Paris");
 	setlocale(LC_TIME, 'fr_FR');
-	$NbDaysDisplayed = 19;
+	$NbDaysDisplayed = 20;
 	$PageCacheName = $NbDaysDisplayed."DerniersJours.php";
-	$debug = false;
+	$debug = true;
 	
 	if	( 
 			isCacheValidThisHour($PageCacheName) 
@@ -121,29 +121,20 @@
 				$xGrad = '{x: ["0.5","1.5","2.5","3.5","4.5","5.5","6.5","7.5","8.5","9.5","10.5","11.5","12.5","13.5","14.5","15.5","16.5","17.5","18.5","19.5","20.5","21.5","22.5","23.5"],';
 				
 				echo 'var data = [';
-				
-				$missingT = 0;
-				
+	
 				for($j=0;$j<$NbDaysDisplayed;$j++)
 				{
 					echo $xGrad;
 					$y=0;
-					$missing = 0;
 					
-					for($i=(0+$j*24-$missingT);$i<24+$j*24-$missingT;$i++)
+					for($i=(0+$j*24);$i<24+$j*24;$i++)
 					{
 						
-						if($i==(0+$j*24-$missingT))
+						if($i==(0+$j*24))
 							echo 'y: [';
 						
 						if($i< $nb and $y==intval($tablo[$i]['heure'])) {echo '"'.$tablo[$i]['nbLocation'].'", ';}
-						else 
-							{if($i< $nb)
-								{ 
-								echo '" ", ';
-								$missing = $missing +1; 
-								}
-							}
+						else {if($i< $nb) echo '"0", ';}
 						$y=$y+1;
 						
 					}
@@ -151,11 +142,10 @@
 					
 					echo ", type: 'scatter',";
 					if ( $j< $NbDaysDisplayed-4 and $j!=4 and $j!= 11) echo " visible: 'legendonly',";
-					echo "name : '".ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24-$missingT]['date']))))."'}";
+					echo "name : '".ucfirst(strftime('%a %d/%m/%Y', date_timestamp_get(date_create($tablo[$j*24]['date']))))."'}";
 					if($j!=$NbDaysDisplayed)
 						echo ",";
 					
-					$missingT = $missingT + $missing;
 					//error_log(date("Y-m-d H:i:s")." - j =".$j." - missing : ".$missing);
 				}
 									
