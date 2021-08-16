@@ -587,26 +587,62 @@
 	{
 		$query=
 		"
-		SELECT
-			 c.date,
-			 heure,
-			 SUM(`nbrVelibExit`) nbLocation,
-			 SUM(`nbrEVelibExit`) nbLocationVAE,
-			 SUM(`nbrVelibExit`) - SUM(`nbrEVelibExit`) nbLocationMeca
-		FROM
-			 `velib_activ_station_stat` c
-		where 
-			(c.DATE = DATE(NOW() ) and c.heure!= HOUR(NOW()))
-			or
-			(
-				c.DATE != DATE(NOW() ) 
-				and 
-				c.DATE > ADDDATE(NOW(), INTERVAL -".$NbDays." DAY)
-			)
-		GROUP BY
-				 c.date, heure
-		ORDER BY
-				 date	, heure  
+			select dt date, h heure, nbLocation, nbLocationVAE, nbLocationMeca 
+			from 
+				(
+					select dt, h
+					from 
+					(
+						SELECT DATE(cal.date) dt
+						FROM 
+						(
+							  SELECT SUBDATE(NOW(), INTERVAL ".$NbDays." -1 DAY) + INTERVAL xc DAY AS date
+							  FROM 
+							  (
+									SELECT @xi:=@xi+1 as xc from
+									(SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) xc1,
+									(SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) xc2,
+									(SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) xc3,
+									(SELECT @xi:=-1) xc0
+							  ) xxc1
+						) cal
+						WHERE cal.date <= NOW()
+						ORDER BY cal.date DESC
+					) xj,
+					(
+					select * FROM
+					(
+						SELECT @yi:=@yi+1 as h 
+						from
+							(SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) yc1,
+							(SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) yc2,
+							(SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4) yc3,
+							(SELECT @yi:=-1) yc0
+					) yyc2
+					where h < 24
+					) yh
+				) dttable left join 
+				(
+						SELECT
+						 c.date,
+						 heure,
+						 (`nbrVelibExit`) nbLocation,
+						 (`nbrEVelibExit`) nbLocationVAE,
+						 (`nbrVelibExit`) - (`nbrEVelibExit`) nbLocationMeca
+					FROM
+						 `velib_activ_station_stat` c
+					where 
+						(c.DATE = DATE(NOW() ) and c.heure!= HOUR(NOW()))
+						or
+						(
+							c.DATE != DATE(NOW() ) 
+							and 
+							c.DATE > ADDDATE(NOW(), INTERVAL -".$NbDays." DAY)
+						)
+				) datatable on dttable.dt = datatable.date and dttable.h = datatable.heure
+
+			ORDER BY
+					 dt, h
 		";
 		
 		if ($result = mysqli_query($link, $query)) 
