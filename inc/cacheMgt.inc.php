@@ -155,7 +155,32 @@ function velibAPIParser_IsLocked()
 	else
 		return False;
 }
-// ---- Limitation du nombre de process velibAPIParser à 1 -- BEGIN ---- //
+// ---- Limitation du nombre de process velibAPIParser à 1 -- END ---- //
 
+
+// ---- Pas de collecte pendant la sauvegarde BDD -- BEGIN ---- //
+function velibAPIParser_SetDbBackupLock()
+{
+	file_put_contents(dirname(__FILE__).'/../cache/velibAPIParser.DbBackup.lock', 'LOCKED') ;
+}
+
+function velibAPIParser_RemoveDbBackupLock()
+{
+	file_put_contents(dirname(__FILE__).'/../cache/velibAPIParser.DbBackup.lock', 'UNLOCKED') ;
+}
+
+function velibAPIParser_Locked_by_DbBackup()
+{
+	if( file_get_contents(dirname(__FILE__).'/../cache/velibAPIParser.DbBackup.lock') == "LOCKED")
+	{
+		if( filemtime(dirname(__FILE__).'/../cache/velibAPIParser.DbBackup.lock') < (time() - 240 )) 
+			return False;
+		else
+			return True;
+	}
+	else
+		return False;
+}
+// ---- Pas de collecte pendant la sauvegarde BDD -- END ---- //
 
 ?>
