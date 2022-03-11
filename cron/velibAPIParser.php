@@ -9,9 +9,9 @@ date_default_timezone_set("Europe/Paris");
 include "./../inc/cacheMgt.inc.php";
 include "./../inc/mysql.inc.php";
 
-$debug = true;
+$debug = false;
 $debugURL = false;
-$debugVerbose = true;
+$debugVerbose = false;
 $debugVelibRawData= false;
 $velibExit = 0;
 $EvelibExit = 0;
@@ -21,7 +21,11 @@ $EvelibReturn = 0;
 echo date(DATE_RFC2822);
 	echo "<br>";
 	
+	
+if($debug)
+{
 error_log(date("Y-m-d H:i:s")." - velibAPIParser - start");
+}
 
 if(velibAPIParser_Locked_by_DbBackup())
 {
@@ -163,7 +167,20 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 	
 	// velib data collection (bis)
 	try
-	{	$SomeVelibRawData = file_get_contents('https://www.velib-metropole.fr/webapi/map/details?gpsTopLatitude=49.007249184314254&gpsTopLongitude=2.92510986328125&gpsBotLatitude=48.75890477584505&gpsBotLongitude=1.7832183837890627&zoomLevel=11');
+	{	
+		//$SomeVelibRawData = file_get_contents('https://www.velib-metropole.fr/webapi/map/details?gpsTopLatitude=49.007249184314254&gpsTopLongitude=2.92510986328125&gpsBotLatitude=48.75890477584505&gpsBotLongitude=1.7832183837890627&zoomLevel=11');
+		// Initialize a CURL session. 
+		$ch = curl_init();  
+		  
+		// Return Page contents. 
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+		  
+		//grab URL and pass it to the variable. 
+		curl_setopt($ch, CURLOPT_URL, $url); 
+		  
+		$SomeVelibRawData = curl_exec($ch); 
+		
+		
 		if($SomeVelibRawData==false)
 		{
 			echo "ko"; 
@@ -193,7 +210,7 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 			var_dump($md5BlackListedArray);
 		}
 		echo "<br> MD5 = ".$jsonMd5." On ignore automatiquement ce json suivant son MD5 <br>";
-		echo "<br> KO";
+		echo "<br> KO - stop";
 		md5BlackListKO();
 		velibAPIParser_RemoveLock();
 		exit;

@@ -5,12 +5,12 @@
 	if
 	( 
 		isCacheValid('index.php.1') 
-		and isCacheValid('index.php.2') 
-		and isCacheValid('index.php.3') 
-		and isCacheValid('index.php.4') 
-		and isCacheValid('webview.php.5') 
-		and isCacheValid('webview.php.6') 
-		and isCacheValid('lastUpdateText') 
+		and isCacheValid('index.php.2', false) 
+		and isCacheValid('index.php.3', false) 
+		and isCacheValid('index.php.4', false) 
+		and isCacheValid('webview.php.5', false) 
+		and isCacheValid('webview.php.6', false) 
+		and isCacheValid('lastUpdateText', false) 
 	)
 	{
 		//echo "valide cache";

@@ -3,7 +3,7 @@
 	include "./inc/mysql.inc.php";
 	include "./inc/cacheMgt.inc.php";	
 	
-	if( isCacheValid('liste-des-stations.php') and isCacheValid('lastUpdateText') )
+	if( isCacheValid('liste-des-stations.php') and isCacheValid('lastUpdateText', false) )
 	{
 		$cacheValide = true;
 		

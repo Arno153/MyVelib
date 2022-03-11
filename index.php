@@ -5,11 +5,11 @@
 	
 	if	( 
 			isCacheValid('index.php.1') 
-			and isCacheValid('index.php.2') 
-			and isCacheValid('index.php.3') 
-			and isCacheValid('index.php.4') 
-			and isCacheValid('index.php.6') 
-			and isCacheValid('lastUpdateText') 
+			and isCacheValid('index.php.2', false) 
+			and isCacheValid('index.php.3', false) 
+			and isCacheValid('index.php.4', false) 
+			and isCacheValid('index.php.6', false) 
+			and isCacheValid('lastUpdateText', false) 
 		)
 		$cacheValide = true;
 	else

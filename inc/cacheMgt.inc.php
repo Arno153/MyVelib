@@ -6,11 +6,14 @@ function InvalidCache()
 	file_put_contents(dirname(__FILE__).'/../cache/invalidCache.cache', time()) ;
 }
 
-function isCacheValid($page)
+function isCacheValid($page, $log = true)
 {
 	$debugCacheMgt = false;
 	$noCacheMode = false;
-	isVelibAPIParserKO();	
+	if($log)
+	{
+		isVelibAPIParserKO();	
+	}
 	
 	if( filemtime(dirname(__FILE__).'/../cache/invalidCache.cache') <= filemtime(dirname(__FILE__).'/../cache/'.$page.'.cache')	)
 	{
@@ -112,12 +115,12 @@ function isVelibAPIParserKO()
 			if( time() < filemtime(dirname(__FILE__).'/../cache/md5BlackListKO.cache')+100	) 
 			{
 				error_log( date("Y-m-d H:i:s")." - pas de collecte depuis plus de 5 minutes - rejet MD5 - envoi email");
-				mail('webmaster@philibert.info', 'Alerte : Velib.philibert.info : VelibAPIParser est KO', 'le parser velib n\'a pas trourné depuis plus de 5 minutes - rejet MD5');
+				mail('webmaster@philibert.info', 'Alerte : Velib.philibert.info : VelibAPIParser est KO', 'le parser velib n\'a pas tourné depuis plus de 5 minutes - rejet MD5');
 			}
 			else
 			{
 				error_log( date("Y-m-d H:i:s")." - pas de collecte depuis plus de 5 minutes - envoi email");
-				mail('webmaster@philibert.info', 'Alerte : Velib.philibert.info : VelibAPIParser est KO', 'le parser velib n\'a pas trourné depuis plus de 5 minutes');
+				mail('webmaster@philibert.info', 'Alerte : Velib.philibert.info : VelibAPIParser est KO', 'le parser velib n\'a pas tourné depuis plus de 5 minutes');
 			}
 			file_put_contents(dirname(__FILE__).'/../cache/isVelibAPIParserKOMail.cache', time()) ;
 		}
@@ -128,6 +131,7 @@ function isVelibAPIParserKO()
 
 function md5BlackListKO()
 {
+	//error_log( date("Y-m-d H:i:s")." - update md5 file.cache");
 	file_put_contents(dirname(__FILE__).'/../cache/md5BlackListKO.cache', time()) ;
 }
 // ---- Alerte collecte KO -- END ---- //
