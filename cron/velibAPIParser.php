@@ -17,15 +17,16 @@ $velibExit = 0;
 $EvelibExit = 0;
 $velibReturn = 0;
 $EvelibReturn = 0;
+$url1 = 'https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json';
+$url2 = 'https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json';
 
 echo date(DATE_RFC2822);
-	echo "<br>";
+echo "<br>";
 	
 	
-if($debug)
-{
+
 error_log(date("Y-m-d H:i:s")." - velibAPIParser - start");
-}
+
 
 if(velibAPIParser_Locked_by_DbBackup())
 {
@@ -42,45 +43,51 @@ if(velibAPIParser_IsLocked())
 	exit;
 }
 else 
+{
 	velibAPIParser_SetLock();
+}
 
 if($debugURL)
 {
 	error_log(date("Y-m-d H:i:s")." - velibAPIParser - Get URL begin");
 }
 
-// velib data collection
+// velib data collection - 2 url open data
 try
 {	
-	//$SomeVelibRawData = file_get_contents('https://www.velib-metropole.fr/webapi/map/details?gpsTopLatitude=49.007249184314254&gpsTopLongitude=2.92510986328125&gpsBotLatitude=48.75890477584505&gpsBotLongitude=1.7832183837890627&zoomLevel=11');
-
-	//	
-		// From URL to get webpage contents. 
-		$url = "https://www.velib-metropole.fr/webapi/map/details?gpsTopLatitude=49.007249184314254&gpsTopLongitude=2.92510986328125&gpsBotLatitude=48.75890477584505&gpsBotLongitude=1.7832183837890627&zoomLevel=11"; 
-		  
-		// Initialize a CURL session. 
-		$ch = curl_init();  
-		  
-		// Return Page contents. 
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-		  
-		//grab URL and pass it to the variable. 
-		curl_setopt($ch, CURLOPT_URL, $url); 
-		  
-		$SomeVelibRawData = curl_exec($ch); 
-	
-	//
-	
-	if($SomeVelibRawData==false)
+	$velibRawDataUrl1 = curlGetVelibData($url1);
+	if($velibRawDataUrl1==false)
 	{
-		echo "ko"; 
+		echo "ko - url 1"; 
 		velibAPIParser_RemoveLock();
 		exit;
 	}
-}catch (Exception $e) {
-		echo "ko: url is not reachable";
+
+	$velibRawDataUrl2 = curlGetVelibData($url2);
+	if($velibRawDataUrl2==false)
+	{
+		echo "ko - url 2"; 
 		velibAPIParser_RemoveLock();
 		exit;
+	}
+
+}catch (Exception $e) {
+	echo "ko: url is not reachable";
+	velibAPIParser_RemoveLock();
+	exit;
+}
+
+//fusion des 2 json en un tableau
+$VelibDataArray = velibJsonMerge($velibRawDataUrl1, $velibRawDataUrl2 );
+
+if(!is_array($VelibDataArray))
+{
+	echo "<br> Retour inattendu de l'api Velib";
+	error_log( date("Y-m-d H:i:s")." - Retour inattendu de l'api Velib");
+	error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
+	error_log(date("Y-m-d H:i:s").$SomeVelibRawData);
+	velibAPIParser_RemoveLock();
+	exit;
 }
 
 if($debugURL)
@@ -103,31 +110,21 @@ if($debugVerbose)
 	echo "Success: A proper connection to MySQL was made! The my_db database is great." . PHP_EOL;
 	echo "<br>";
 	echo "Host information: " . mysqli_get_host_info($link) . PHP_EOL;
-	echo "<br>";
+	echo "<br><br>";
 }
 
 // ---- nettoyage des données oscilatoire
-$jsonMd5 = md5($SomeVelibRawData); //on calc le md5 du flux courrant
 //on purge des data de pplus de 12h dans le log des MD5 des flux
-$r = " Delete from `velib_api_sanitize` WHERE `JsonDate` <= DATE_ADD(NOW(), INTERVAL - 12 HOUR)"; 
-if($debugVerbose){ 	echo $r; echo "<br>";}							
-if(!mysqli_query($link, $r))
-{
-	printf("Errormessage: %s\n", mysqli_error($link));
-}	
+jsonMd5CleanBlackList($link, $debugVerbose);	
 
+$jsonMd5 = md5(json_encode($VelibDataArray)); //on calc le md5 des flux courrant fusionnés
 // on ajoute le md5 du flux courant dans la table de log des MD5 des flux
-$r = "
-		INSERT INTO `velib_api_sanitize` ( `JsonDate`, `JsonMD5`) 
-		VALUES ( sysdate(), '$jsonMd5' )
-	";
-if(!mysqli_query($link, $r))
-{
-	printf("Errormessage: %s\n", mysqli_error($link));
-}
+jsonMd5AddBlackList($link, $jsonMd5);
 
 
-// si le md5 du flux courant est sorti plus de 25 fois danns les dernières 12h on le blacklist
+// si le md5 du flux courant est sorti plus de 25 fois danns les dernières 12h on l'ignore sur la base de la blacklist
+//on recupère les valeurs black listées
+$md5BlackListedArray = array();
 $r = "
 		SELECT 
 			`JsonMD5`,
@@ -136,8 +133,6 @@ $r = "
 		group by `JsonMD5`
 		having count(`JsonMD5`)> 25
 	";
-$md5BlackListedArray = array();
-//on recupère les valeurs black listées
 if($result = mysqli_query($link, $r)) 
 {
 	//on construit un tableau des valeurs blacklistées
@@ -154,36 +149,32 @@ else
 	printf("Errormessage: %s\n", mysqli_error($link));
 }
 
-//si le md5 du flux courant est blacklisté on arrette recommance 1 fois puis on arrète là!
+//si le md5 du flux courant est blacklisté on attend 10 sec et on recommance 1 fois puis on arrète tout!
 if(in_array($jsonMd5, $md5BlackListedArray, false))
 {
 	if($debugVerbose)
 	{
 		var_dump($md5BlackListedArray);
 	}
-	echo "<br> MD5 = ".$jsonMd5." On ignore automatiquement ce json suivant son MD5 <br>";
+	echo "<br> MD5 = ".$jsonMd5." On ignore automatiquement ce json suivant son MD5 (run 1) <br>";
 	echo "<br> retry in 10 sec <br>";
 	sleep(10);
 	
 	// velib data collection (bis)
 	try
 	{	
-		//$SomeVelibRawData = file_get_contents('https://www.velib-metropole.fr/webapi/map/details?gpsTopLatitude=49.007249184314254&gpsTopLongitude=2.92510986328125&gpsBotLatitude=48.75890477584505&gpsBotLongitude=1.7832183837890627&zoomLevel=11');
-		// Initialize a CURL session. 
-		$ch = curl_init();  
-		  
-		// Return Page contents. 
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-		  
-		//grab URL and pass it to the variable. 
-		curl_setopt($ch, CURLOPT_URL, $url); 
-		  
-		$SomeVelibRawData = curl_exec($ch); 
-		
-		
-		if($SomeVelibRawData==false)
+		$velibRawDataUrl1 = curlGetVelibData($url1);
+		if($velibRawDataUrl1==false)
 		{
-			echo "ko"; 
+			echo "ko - url 1"; 
+			velibAPIParser_RemoveLock();
+			exit;
+		}
+
+		$velibRawDataUrl2 = curlGetVelibData($url2);
+		if($velibRawDataUrl2==false)
+		{
+			echo "ko - url 2"; 
 			velibAPIParser_RemoveLock();
 			exit;
 		}
@@ -192,16 +183,23 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 			velibAPIParser_RemoveLock();
 			exit;
 	}
-	$jsonMd5 = md5($SomeVelibRawData); //on calc le md5 du flux courrant (bis)
-	// on ajoute le md5 du flux courant dans la table de log des MD5 des flux
-	$r = "
-			INSERT INTO `velib_api_sanitize` ( `JsonDate`, `JsonMD5`) 
-			VALUES ( sysdate(), '$jsonMd5' )
-		";
-	if(!mysqli_query($link, $r))
+	
+	//fusion des 2 json en un tableau
+	$VelibDataArray = velibJsonMerge($velibRawDataUrl1, $velibRawDataUrl2 );
+	
+	if(!is_array($VelibDataArray))
 	{
-		printf("Errormessage: %s\n", mysqli_error($link));
-	}	
+		echo "<br> Retour inattendu de l'api Velib";
+		error_log( date("Y-m-d H:i:s")." - Retour inattendu de l'api Velib");
+		error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
+		error_log(date("Y-m-d H:i:s").$SomeVelibRawData);
+		velibAPIParser_RemoveLock();
+		exit;
+	}
+	
+	$jsonMd5 = md5(json_encode($VelibDataArray)); //on calc le md5 des flux courrant fusionnés (bis)
+	// on ajoute le md5 du flux courant dans la table de log des MD5 des flux
+	jsonMd5AddBlackList($link, $jsonMd5);
 	
 	if(in_array($jsonMd5, $md5BlackListedArray, false))
 	{
@@ -209,15 +207,15 @@ if(in_array($jsonMd5, $md5BlackListedArray, false))
 		{
 			var_dump($md5BlackListedArray);
 		}
-		echo "<br> MD5 = ".$jsonMd5." On ignore automatiquement ce json suivant son MD5 <br>";
+		echo "<br> MD5 = ".$jsonMd5." On ignore automatiquement ce json suivant son MD5 (run 2)<br>";
 		echo "<br> KO - stop";
 		md5BlackListKO();
 		velibAPIParser_RemoveLock();
 		exit;
-	}
-		
-	
+	}	
 }	
+
+
 //si le md5 du flux courant n'est pas black-listé par le log on poursuit avec la maj des données
 // ---- nettoyage des données oscilatoire
 if($debug)
@@ -227,29 +225,12 @@ error_log( date("Y-m-d H:i:s")." - Collecte des données Velib");
 
 if($debugVelibRawData)
 {
-	echo "vardump SomeVelibRawData</br>";
-	echo $SomeVelibRawData;
-	echo "</br>";
-}
-
-$VelibDataArray = json_decode($SomeVelibRawData, true);
-
-if($debugVelibRawData)
-{
 	echo "vardump VelibDataArray</br>";
 	var_dump($VelibDataArray);
 	echo "</br>";
 }
 
-if(!is_array($VelibDataArray))
-{
-	echo "<br> Retour inattendu de l'api Velib";
-	error_log( date("Y-m-d H:i:s")." - Retour inattendu de l'api Velib");
-	error_log(date("Y-m-d H:i:s")." - json decode error - ".json_last_error ().":".json_last_error_msg ());
-	error_log(date("Y-m-d H:i:s").$SomeVelibRawData);
-	velibAPIParser_RemoveLock();
-	exit;
-}
+
 
 // update log
 // 0 : 
@@ -267,74 +248,40 @@ if(!($openLogFile = fopen($lofFile, 'a+')))
 echo "create and update stations from velib 2018 data flow";
 if($debugVerbose)
 	echo "</BR></BR>--- ---- array parsing --- --- </BR>";
-foreach($VelibDataArray as $keyL1 => $valueL1){
+foreach($VelibDataArray as $keyL1 => $VelibStationArray){
 	if($debugVerbose)
 	{
 		echo "</br> --- --- ---This is a  station --- </br>";
 		echo "<br>station data from velib flow :<br>";		
-		//echo "station ".$keyL1."</br>";
-		var_dump($valueL1) ;	
+		var_dump($VelibStationArray) ;	
 		echo "</br>";
 	}
 	$stationNbEDock=0;
-	$stationNbDock=0;
-	foreach($valueL1 as $keyL2 => $valueL2){
-		if(is_array($valueL2))
-		{
-			if($debugVerbose)
-				echo "station name and gps data : </br>";
-			foreach($valueL2 as $keyL3 => $valueL3){
-				if(is_array($valueL3))
-				{
-					if($debugVerbose)
-						echo "gps data : ";
-					foreach($valueL3 as $keyL4 => $valueL4)
-					{
-						if($debugVerbose)
-							echo "</br>".$keyL4." : ".$valueL4;
-						if($keyL4 == "latitude"){ $stationLat = $valueL4 + 0;} 
-						if($keyL4 == "longitude"){ $stationLon = $valueL4 + 0;}
-					}
-				}
-				else
-				{
-				if($keyL3 == "state")
-				{ 
-					if($valueL3=="Neutralised")
-						$stationState="Close";
-					else
-						$stationState = $valueL3;
-				} 	
-				if($keyL3 == "name"){ $stationName = $valueL3;}	
-				if($keyL3 == "code"){ $stationCode = ltrim($valueL3, '0');}	
-				if($debugVerbose)
-					echo "</br>".$keyL3."  : ".$valueL3 ;	
-				}
-			}
-		}
-		else
-		{
-			if($keyL2 == "nbBike"){ $stationNbBike  = $valueL2;} 
-			if($keyL2 == "nbEbike"){ $stationNbEBike  = $valueL2;} 
-			if($keyL2 == "nbFreeDock"){ $stationNbFreeDock   = $valueL2;} 
-			if($keyL2 == "nbFreeEDock"){ $stationNbFreeEDock   = $valueL2;}
-			if($keyL2 == "nbDock"){ $stationNbDock   = $valueL2;}
-			if($keyL2 == "nbEDock"){ $stationNbEDock   = $valueL2;}	
-			if($keyL2 == "nbBikeOverflow"){ $stationNbBikeOverflow  = $valueL2;} 
-			if($keyL2 == "nbEBikeOverflow"){ $stationNbEBikeOverflow  = $valueL2;} 
-			if($keyL2 == "kioskState"){ $stationKioskState  = $valueL2;} 
-				//echo "</br>".$keyL2."  : ".$valueL2 ;	
-		}
-	}	
-
+	
+	//
+	$stationCode = ltrim($VelibStationArray['stationCode'], '0');
+	$stationName = $VelibStationArray['name'];
+	$stationLat = $VelibStationArray['lat'] + 0;
+	$stationLon = $VelibStationArray['lon'] + 0;
+	$stationState = $VelibStationArray['state'];
+	$stationNbBike  = $VelibStationArray['bike'];
+	$stationNbEBike  = $VelibStationArray['ebike'];	
+	$stationNbFreeDock   = 0;
+	$stationNbFreeEDock   = $VelibStationArray['numDocksAvailable'];	
+	$stationNbDock   = 0;
+	$stationNbEDock   = $VelibStationArray['capacity'];	
+	$stationNbBikeOverflow  = 0;
+	$stationNbEBikeOverflow  = 0;	
+	$stationKioskState  = $VelibStationArray['kioskState'];	
+	
 	if($debugVerbose)
 	{
 
-		//echo "</br>stationName:".$stationName;
-		//echo " - "."stationCode:".$stationCode;
-		//echo "</br>"."stationState:".$stationState;
-		//echo "</br>"."stationLat:".$stationLat;
-		//echo "</br>"."stationLon:".$stationLon;
+		echo "</br>stationName:".$stationName;
+		echo "</br>stationCode:".$stationCode;
+		echo "</br>"."stationState:".$stationState;
+		echo "</br>"."stationLat:".$stationLat;
+		echo "</br>"."stationLon:".$stationLon;
 		echo "</br>"."stationNbEDock:".($stationNbEDock+$stationNbDock);
 		echo "</br>"."stationNbBike:".$stationNbBike;
 		echo "</br>"."stationNbEBike:".$stationNbEBike;
@@ -342,6 +289,7 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 		echo "</br>"."nbFreeEDock:".$stationNbFreeEDock;
 		echo "</br>"."stationNbBikeOverflow:".$stationNbBikeOverflow;
 		echo "</br>"."stationNbEBikeOverflow:".$stationNbEBikeOverflow;	
+		echo "</br>"."stationKioskState:".$stationKioskState ;
 	}
 	
 	if ($result = mysqli_query($link, "SELECT * FROM velib_station where stationCode = '$stationCode'")) {
@@ -395,7 +343,10 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					SET 
 						`stationLastView`=now()
 					WHERE `id`='$row[id]'";
+					if($debug)
+					{
 					echo $r;
+					}
 					if(!mysqli_query($link, $r))
 					{
 						printf("Errormessage: %s\n", mysqli_error($link));
@@ -409,18 +360,8 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 					echo "</br>Les données ont changé";	
 					$row["stationLat"] = $row["stationLat"] +0;
 					$row["stationLon"] = $row["stationLon"] +0;
-					
-						/*
-						echo "<br> cond1:".(round($stationLat - $row["stationLat"],5));
-						echo "<br> cond2:".(round($stationLon - $row["stationLon"],5));
-						
-						echo "<br> Lat - Before:".$row["stationLat"]." - After:" . $stationLat;
-						echo "<br> Lat - Before:".gettype($row["stationLat"])." - After:" . gettype($stationLat);
-						echo "<br> Lon - Before:".$row["stationLon"]." - After:" . $stationLon;
-						echo "<br> Lon - Before:".gettype($row["stationLon"])." - After:" . gettype($stationLon);
-						*/
-					
-					// check lat/lon round à 10 décimale pour les stations avec doc et si changement mettre à jour aussi l'adresse via Google geocode API...
+				
+					// check lat/lon round à 5 décimale pour les stations avec doc et si changement mettre à jour aussi l'adresse via Google geocode API...
 					if( ((round($stationLat - $row["stationLat"],5)) != 0) or ((round($stationLon - $row["stationLon"],5)) !=0 ))
 					{//la position de la station a changé
 						echo "<br> La position a changé";
@@ -432,58 +373,6 @@ foreach($VelibDataArray as $keyL1 => $valueL1){
 						echo "<br> Lon - Before:".gettype($row["stationLon"])." - After:" . gettype($stationLon);
 						
 						$stationLocationHasChanged  = 1;
-						
-						if(false)//désactivé
-						{
-							/// recupérer l'adresse --> google geocode API
-								
-							$wsUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$stationLat.','.$stationLon.'&key=AIzaSyBhVM63uEbuaccNCZ687XuAMVavQK4o-VQ';
-							if($debugVerbose)
-								echo "<br>".$wsUrl."<br>";	
-							$googleGeocodeAPIRawData = file_get_contents($wsUrl);
-							$googleGeocodeAPIDataArray = json_decode($googleGeocodeAPIRawData, true);
-
-							if($debugVerbose)
-							{
-								echo "vardump</br>";
-								var_dump($googleGeocodeAPIDataArray);	
-							}
-							
-							if(count($googleGeocodeAPIDataArray)>3) //parce que lorsque le quota est atteint la reponse est un array(3)
-							{
-								//echo "</br> --- --- ---dépiller le retour google  --- </br>";
-								foreach($googleGeocodeAPIDataArray as $keyL1 => $valueL1)
-								{			
-									foreach($valueL1 as $keyL2 => $valueL2){
-										if(is_array($valueL2))
-										{
-											foreach($valueL2 as $keyL3 => $valueL3){
-												if(!is_array($valueL3))
-												{
-													if($keyL3 == 'formatted_address')
-														{
-															$stationAdress = mysqli_real_escape_string($link, $valueL3); //ici on à l'adresse
-															$quitter = 1;
-															break;
-														}
-												}
-											}
-											if($quitter){
-												break;
-											}
-										}
-									}
-									if($quitter){
-										break;
-									}				
-								}
-								echo "<br> Adresse - Before:".$row["stationAdress"]." - After:" . $stationAdress;	
-							}						
-							else
-							{
-							$stationAdress = mysqli_real_escape_string($link, $row["stationAdress"]);
-							}
-						}
 					}
 					else
 					{//la position de la station n'a pas changé
@@ -1623,7 +1512,106 @@ fclose($openLogFile);
 error_log(date("Y-m-d H:i:s")." - velibAPIParser - stop");
 
 
+/// fonctions 
+function curlGetVelibData($url)
+{
+		// From URL to get webpage contents. 
+				  
+		// Initialize a CURL session. 
+		$ch = curl_init();  
+		  
+		// Return Page contents. 
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+		  
+		//grab URL and pass it to the variable. 
+		curl_setopt($ch, CURLOPT_URL, $url); 
+		  
+		return curl_exec($ch); 	
+}
+
+function velibJsonMerge($velibRawDataUrl1, $velibRawDataUrl2 )
+{
+	$velibRawDataUrl1Array = json_decode($velibRawDataUrl1,true);
+	$velibRawDataUrl2Array = json_decode($velibRawDataUrl2,true);
+	$VelibDataLocalArray=array();
+
+	if(count($velibRawDataUrl1Array['data']['stations'])==count($velibRawDataUrl2Array['data']['stations']))
+	{
+		$c = count($velibRawDataUrl1Array['data']['stations']);
+		for ($i = 0; $i < $c; $i++) 
+		{
+			$state = "";
+			$kioskState = "no";
+			
+			if($velibRawDataUrl1Array['data']['stations'][$i]['is_installed']==0){
+				$state = "Work in progress";			
+			}
+			elseif($velibRawDataUrl1Array['data']['stations'][$i]['is_returning'] ==1 && $velibRawDataUrl1Array['data']['stations'][$i]['is_renting'] ==1){
+				$state = "Operative";			
+			}
+			else{
+				$state = "Close";			
+			}	
+			
+			if(isset($velibRawDataUrl2Array['data']['stations'][$i]['rental_methods']))
+			{
+				$kioskState = "yes";
+			}
+			
+			
+			array_push( $VelibDataLocalArray, 
+						array(
+								"stationCode" => $velibRawDataUrl1Array['data']['stations'][$i]['stationCode'],
+								"numBikesAvailable" => $velibRawDataUrl1Array['data']['stations'][$i]['numBikesAvailable'],
+								"bike" => $velibRawDataUrl1Array['data']['stations'][$i]['num_bikes_available_types'][0]['mechanical'],
+								"ebike" => $velibRawDataUrl1Array['data']['stations'][$i]['num_bikes_available_types'][1]['ebike'],
+								"numDocksAvailable" => $velibRawDataUrl1Array['data']['stations'][$i]['numDocksAvailable'],
+								"state" => $state,							
+								"name" => $velibRawDataUrl2Array['data']['stations'][$i]['name'],
+								"lat" => $velibRawDataUrl2Array['data']['stations'][$i]['lat'],
+								"lon" => $velibRawDataUrl2Array['data']['stations'][$i]['lon'],
+								"capacity" => $velibRawDataUrl2Array['data']['stations'][$i]['capacity'],
+								"kioskState" => $kioskState
+							)
+					);
+			
+		}
+	}
+	else{
+			echo "données inconsistante";
+	}
+	return $VelibDataLocalArray;
+}
+
+
+function jsonMd5CleanBlackList($link, $debugVerbose)
+{
+	// ---- nettoyage des données oscilatoire
+	//on purge des data de pplus de 12h dans le log des MD5 des flux
+	$r = " Delete from `velib_api_sanitize` WHERE `JsonDate` <= DATE_ADD(NOW(), INTERVAL - 12 HOUR)"; 
+	if($debugVerbose){ 	echo $r; echo "<br><br>";}							
+	if(!mysqli_query($link, $r))
+	{
+		printf("Errormessage: %s\n", mysqli_error($link));
+	}
+}	
+
+function jsonMd5AddBlackList($link, $jsonMd5)
+{
+	// on ajoute le md5 du flux courant dans la table de log des MD5 des flux
+	$r = "
+			INSERT INTO `velib_api_sanitize` ( `JsonDate`, `JsonMD5`) 
+			VALUES ( sysdate(), '$jsonMd5' )
+		";
+	if(!mysqli_query($link, $r))
+	{
+		printf("Errormessage: %s\n", mysqli_error($link));
+	}
+}
+
 ?>
 
 </body>
 </html>
+
+
