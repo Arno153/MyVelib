@@ -1,5 +1,5 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.9.9
 -- https://www.phpmyadmin.net/
 --
 
@@ -26,6 +26,8 @@ CREATE TABLE `velib_activ_station_stat` (
   `nbrVelibExit` int(11) DEFAULT NULL,
   `nbrEvelibExit` int(11) DEFAULT NULL,
   `networkNbBike` int(11) DEFAULT NULL,
+  `networkMinNbBike` int(11) DEFAULT NULL,
+  `networkMaxNbBike` int(11) DEFAULT NULL,
   `networkNbBikeOverflow` int(11) DEFAULT NULL,
   `networkEstimatedNbBike` int(11) DEFAULT NULL,
   `networkEstimatedNbBikeOverflow` int(11) DEFAULT NULL,
@@ -34,7 +36,7 @@ CREATE TABLE `velib_activ_station_stat` (
   `networkEstimatedNbEBike` int(11) DEFAULT NULL,
   `networkEstimatedNbEBikeOverflow` int(11) DEFAULT NULL,
   `networkNbDock` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -46,7 +48,7 @@ DROP TABLE IF EXISTS `velib_api_sanitize`;
 CREATE TABLE `velib_api_sanitize` (
   `JsonDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `JsonMD5` varchar(32) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -61,7 +63,7 @@ CREATE TABLE `velib_network` (
   `Current_Value` varchar(50)  NOT NULL,
   `Min_Value` varchar(50) NOT NULL,
   `Max_Value` varchar(50) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 INSERT INTO velib_network (id, network_key, Current_Value, Min_Value, Max_Value) VALUES(1, 'LastUpdate', '2010-01-01 00:00:00', '2010-01-01 00:00:00', '2010-01-01 00:00:00');
@@ -100,7 +102,7 @@ CREATE TABLE `velib_station` (
   `nbFreeEDock` int(11) NOT NULL,
   `stationNbBikeOverflow` int(11) NOT NULL,
   `stationNbEBikeOverflow` int(11) NOT NULL,
-  `stationLastChange` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'date du dernier changement de la station',
+  `stationLastChange` timestamp NOT NULL COMMENT 'date du dernier changement de la station',
   `stationLastExit` datetime DEFAULT NULL COMMENT 'date du dernier retrait',
   `stationInsertedInDb` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `stationOperativeDate` datetime DEFAULT NULL,
@@ -118,7 +120,7 @@ CREATE TABLE `velib_station` (
   `stationLocationHasChanged` tinyint(1) NOT NULL DEFAULT '0',
   `stationCP` int(11) DEFAULT NULL,
   `stationCommune` varchar(255) COLLATE utf8_bin DEFAULT NULL															 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -144,7 +146,9 @@ PARTITION BY RANGE COLUMNS(stationStatDate)
 (
 PARTITION p0 VALUES LESS THAN ('2019-06-30') ENGINE=InnoDB,
 PARTITION p1 VALUES LESS THAN ('2019-11-30') ENGINE=InnoDB,
-PARTITION p2 VALUES LESS THAN (MAXVALUE) ENGINE=InnoDB
+PARTITION p2 VALUES LESS THAN ('2021-01-01') ENGINE=InnoDB,
+PARTITION p3 VALUES LESS THAN ('2022-01-01') ENGINE=InnoDB,
+PARTITION p4 VALUES LESS THAN (MAXVALUE) ENGINE=InnoDB
 );
 
 -- --------------------------------------------------------
@@ -158,8 +162,8 @@ CREATE TABLE IF NOT EXISTS `velib_station_status` (
   `id` int(11) NOT NULL,
   `stationCode` varchar(10) COLLATE utf8_bin NOT NULL COMMENT 'code station api veli sans les 0 devant',
   `stationState` varchar(50) COLLATE utf8_bin NOT NULL,
-  `stationStatusDate` datetime DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `stationStatusDate` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Index pour les tables exportées
@@ -197,11 +201,8 @@ ALTER TABLE `velib_station`
 -- Index pour la table `velib_station_min_velib`
 --
 ALTER TABLE `velib_station_min_velib`
-  ADD PRIMARY KEY (`stationCode`,`stationStatDate`);
-  
-ALTER TABLE `velib_station_min_velib` 
-  ADD INDEX `stationstatdate_idx` (`stationStatDate`, `stationCode`) USING BTREE; 
-
+  ADD PRIMARY KEY (`stationCode`,`stationStatDate`),
+  ADD KEY `stationstatdate_idx` (`stationStatDate`,`stationCode`) USING BTREE;
 --
 -- Index pour la table `velib_station_status`
 --
