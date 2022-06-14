@@ -74,8 +74,7 @@
 			"
 			<div class='maintenance'>
 				<!-- !!! Mode maintenance actif !!! -->
-					Mon processus de collecte des données Velib est actuellement perturbé.</br>
-					Les données affichées peuvent ponctuellement avoir quelques minutes; La précision de l'estimation fourni ici pourrait être dégradée.
+					Plus de collecte de données depuis le 11/03/2022 17:22</br>
 			</div>	
 			";
 	}

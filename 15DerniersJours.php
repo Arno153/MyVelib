@@ -7,7 +7,7 @@
 	setlocale(LC_TIME, 'fr_FR');
 	$NbDaysDisplayed = 20;
 	$PageCacheName = $NbDaysDisplayed."DerniersJours.php";
-	$debug = true;
+	$debug = false;
 	
 	if	( 
 			isCacheValidThisHour($PageCacheName) 
@@ -63,9 +63,7 @@
 			"
 			<div class='maintenance'>
 				<!-- !!! Mode maintenance actif !!! -->
-					Mon processus de collecte des données Velib est actuellement perturbé.</br>
-					Les statistiques d'utilisation du 10 au 13 sont indisponible, depuis elles sont sous estimées par rapport au reste de la série. </br>
-					Les autres données, moins sensible à la régularité de la collecte, sont affectées plus marginalement. 
+					Plus de collecte de données depuis le 11/03/2022 17:22</br>
 			</div>	
 			";
 	}

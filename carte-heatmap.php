@@ -68,9 +68,7 @@
 			"
 			<div class='maintenance'>
 				<!-- !!! Mode maintenance actif !!! -->
-					Mon processus de collecte des données Velib est actuellement perturbé.</br>
-					Les statistiques d'utilisation affichées pour les 10, 11, 12 et 13 septembre sont erronées. </br>
-					Les statistiques d'utilisation affichées depuis le 13 septembre sont plus ou moins lourdement sous estimées. </br>
+					Plus de collecte de données depuis le 11/03/2022 17:22</br>
 			</div>	
 			";
 	}
