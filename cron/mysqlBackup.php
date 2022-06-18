@@ -1,136 +1,105 @@
 <?php
-
-include "./../inc/mysql.inc.php";
 include "./../inc/cacheMgt.inc.php";
+include "./../inc/config.inc.php";
 $debug = 1; //debug mode
 
-echo "Début sauvegarde BDD<br>";
-	velibAPIParser_SetDbBackupLock(); //disable updates during backup
-	$sourceFile = backupDatabaseTables($debug, "velib_"); //backup
-	velibAPIParser_RemoveDbBackupLock();//enable updates after backup
-echo "Fin de la sauvegarde BDD<br><br>";
+$backupStep=0;
+$Tables = 'velib_activ_station_stat velib_api_sanitize  velib_network velib_station velib_station_status '; 
+$HugeTable  = 'velib_station_min_velib';
+$Alltables =  $Tables." ".$HugeTable;
 
-// compression de la sauvegarde
-echo "Début de la compression de la sauvegarde BDD<br>";
-	if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);
-	$gz = gzcompressfile($sourceFile);
-	if($gz!= false)
-	{
-		unlink ($sourceFile);
-		echo "--> succès<br>";
-	}
-	if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);
-echo "Fin de la compression de la sauvegarde BDD<br><br>";
+$rep = getcwd().'/../backup_files/'; //Répertoire où sauvegarder le dump de la base de données
+$fichierDb = $db."-".date("d-m-Y").".sql";
+$mysqlDumpconf=getcwd()."/../inc/.sqlpwd";
 
-if($gz != false)
+if(isset($_GET["step"]))
 {
-	echo "debut de la purge des anciennes sauvegarde<br>";
-		$i = purgeSQLBackup(7,30,$debug);
-		echo "-->".$i." fichier(s) purgé(s)<br>";
-	echo "fin de la purge des anciennes sauvegarde<br>";
+	$backupStep = $_GET["step"];
+	//error_log("set".$_GET["step"]);
 }
+else $backupStep = 1;
+//error_log("used".$backupStep);
 
-/**
- * @function    backupDatabaseTables
- * @author      CodexWorld
- * @link        http://www.codexworld.com
- * @usage       Backup database tables and save in SQL file
- */
-function backupDatabaseTables($debug, $tables = '*'){
-    //connect & select the database
-	$db = mysqlConnect();
-	
-	if ($db->connect_error) {
-		die('Erreur de connexion (' . $mysqli->connect_errno . ') '
-				. $mysqli->connect_error);
-	}
-	
-	$return = "";
-	
-    //get all of the tables
-    if($tables == '*'){
-        $tables = array();
-        $result = $db->query("show TABLES");
-        while($row = $result->fetch_row()){
-            $tables[] = $row[0];
-        }
-    }else{
-        $result = $db->query("show TABLES like '$tables%' ");
-		$tables = array();
-        while($row = $result->fetch_row()){
-            $tables[] = $row[0];
-        }		
-    }
 
-	$fileTime = time();
-	$fileName = './../backup_files/db-backup-'.$fileTime.'.sql';
-	//open file
-	$handle = fopen($fileName,'w+');	
-	
-    //loop through the tables
-    foreach($tables as $table)
-	{
-		if($debug == 1)error_log( "backup table: ".$table);
-		if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);
-        $result = $db->query("SELECT * FROM $table");
-        $numColumns = $result->field_count;
-
-        $return .= "DROP TABLE IF EXISTS $table;";
-
-        $result2 = $db->query("SHOW CREATE TABLE $table");
-        $row2 = $result2->fetch_row(); 
-
-        $return .= "\n\n".$row2[1].";\n\n";
-		$i = 0;
+switch ($backupStep) 
+{
+    case 1:
+		velibAPIParser_SetDbBackupLock(); //disable updates during backup
 		
-		while($row = $result->fetch_row())
+		error_log( date("Y-m-d H:i:s")."Begin backup DB : $db in $rep/$fichierDb"  );
+		error_log( date("Y-m-d H:i:s")."dump structure : Begin" );
+			exec("mysqldump --defaults-extra-file=".$mysqlDumpconf." --no-data ".$db." ".$Alltables."  > ".$rep.$fichierDb." 2>".$rep.$fichierDb.".err");
+		error_log( date("Y-m-d H:i:s")."dump tructure : END" );
+        break;		
+    case 2:
+		error_log( date("Y-m-d H:i:s")."dump Tables data : Begin" );
+			exec("mysqldump --defaults-extra-file=".$mysqlDumpconf." --no-create-info ".$db." ".$Tables."  >> ".$rep.$fichierDb." 2>>".$rep.$fichierDb.".err");
+		error_log( date("Y-m-d H:i:s")."dump Tables data : END" );
+        break;
+    case 3:	
+		error_log( date("Y-m-d H:i:s")."dump data from velib_station_min_velib  : Begin" );
+		error_log( date("Y-m-d H:i:s")."dump data from velib_station_min_velib  : Part 1: 2018" );
+			$Where = ' --where=" stationStatDate < \'2019-01-01\' "';
+			exec("mysqldump --defaults-extra-file=".$mysqlDumpconf." --no-create-info ".$db." ".$HugeTable." ".$Where."  >> ".$rep.$fichierDb." 2>>".$rep.$fichierDb.".err");
+        break;		
+    case 4:			
+		error_log( date("Y-m-d H:i:s")."dump data from velib_station_min_velib  : Part 2: 2019" );
+			$Where = ' --where=" stationStatDate < \'2020-01-01\' and stationStatDate >= \'2019-01-01\' "';
+			exec("mysqldump --defaults-extra-file=".$mysqlDumpconf." --no-create-info ".$db." ".$HugeTable." ".$Where."  >> ".$rep.$fichierDb." 2>>".$rep.$fichierDb.".err");		
+        break;		
+    case 5:
+		error_log( date("Y-m-d H:i:s")."dump data from velib_station_min_velib  : Part 3: 2020" );
+			$Where = ' --where=" stationStatDate < \'2021-01-01\' and stationStatDate >= \'2020-01-01\' "';
+			exec("mysqldump --defaults-extra-file=".$mysqlDumpconf." --no-create-info ".$db." ".$HugeTable." ".$Where."  >> ".$rep.$fichierDb." 2>>".$rep.$fichierDb.".err");	
+        break;			
+    case 6:
+		error_log( date("Y-m-d H:i:s")."dump data from velib_station_min_velib  : Part 4: 2021" );
+			$Where = ' --where=" stationStatDate < \'2022-01-01\' and stationStatDate >= \'2021-01-01\' "';
+			exec("mysqldump --defaults-extra-file=".$mysqlDumpconf." --no-create-info ".$db." ".$HugeTable." ".$Where."  >> ".$rep.$fichierDb." 2>>".$rep.$fichierDb.".err");
+		break;		
+    case 7:
+		error_log( date("Y-m-d H:i:s")."dump data from velib_station_min_velib  : Part 5: 2022" );
+			$Where = ' --where=" stationStatDate < \'2023-01-01\' and stationStatDate >= \'2022-01-01\' "';
+			exec("mysqldump --defaults-extra-file=".$mysqlDumpconf." --no-create-info ".$db." ".$HugeTable." ".$Where."  >> ".$rep.$fichierDb." 2>>".$rep.$fichierDb.".err");	
+		error_log( date("Y-m-d H:i:s")."dump data from velib_station_min_velib  : END" );
+		error_log( date("Y-m-d H:i:s")."backup of $db in $rep/$fichierDb"  );   		
+		break;			
+	case 8:	
+		error_log( date("Y-m-d H:i:s")."Begin gz compress");
+		$gz = gzcompressfile($rep.$fichierDb);
+		if($gz!= false)
 		{
-			$return .= "INSERT INTO $table VALUES(";
-
-			for($j=0; $j < $numColumns; $j++){
-				$row[$j] = addslashes($row[$j]);
-				
-				$row[$j] = preg_replace("/\n/","\\n",$row[$j]);
-
-				//if (isset($row[$j])) { $return .= '"'.$row[$j].'"' ; } else { $return .= '""'; }
-				if (isset($row[$j]) && $row[$j] != "") { $return .= '"'.$row[$j].'"' ; } else { $return .= 'NULL'; }
-				
-				if ($j < ($numColumns-1)) { $return.= ','; }
-			}
-			$return .= ");\n";
-			$i=$i+1;
+			unlink ($rep.$fichierDb);
+			error_log( "debut de la purge des anciennes sauvegarde<br>");
+			$i = purgeSQLBackup(7,30,$debug);
+			error_log("-->".$i." fichier(s) purgé(s)<br>");
 			
-			if($i==25000) //ecriture fichier toute les 100k lignes pour limiter la conso mémoire
-			{
-				//write to file
-				if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);
-				fwrite($handle,$return);
-				if($debug == 1)error_log( "table: ".$table." partially saved to file ");
-				if($debug == 1)error_log( "memory used ".memory_get_usage()/1048576);		
-				$return = "";
-				$i=0;				
-			}		
+
 
 		}
-
-        $return .= "\n\n\n";
-		
-		//write to file
-		fwrite($handle,$return);		
-		$return = "";
-		
-		// echo "memory used ".memory_get_usage()."<br>";
-		echo "--> table: ".$table." exportée<br>";		
-    }
-	
-	//close file
-	fclose($handle);
-	//close db connection
-	mysqlClose($db);
-	
-	if($debug == 1)error_log("max memory used: ".memory_get_peak_usage()/1048576);
-	return $fileName;
+		error_log( date("Y-m-d H:i:s")."End backup DB : $db in $gz"  );
+		break;
 }
+
+$NextBackupStep = $backupStep +1;
+//error_log("next: ".$NextBackupStep);
+
+if($backupStep >= 8)
+{
+	echo "end";
+	velibAPIParser_RemoveDbBackupLock();//enable updates after backup
+
+}
+else
+{
+	//error_log("header content:"."Location: mysqldump.php?step=$NextBackupStep");
+	header("Location: mysqlBackup.php?step=$NextBackupStep");
+	die();
+}
+
+
+
+
 
 function purgeSQLBackup($delaiPurge, $delaiPurgeTotale, $debug)
 {
@@ -206,3 +175,6 @@ function gzcompressfile($source,$level=false){
     if($error) return false;
       else return $dest;
     } 
+
+?>
+

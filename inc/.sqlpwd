@@ -1,0 +1,4 @@
+[mysqldump]
+user=user
+password=password
+host=servermysql
