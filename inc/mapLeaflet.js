@@ -169,67 +169,7 @@ function getStations(estimatedVelibNumber,bloqueTF,VAEFlag, placeVelib)
 		xmlhttp.send();
 		
  }	
- 
 
- 
- function signalerAlimentee(stationCode, electrified)
- {
-	 
-	var nbrPopupDisplayed= 0;
-	nbrPopupDisplayed = getCookie("popupdisplayed");
-	if (nbrPopupDisplayed >= 1) 
-	{
-		confirmationCheck = true;
-		setCookie("popupdisplayed",nbrPopupDisplayed, 2);
-	} 
-	else 
-	{
-		confirmationCheck = confirm("Par alimentée, on entend raccordée au réseau électrique et non sur batterie!\nLe sommet de la borne est allumé et s'ils existent l'écran, le lecteur CB, etc... fonctionnent ");
-		if (confirmationCheck) 
-		{
-			setCookie("popupdisplayed",nbrPopupDisplayed*1+1, 1);
-		}
-	}
-	 
-	 
-	 
-	 if(confirmationCheck)
-	 {
-	   var xmlhttp;
-		// compatible with IE7+, Firefox, Chrome, Opera, Safari
-		xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function(){
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
-				callback(xmlhttp.responseText);
-			}
-		}
-		
-		xmlhttp.onreadystatechange = function(event) {
-			// XMLHttpRequest.DONE === 4
-			if (this.readyState === XMLHttpRequest.DONE) {
-				if (this.status === 200) {
-					console.log("Réponse reçue: %s", this.responseText);
-					var respArray;
-					respArray = this.responseText.split("&");						
-					document.getElementById("button-elec-"+respArray[1]).value = respArray[2];
-					if(respArray[0]=="ok")
-					{
-					document.getElementById("button-elec-"+respArray[1]).disabled = true;
-					sleep(1000);
-					refresh();
-					}						
-				} else {
-					console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
-				}
-			}
-		};
-		
-		url='./api/stationRaccordee.api.php?stationCode='+stationCode+'&electrified='+electrified;
-		xmlhttp.open("POST", url, true);
-		xmlhttp.send();
-	 }
-		
- }	
  
  function sleep(milliseconds) {
 	  var start = new Date().getTime();
@@ -484,20 +424,6 @@ function addMarkersToMap(estimatedVelibNumber, bloqueTF, VAEFlag, placeVelib )
 		else
 		{
 			infoWindowContent = infoWindowContent + '<br> - ne marche pas? <input type="button" id="button-true-'+locations[i]['stationCode']+'" value="Signaler" onclick="signaler('+locations[i]['stationCode']+',true)" />';
-		}
-		
-		if(locations[i]['stationConnected']=='1')
-		{
-			infoWindowContent = infoWindowContent + '<br> - est signalée comme alimentée! <input type="button" id="button-elec-'+locations[i]['stationCode']+'" value="Signaler une erreur" onclick="signalerAlimentee('+locations[i]['stationCode']+',false)" />';
-		}
-		else if (locations[i]['stationConnected']=='0')
-		{
-			infoWindowContent = infoWindowContent + '<br> - est signalée comme non alimentée! <input type="button" id="button-elec-'+locations[i]['stationCode']+'" value="Signaler une erreur" onclick="signalerAlimentee('+locations[i]['stationCode']+',true)" />';
-		}
-		else 
-		{
-			infoWindowContent = infoWindowContent + '<br> - est elle alimentée? <input type="button" id="button-elec-'+locations[i]['stationCode']+'" value="Oui" onclick="signalerAlimentee('+locations[i]['stationCode']+',true)" />';
-			infoWindowContent = infoWindowContent + ' <input type="button" id="button-elec-'+locations[i]['stationCode']+'" value="Non" onclick="signalerAlimentee('+locations[i]['stationCode']+',false)" />';
 		}
 		
 		infoWindowContent = infoWindowContent + '<p>Plus d\'infos: <a href="https://velib.nocle.fr/station.php?code='+locations[i]['stationCode']+'" target="_blank">velib.nocle.fr</a> ';
