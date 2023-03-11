@@ -32,13 +32,13 @@
 	
 	
 	<!-- Base MAP -->
-	 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
-	   integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
-	   crossorigin=""/>
+	 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+		 integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+		 crossorigin=""/>
 	 <!-- Make sure you put this AFTER Leaflet's CSS -->
-	 <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
-	   integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
-	   crossorigin=""></script>
+	 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+		 integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+		 crossorigin=""></script>
 	<!-- Base MAP END-->
 	
 
