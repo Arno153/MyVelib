@@ -59,7 +59,7 @@
 	<link rel="stylesheet" media="all" href="./css/joujouVelib.css?<?php echo filemtime('./css/joujouVelib.css');?>">	
 	<script src="./inc/sorttable.js"></script>
 	<!-- Plotly.js -->
-	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
   </head>
   <body>
 	<?php
@@ -464,7 +464,7 @@
 							plot_bgcolor: '#f8f9fa',
 							showlegend: false,
 							margin: {
-										l: 20,
+										l: 30,
 										r: 40,
 										b: 30,
 										t: 30,
