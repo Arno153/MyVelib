@@ -1,5 +1,5 @@
 {
     "require": {
-        "components/jquery": "3.6.4"
+        "components/jquery": "3.6.2"
     }
 }
