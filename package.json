@@ -9,6 +9,6 @@
     "leaflet-control-geocoder": "2.4.0",
     "jquery-ui": "1.13.2",
     "Font-Awesome": "6.3.0",
-    "plotly.js" : "2.20.0"    
+    "plotly.js" : "2.21.0"    
   }
 }
