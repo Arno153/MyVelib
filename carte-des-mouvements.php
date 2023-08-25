@@ -32,12 +32,12 @@
 	
 	
 	<!-- Base MAP -->
-	 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-		 integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-		 crossorigin=""/>
+	  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
 	 <!-- Make sure you put this AFTER Leaflet's CSS -->
-	 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-		 integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+	 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+		 integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
 		 crossorigin=""></script>
 	<!-- Base MAP END-->
 	
@@ -51,10 +51,7 @@
 	<!-- custom controle -- refresh and toggle button -->
 	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">	-->
 	<script src="./inc/Leaflet.Control.Custom.js"></script>
-	<script
-	  src="https://code.jquery.com/jquery-3.6.4.min.js"
-	  integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
-	  crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 	
 	<!-- custom controle -- END -->
 	

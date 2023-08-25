@@ -46,7 +46,7 @@
 	<link rel="stylesheet" media="all" href="./css/joujouVelib.css?<?php echo filemtime('./css/joujouVelib.css');?>">	
 	<script src="./inc/sorttable.js"></script>
 	<!-- Plotly.js -->
-	<script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
   </head>
   <body>
 	<?php
@@ -671,10 +671,7 @@
 	</div>
 
 	<!-- graph to full screen -->
-	<script
-	  src="https://code.jquery.com/jquery-3.6.4.min.js"
-	  integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
-	  crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 	
 	<script>
 
