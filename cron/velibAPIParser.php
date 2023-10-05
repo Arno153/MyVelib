@@ -17,8 +17,8 @@ $velibExit = 0;
 $EvelibExit = 0;
 $velibReturn = 0;
 $EvelibReturn = 0;
-$url1 = 'https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_status.json';
-$url2 = 'https://velib-metropole-opendata.smoove.pro/opendata/Velib_Metropole/station_information.json';
+$url1 = 'https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/station_status.json';
+$url2 = 'https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/station_information.json';
 
 echo date(DATE_RFC2822);
 echo "<br>";
