@@ -59,7 +59,7 @@
 	<link rel="stylesheet" media="all" href="./css/joujouVelib.css?<?php echo filemtime('./css/joujouVelib.css');?>">	
 	<script src="./inc/sorttable.js"></script>
 	<!-- Plotly.js -->
-	<script src="https://cdn.plot.ly/plotly-2.26.2.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
   </head>
   <body>
 	<?php
