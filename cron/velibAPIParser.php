@@ -261,6 +261,7 @@ foreach($VelibDataArray as $keyL1 => $VelibStationArray){
 	//
 	$stationCode = ltrim($VelibStationArray['stationCode'], '0');
 	$stationName = $VelibStationArray['name'];
+	$stationName = mysqli_real_escape_string($link, $stationName);
 	$stationLat = $VelibStationArray['lat'] + 0;
 	$stationLon = $VelibStationArray['lon'] + 0;
 	$stationState = $VelibStationArray['state'];
@@ -319,6 +320,7 @@ foreach($VelibDataArray as $keyL1 => $VelibStationArray){
 				if 
 				(
 					$stationState == $row["stationState"] and
+					$stationName == $row["stationName"] and
 					$stationNbEDock+$stationNbDock	== $row["stationNbEDock"] and
 					$stationNbBike == $row["stationNbBike"] and
 					$stationNbEBike == $row["stationNbEBike"] and
@@ -355,6 +357,7 @@ foreach($VelibDataArray as $keyL1 => $VelibStationArray){
 				else
 				{ // quelque chose à changé
 					echo "</br>stationName : ".$stationName;
+					echo " - old station name : ".$row["stationName"];
 					echo " - "."stationCode : ".$stationCode;
 					echo " - "."stationState : ".$stationState;
 					echo "</br>Les données ont changé";	
@@ -414,6 +417,7 @@ foreach($VelibDataArray as $keyL1 => $VelibStationArray){
 						$r = "UPDATE `velib_station` 
 						SET 
 							`stationState`='$stationState' ,
+							`stationName`='$stationName' ,
 							`stationLat` = '$stationLat', 
 							`stationLon` = '$stationLon', 
 							`stationNbEDock`='$stationNbEDock'+'$stationNbDock',
