@@ -260,7 +260,14 @@ foreach($VelibDataArray as $keyL1 => $VelibStationArray){
 	
 	//
 	$stationCode = ltrim($VelibStationArray['stationCode'], '0');
-	$stationName = $VelibStationArray['name'];
+	if(isset($VelibStationArray['name']))
+	{
+		$stationName = $VelibStationArray['name'];
+	}
+	else
+	{
+		$stationName = "Nom inconnu";
+	}
 	$stationName = mysqli_real_escape_string($link, $stationName);
 	$stationLat = $VelibStationArray['lat'] + 0;
 	$stationLon = $VelibStationArray['lon'] + 0;
@@ -320,7 +327,7 @@ foreach($VelibDataArray as $keyL1 => $VelibStationArray){
 				if 
 				(
 					$stationState == $row["stationState"] and
-					$stationName == $row["stationName"] and
+					$stationName == mysqli_real_escape_string($link,$row["stationName"]) and
 					$stationNbEDock+$stationNbDock	== $row["stationNbEDock"] and
 					$stationNbBike == $row["stationNbBike"] and
 					$stationNbEBike == $row["stationNbEBike"] and
